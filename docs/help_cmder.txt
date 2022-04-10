@@ -1,0 +1,57 @@
+----------- CMDER SHORT CUTS --------------
+https://cmder.net/
+
+Macro
+Up/Down Folder            WIN+ALP+P > Keys and Macro > Macro Dropdown > Assign ALT Up / AlT DOWN
+                          print "cd .. \r\n" / print "cd - \r\n"
+
+Tab manipulation
+Ctrl + `                : Global Summon from taskbar
+Win + Alt + p           :  Preferences (Or right click on title bar)
+Ctrl + t                : New tab dialog (maybe you want to open cmd as admin?)
+Ctrl + w                : Close tab
+Shift + Alt + number    : Fast new tab:
+1. CMD
+2. PowerShell
+Alt + Enter             : Fullscreen
+
+Shell
+Ctrl + Alt + u          : Traverse up in directory structure (lovely feature!)
+End, Home, Ctrl         : Traverse text as usual on Windows
+Ctrl + r                : History search
+Shift + mouse           : Select and copy text from buffer
+Right click / 
+Ctrl + Shift + v        : Paste text
+
+Ctrl                    : In result list with links open link
+
+Notes / Docs
+
+Aliases
+There is simple support for aliases. They can be created by using the alias command like this: 
+alias ls=ls --color $*. 
+They are pretty much just doskeys in /config/aliases. One per line. And make sure to handle arguments by putting argument variables $* somewhere.
+
+Documentations
+Most of the Cmder functionality are documented in the 
+readme file on GitHub
+https://github.com/cmderdev/cmder/blob/master/README.md
+We have extented help available in Cmder Wiki
+https://github.com/cmderdev/cmder/wiki
+
+Console emulator ~ Conemu
+https://conemu.github.io/
+Cmd.exe enhancements ~ clink
+https://mridgers.github.io/clink/
+Unix tools on windows ~ git for windows
+https://gitforwindows.org/
+
+Tweaks on Completion Features
+https://superuser.com/questions/991493/cmder-use-tab-to-cycle-through-the-auto-completes-candidates
+21 => not working > clink completions bundle by nowe
+C:\TOOLS\cmder\vendor\clink-completions
+
+--- clink --- 
+https://chrisant996.github.io/clink/clink.html#sample-inputrc-file
+$HOME/.inputrc
+

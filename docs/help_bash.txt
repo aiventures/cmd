@@ -1,0 +1,91 @@
+----------- BASH SHORT CUTS --------------
+exec bash   : reload bash
+
+grep     
+        https://git-scm.com/docs/git-grep
+        https://stackoverflow.com/questions/10619160/how-do-i-use-the-grep-include-option-for-multiple-file-types
+        -i case inensitive
+        -r recursive
+        -l result filename only
+        -R follow symbolic links / regular expression
+        -n each output line is preceded by its relative line number in the file
+        -s silent mode
+        -Rl ...
+        --include / --exclude include/exclude pattern
+
+        Examples
+        
+        grep pattern --max-depth=-1 --include=*.html --include=*.php 
+        grep pattern -r --include=\*.{cpp,h} rootdir
+        (search through all .cpp and .h files rooted in the directory rootdir)        
+        
+        grep -ir pin* | grep start
+        (pipe search for pin , then filter by start)
+                
+        grep --color=always --include="[iI]*.txt" -nri "pin" | grep start
+        (color results search / searches in text starting with i for pin, only shows lines with start)
+        
+        alias | grep --color=always ".txt"
+        (filter alias list containing .txt) 
+        
+        env | grep PATH
+        (filter environment variables)
+        
+        
+compgen 
+        compgen -v | grep --color=always p_       
+        (show environment variables)
+    
+cd      /c/path cd ~ (root dir , defined in HOME in env variables)
+pwd 
+        current work dir
+ls  
+        list directory (ls -a / ls-1 / line ls --color -R -1)
+
+cat 
+        https://git-scm.com/docs/git-cat-file
+        cat <file path> display file contents
+        cat -n (line numbers) -T (distinguish tabs and spaces)
+        
+less    less <file>  one page at a time
+        less -N (line numbers) / -X (cleared command file)
+        
+more    more filename loads file at once in contrast to less
+        -p  (clear output) +100 (display from line 100)
+    
+find     
+        find . -name "*ora*"
+        find path/to/dir -name "*.ext1" -o -name "*.ext2" (-o: or)
+        find . -type f  -name 'text_for_search'   (type t=file)
+        find . -type f  -iname 'text_for_search' (iname = regex)
+        find . -type f -name "*.iso" (extension)
+        
+type    type <funcname> will print source code of bash function
+
+declare "declare -F|grep -iv _git" shows list of functions not containing git
+
+https://dev.to/awwsmm/101-bash-commands-and-tips-for-beginners-to-experts-30je#whereis-which-whatis
+        
+----------- BASH NAMING Conventions --------------
+Personal Naming Conventions aticking to naming conventions helps with autocomplete feature to get variables / aliases ...
+and it can also help to filter available aliases variables using grep command
+
+files and win representations
+f_...   file in bash representation /c/...<file>      
+fwin_   file in win representation C:\...<file>
+
+paths and win representaion
+p_...   file in bash representation /c/<path>      
+pwin_   path in win representation C:\<path>
+
+work files (changing per task)
+w_{f_,fwin_...} same as above but with prefix w_
+
+executables 
+exe_ / exewin ...  same as f/fwin  but pointing to an executable eg
+                   exe_npp='start notepad++' / exe_explorer=''
+                   
+special excecutable commands
+explorer "<win path to folder>"         Open windows explorer wit path / note double quotes (spaces in path will break opening in path)
+start notepad++ "<win path to file>"    OPens file in notepad++ 
+start "<url>"                           Opens URL in default browser (note double quote again)

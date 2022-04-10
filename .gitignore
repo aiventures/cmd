@@ -1,0 +1,15 @@
+*.stackdump
+*.bash_history
+*.lesshst
+*_done.txt
+*_report.txt
+*.bak
+todo.sh
+todo.txt
+einkauf.txt
+todo.cfg
+einkauf.cfg
+*done.cfg
+header_personal.sh
+.inputrc
+.gitconfig

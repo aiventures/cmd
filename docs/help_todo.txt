@@ -1,0 +1,24 @@
+--------- TODO.TXT ---------
+TODO.TXT Frequently used commands
+(t used as alias to execute command)
+General:
+t -t a text +... @... add task with date
+-------------------------
+# = Todo Number
+todo.sh [-fhpantvV] [-d todo_config] action [#] [task_description]
+todo.sh add "THING I NEED TO DO +project @context"
+
+t ls
+t ls +(project) @(context)
+t lsp a...z     List tasks by Prio t lsp a-j is also working
+t lsprj         list projects
+t lsc           list contexts
+t -f del        delete without confirmation
+t p             [A-F] Prioritize
+t dp            Deprioritize
+t prep # "P"    Prefix Task <#>
+t lf            filelist
+t lsa           show all tasks
+t -a do         complete without moving task into archive
+t report        put into report file
+in shell "> export.txt" export to file
