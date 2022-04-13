@@ -13,3 +13,11 @@ einkauf.cfg
 header_personal.sh
 .inputrc
 .gitconfig
+
+# ignore own links -with exceptions
+/links/*
+/links/test.url
+Shell Command Language.url
+# ignore own files except a coupld
+/docs
+

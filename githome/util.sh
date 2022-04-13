@@ -1,10 +1,30 @@
-echo "---- load util.sh functions ----"
+# load global definitions
+. ~/global.sh
 
 # load header definitions
 . ~/header.sh
 
+# define your own setting check the header_personal_template.sh 
+# file, adapt it and rename it to header_personal.sh 
+. ~/header_personal.sh
+
+# load todo config (optional)
+# comment the following line if todo.txt not used
+. ~/../todo/header_todo.sh
+
 # load shortcuts
 . ~/shortcuts.sh
+
+echo "---- load util.sh functions ----" 
+# check for existing variables
+var_exists EXE_NPP
+var_exists EXE_XLS
+var_exists EXE_MLO
+var_exists f_mlo
+var_exists P_PROGRAM_FILES
+var_exists P_PROGRAM_FILES_X86
+var_exists p_work
+var_exists p_tools
 
 # path functions to convert bash path into win path 
 # https://stackoverflow.com/questions/40879648/how-to-open-the-current-directory-on-bash-on-windows
@@ -30,28 +50,7 @@ function is_url {
     fi
 }
 
-function encode_path () {
-	: encode_path "<path that may contain spaces>"
-    : navigates tp open explorer for path in shell notation 
-	: works for path containing spaces
-	: you can use path variables without quotation marks
-	local num_arguments=$#;
-
-	local i=0;
-	local s=""
-
-	for var in "$@"
-	do   
-	s+="${var}"
-	i=$(($i + 1));
-	if [ $i -lt $num_arguments ]
-	then
-	  s+=" "
-	fi;
-	done
-
-	echo "$s";  
-}
+# encode_path moved to global.sh
 
 function towinpath {
     : towinpath "<bash path>"
@@ -126,8 +125,7 @@ function open {
                 eval "$mlo" &
                 ;;
             xlsx)
-                exe_xls="/c/Program Files/Microsoft Office/root/Office16/EXCEL.EXE"
-                xls="\"$exe_xls\" \"$pwin\""
+                xls="\"$EXE_XLS\" \"$pwin\""
                 echo "xls"
                 eval "$xls" &
                 ;;
@@ -172,6 +170,48 @@ function cdd () {
 	eval $cdd;  
 }
 
+open_link () {
+    : reads an url link and displays it
+    encoded_path="$(encode_path "$@")";
+    regex="URL=(.*)"
+    f=$(basename "$encoded_path")
+    # echo "LINK $f"
+    
+    while read line; do    
+        # echo "$line"
+        if [[ $line =~ $regex ]]; then
+            url="${BASH_REMATCH[1]}"
+            echo "$url"
+        fi                
+    done < "$encoded_path"
 
+}
 
+walk_dir () {    
+    : recursively check files
+    : https://unix.stackexchange.com/questions/494143/recursive-shell-script-to-list-files
+    shopt -s nullglob dotglob    
+    encoded_path="$@"
+    dirname="$(dirname "$encoded_path")"
+    echo "$encoded_path"
 
+    for pathname in "$encoded_path"/*; do
+        if [ -d "$pathname" ]; then
+            walk_dir "$pathname"
+        else
+            f=$(basename "$pathname")
+            # echo "FILE [$f]"
+            case "$pathname" in
+                *.txt|*.doc)
+                    # printf '    txt %s\n' "$f"
+                    ;;
+                *.url)
+                    # printf '    link %s\n' "$f"
+                    url=$(open_link "$pathname")
+                    printf "    - [%s] %s\n" "$f" "$url"
+                    ;;
+            *) 
+            esac
+        fi
+    done
+}
