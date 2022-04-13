@@ -3,6 +3,56 @@ echo "---- load global.sh definitions ----"
 # loading global definitions like exe files and work paths 
 # that need to be defined up front
 
+# ########################################################
+# suggestion for prefix notation conventions
+# (helps with autocomplete feature)
+# files and win representations
+# f_ / fwin_: files & paths and win representaion
+# p_ / pwin_ 
+# w_{f_,fwin_...}: work files (changing per task)
+# executables: EXE_ ...
+# help files: HELP_ ...
+
+# $p_work is supposed to contain your personal files
+# so they can be searched as well
+# @TODO: DEFINE p_work
+export_path p_work "<path to your work>"
+
+# $p_cmd root path pointing to all cmd files
+# @TODO: DEFINE/CHECK p_cmd
+export_path p_cmd "$p_work/CMD"
+
+# git home ($HOME should be set in windows environment)
+# for now Git $HOME is the same $p_cmd/githome
+export_path p_home "$p_cmd/githome"
+
+# ########################################################
+
+# txt documents folder 
+export_path p_docs "$p_cmd/docs"
+
+# links folder
+export_path p_links "$p_cmd/links"
+
+# define global paths
+export_path P_PROGRAM_FILES_X86 "/c/Program Files (x86)"
+export_path P_PROGRAM_FILES "/c/Program Files"
+
+# --- define executables ---
+export_path p_tools "/c/10_Tools"
+
+# my life organized / delete if not used
+export_path EXE_MLO "$p_tools/MLO/mlo.exe"
+export_path f_mlo "$p_work/MeineAufgaben.ml"
+go_mlo="$EXE_MLO $f_mlo &"
+alias go_mlo=$mlo
+
+# notepad++ (theres already a shortcut available)
+export_path EXE_NPP "$p_tools/Notepad++/notepad++.exe"
+
+# MS Excel
+export_path EXE_XLS "/c/Program Files/Microsoft Office/root/Office16/EXCEL.EXE"
+
 function encode_path () {
 	: encode_path "<path that may contain spaces>"
     : navigates tp open explorer for path in shell notation 
@@ -73,52 +123,3 @@ function export_path {
     check_path "$value"
     # export -p | grep $param
 }
-
-# ########################################################
-# suggestion for prefix notation conventions
-# (helps with autocomplete feature)
-# files and win representations
-# f_ / fwin_: files & paths and win representaion
-# p_ / pwin_ 
-# w_{f_,fwin_...}: work files (changing per task)
-# executables: EXE_ ...
-# help files: HELP_ ...
-
-# $p_work is supposed to contain your personal files
-# so they can be searched as well
-export_path p_work "<path to your work>"
-
-# $p_cmd root path pointing to all cmd files
-export_path p_cmd "$p_work/CMD"
-
-# git home ($HOME should be set in windows environment)
-# for now Git $HOME is the same $p_cmd/githome
-export_path p_home "$p_cmd/githome"
-
-# ########################################################
-
-# txt documents folder 
-export_path p_docs "$p_cmd/docs"
-
-# links folder (tbd)
-export_path p_links "$p_cmd/links"
-
-# define global paths
-export_path P_PROGRAM_FILES_X86 "/c/Program Files (x86)"
-export_path P_PROGRAM_FILES "/c/Program Files"
-
-# --- define executables ---
-export_path p_tools "/c/10_Tools"
-
-# my life organized / delete if not used
-export_path EXE_MLO "$p_tools/MLO/mlo.exe"
-export_path f_mlo "$p_work/MeineAufgaben.ml"
-go_mlo="$EXE_MLO $f_mlo &"
-alias go_mlo=$mlo
-
-# notepad++ (theres already a shortcut available)
-export_path EXE_NPP "$p_tools/Notepad++/notepad++.exe"
-
-# MS Excel
-export_path EXE_XLS "/c/Program Files/Microsoft Office/root/Office16/EXCEL.EXE"
-
