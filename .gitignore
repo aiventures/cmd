@@ -4,6 +4,7 @@
 *_done.txt
 *_report.txt
 *.bak
+global.sh
 todo.sh
 todo.txt
 einkauf.txt
@@ -13,11 +14,16 @@ einkauf.cfg
 header_personal.sh
 .inputrc
 .gitconfig
+test.sh
+
+# vs code ignore
+settings.json
 
 # ignore own links -with exceptions
 /links/*
 /links/test.url
 Shell Command Language.url
-# ignore own files except a coupld
-/docs
-
+# ignore own files except
+#/docs
+/docs/*.txt 
+!help*.txt 

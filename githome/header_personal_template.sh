@@ -1,4 +1,4 @@
-echo "---- load header_personal.sh definitions ----"
+echo "---- BEGIN header_personal.sh ----"
 echo "     check with tab tab $p_.. $f_... for defined stuff"
 
 # your own definitions go in here
@@ -22,18 +22,4 @@ export p_tools="/c/Program Files"
 
 # --- define executables ---
 
-# my life organized / delete if not used
-# export EXE_MLO="$p_tools/MLO/mlo.exe"
-# export f_mlo="$p_work/MyTasks.ml"
-# mlo="$EXE_MLO $f_mlo &"
-# alias mlo=$mlo
-
-# notepad++ (theres already a shortcut available)
-# notepad is required for the open command
-# export EXE_NPP="$p_tools/Notepad++/notepad++.exe"
-export EXE_NPP="$p_tools/Notepad++/notepad++.exe"
-
-# MS Excel
-# is required when opening foles of type xlsx / version might differ
-export EXE_XLS="/c/Program Files/Microsoft Office/root/Office16/EXCEL.EXE"
-
+echo "     END header_personal.sh ----"

@@ -12,6 +12,8 @@ var_exists p_cmd
 # absolute path pointing todo installation
 export_path p_todo_home "$p_cmd/todo"
 export_path p_todo_cfg "$p_todo_home/todo_cfg"
+
+# @TODO check for todo file
 export_path EXE_TODO "$p_todo_home/todo_cli/todo.sh"
 
 # todo file location (should be an absolute path)
@@ -21,7 +23,7 @@ export_path p_todo_work "$p_cmd/todo/todo_txt"
 
 # search in todo folder / only in text files
 grep_todo="cd \"$p_todo_work\"; ls -a; grep --include='*.txt' --color=always -irn"
-alias grep_todo=$search_todo
+alias grep_todo=$grep_todo
 
 # ------ todo files ----------
 # - assumes you have a todo.cfg in todo_cfg subfolder
@@ -39,6 +41,8 @@ alias grep_todo=$search_todo
 # export REPORT_FILE="$f_todo_report"
 #
 # testdrive the todo.txt by entering \"t ls\"
+
+# @todo generate variables in function
 
 # --- liste todo ---
 export_path f_todo_cfg "$p_todo_cfg/todo.cfg"
