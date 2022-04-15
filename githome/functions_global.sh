@@ -84,9 +84,126 @@ function export_path {
 
 function function_exists()
 {
-    : checks whether functions exists
+    : checks whether function exists
     : "https://stackoverflow.com/questions/85880/determine-if-a-function-exists-in-bash"
-    [[ $(type -t $1) == "function" ]] && return 0
+    [[ $(type -t $1) == "function" ]] && return 0 || echo "function $1 not found"
 }
+
+function is_url {
+    : "is_url <string>"
+    : returns whether string is interpreted as url 
+    : starts with http
+    : returns 0=true / 1=false in return code "$?"
+    # case insensitive
+    shopt -s nocasematch
+
+    if [[ "$1" =~ ^"http" ]]; then
+        #echo "true"
+        shopt -u nocasematch
+        #return 0
+        true
+    else
+        #echo "false"
+        shopt -u nocasematch
+        #return 1
+        false
+    fi
+}
+
+function towinpath {
+    : towinpath "<bash path>"
+    : encodes path to string
+    : spaces in path will leads to breaks
+    { cd "$1" && pwd -W; } | sed 's|/|\\|g'
+}
+
+# https://www.gnu.org/software/sed/manual/html_node/The-_0022s_0022-Command.html
+# 's/regexp/replacement/flags’.
+# https://stackoverflow.com/questions/965053/extract-filename-and-extension-in-bash
+function get_file_extension {
+    : splits filename into suffix and extension
+    : returns array
+    filename="$@"
+    # replaces chars  ".<any non . chars> withnothing" 
+    f_prefix=$(echo "$filename" | sed 's/\.[^.]*$//')
+    # replaces any characters with nothing until the occurence of dot
+    f_ext=$(echo "$filename" | sed 's/^.*\.//')    
+    echo "$f_prefix $f_ext"
+}
+
+function read_link () {
+    : reads an url link and displays it
+    encoded_path="$(encode_path "$@")";
+    regex="URL=(.*)"
+    f=$(basename "$encoded_path")
+    # echo "LINK $f"
+    
+    while read line; do    
+        # echo "$line"
+        if [[ $line =~ $regex ]]; then
+            url="${BASH_REMATCH[1]}"
+            echo "$url"
+        fi                
+    done < "$encoded_path"
+}
+
+# @todo check if explorer file is present
+function go () {   
+    : go "<bash path>" 
+    : opens windows explorer
+	: is used to avoid add quotes so that paths containing spaces
+	: can be used directly without the need to enclose them with quotes
+	encoded_path="$(encode_path "$@")";
+	local open_explorer="explorer \"$(towinpath "$encoded_path")\"";
+	echo " $open_explorer"
+	eval $open_explorer
+}
+
+function cdd () {
+	: "cdd <bash path>", 
+    : opens path in bash
+	: is used to avoid add quotes so that paths containing spaces
+	: can be used directly without the need to enclose them with quotes
+	encoded_path="$(encode_path "$@")";
+	local cdd="cd \"$encoded_path\"";
+	echo "$cdd";
+	eval $cdd;  
+}
+
+function grepm () {
+    : pipes multiple input keywords  
+    : to grep pipe
+    : usage grepm "first command" "list of search terms"
+    : will create a piped grep search using first
+    : parameter as initial command
+    
+    local num_arguments=$#;
+    local command=""
+    local n=2
+
+    if [ $num_arguments -lt 2 ]; then
+        echo "supply parameters to function grepm"
+        return 1
+    fi
+
+    command="$1"
+    if [[ "$command" =~ ^grep.* ]]; then
+        command="${command} \"$2\""
+        n=3
+    else
+        n=2
+    fi
+
+    GREP_PIPE="|grep --color=always -in"
+
+    for ((i=n; i<=$#; i++))
+    do
+        command+="$GREP_PIPE \"${!i}\""
+    done
+
+    #echo "$command"
+    eval "$command"
+}
+
 
 echo "     END functions_global.sh ----"

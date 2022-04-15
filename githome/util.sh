@@ -2,6 +2,8 @@ echo "---- BEGIN util.sh functions ----"
 echo "     repo: https://github.com/aiventures/cmd"
 
 # load global functions 
+# all functions without need for prior 
+# variable definition go here
 . ~/functions_global.sh
 
 # load global definitions use the global_template.sh 
