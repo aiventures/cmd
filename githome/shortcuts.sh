@@ -36,12 +36,21 @@ if [[ $? -eq 0 ]]; then
     alias grep_alias="grepm \"alias\""    
     # search in variables
     alias grep_variables="grepm \"compgen -v\""  
+    # search for available commands
+    alias grep_commands="grepm \"compgen  -abckA function\""
     # list functions excluding git
     alias grep_functions="grepm \"declare -F|grep -iv _git\""
     # list exported functions
     alias grep_export="grepm \"export -p\""
     # list links in links folder
     alias grep_links="grepm \"$open_links\""
+    # https://unix.stackexchange.com/questions/94775/list-all-commands-that-a-shell-knows
+    # compgen -a # will list all the aliases you could run.
+    # compgen -b # will list all the built-ins you could run.
+    # compgen -k # will list all the keywords you could run.
+    # compgen -A function # will list all the functions you could run.
+    # compgen -A function -abck # will list all the above in one go.
+
 fi
 
 echo "     END shortcuts.sh  ----"

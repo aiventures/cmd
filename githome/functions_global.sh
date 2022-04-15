@@ -194,13 +194,15 @@ function grepm () {
         n=2
     fi
 
+    # sort first list
+    command+="|sort"
+
     GREP_PIPE="|grep --color=always -in"
 
     for ((i=n; i<=$#; i++))
     do
         command+="$GREP_PIPE \"${!i}\""
-    done
-
+    done    
     #echo "$command"
     eval "$command"
 }
