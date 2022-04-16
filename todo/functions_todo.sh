@@ -72,9 +72,7 @@ function register_todo () {
     expr_todo="alias ${todo_alias}='\"${EXE_TODO}\" -d \"${f_todo_cfg}\"'"
     echo "     $expr_todo"
     eval $expr_todo
-
-    # optional read configuration 
-    read_todo_config $root_name
+    
 }
 
 echo -e "\r\n     END   functions_todo.sh definitions"

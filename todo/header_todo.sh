@@ -26,8 +26,11 @@ export_path p_todo_work "$p_cmd/todo/todo_txt"
 alias grep_todo="cd \"$p_todo_work\"; ls -a; grepm  \"grep --include='*.txt' --color=always -irn\" "
 
 # register todo files and their variabes / aliases
+# optional reading of config files
 register_todo "einkauf"
+# read_todo_config "einkauf"
 register_todo "todo"
+# register_todo "todo"
 
 # shortcut to short help
 alias t_help="t_ shorthelp"
