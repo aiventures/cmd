@@ -89,3 +89,18 @@ special excecutable commands
 explorer "<win path to folder>"         Open windows explorer wit path / note double quotes (spaces in path will break opening in path)
 start notepad++ "<win path to file>"    OPens file in notepad++ 
 start "<url>"                           Opens URL in default browser (note double quote again)
+-----------------------
+Cooking Recipes
+
+Check whether grep returns results
+ex=$(grepm "export -p" test); ret=$?;  echo "$ret"
+
+if [ $ret -eq 0 ]; then
+    echo found
+else
+    echo not found
+fi
+-----------------------
+Variable Indirection: Variables and their values
+echo 
+"param ${s} ${!s}"

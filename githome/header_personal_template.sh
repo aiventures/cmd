@@ -22,4 +22,4 @@ export p_tools="/c/Program Files"
 
 # --- define executables ---
 
-echo "     END header_personal.sh ----"
+echo -e "\r\n     END header_personal.sh ----"

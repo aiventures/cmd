@@ -22,11 +22,11 @@ echo "     repo: https://github.com/aiventures/cmd"
 # comment the following line if todo.txt not used
 . ~/../todo/header_todo.sh
 
-# load shortcuts
-. ~/shortcuts.sh
-
 # load util functions / only loaded at this stage
 # due to needed variable definitions
 . ~/functions_util.sh
 
-echo "     END util.sh functions ----" 
+# load shortcuts
+. ~/shortcuts.sh
+
+echo -e "\r\n     END util.sh functions ---- \r\n" 

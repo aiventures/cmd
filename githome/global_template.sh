@@ -53,4 +53,4 @@ export_path EXE_NPP "$p_tools/Notepad++/notepad++.exe"
 # MS Excel / depending on version this can be a different folder
 export_path EXE_XLS "/c/Program Files/Microsoft Office/root/Office16/EXCEL.EXE"
 
-echo "     END global.sh ----"
+echo -e "\r\n     END global.sh ----"

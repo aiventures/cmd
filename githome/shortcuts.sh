@@ -53,4 +53,4 @@ if [[ $? -eq 0 ]]; then
 
 fi
 
-echo "     END shortcuts.sh  ----"
+echo -e "\r\n     END shortcuts.sh  ----"

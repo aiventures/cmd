@@ -27,3 +27,4 @@ Shell Command Language.url
 #/docs
 /docs/*.txt 
 !help*.txt 
+*/todo_txt/*.txt

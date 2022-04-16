@@ -14,4 +14,4 @@ export_path help_todo_extended "$p_docs/help_todo_extended.txt"
 export_path help_todo "$p_docs/help_todo.txt"
 export_path help_cmder "$p_docs/help_cmder.txt"
 
-echo "     END header.sh  ----"
+echo -e "\r\n     END header.sh  ----"

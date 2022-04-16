@@ -1,9 +1,7 @@
 echo "---- BEGIN header_todo.sh definitions ----"
 
-echo "current dir $PWD"
-
 # reading additional functions for todo.txt
-. ./todo/functions_todo.sh
+. ~/../todo/functions_todo.sh
 
 # --- verify variable definitions that are referenced below---
 var_exists p_cmd
@@ -17,8 +15,6 @@ var_exists p_cmd
 # absolute path pointing todo installation
 export_path p_todo_home "$p_cmd/todo"; [ "$?" -eq 0 ] || return false
 export_path p_todo_cfg "$p_todo_home/todo_cfg"; [ "$?" -eq 0 ] || return false
-
-# @TODO check for todo file
 export_path EXE_TODO "$p_todo_home/todo_cli/todo.sh"
 
 # todo file location (should be an absolute path)
@@ -29,61 +25,11 @@ export_path p_todo_work "$p_cmd/todo/todo_txt"
 # search in todo folder / only in text files
 alias grep_todo="cd \"$p_todo_work\"; ls -a; grepm  \"grep --include='*.txt' --color=always -irn\" "
 
+# register todo files and their variabes / aliases
+register_todo "einkauf"
+register_todo "todo"
+
 # shortcut to short help
-alias t_help="$EXE_TODO shorthelp"
+alias t_help="t_ shorthelp"
 
-
-
-# ------ todo files ----------
-# - assumes you have a todo.cfg in todo_cfg subfolder
-# - assumes you have file todo.txt in todo_txt folder
-#
-# usage of variables: in the todo.cfg file (placed in folder todo_cfg)
-# (https://raw.githubusercontent.com/todotxt/todo.txt-cli/master/todo.cfg)
-# 
-# replace the first lines by the following:
-# variable defined in ~/header.sh or any other files
-#
-# export TODO_DIR="$p_todo_work"
-# Your todo/done/report.txt locations
-# export TODO_FILE="$f_todo"
-# export DONE_FILE="$f_todo_done"
-# export REPORT_FILE="$f_todo_report"
-#
-# testdrive the todo.txt by entering \"t ls\"
-# 
-# use the functions_todo.sh functions to create variables / validate aliases for 
-# todo.txt files as shown below
-
-
-
-
-
-
-
-# @todo generate variables in function
-# --- liste todo ---
-
-
-#export_path f_todo_cfg "$p_todo_cfg/todo.cfg"
-#todo_command="cls; $EXE_TODO -c -d \"$f_todo_cfg\""
-#alias t_=$todo_command
-# you can open the files in notepad++ 
-# by entering "open $f_todo" in console
-#export_path f_todo_done "$p_todo_work/todo_done.txt"
-#export_path f_todo_report "$p_todo_work/todo_report.txt"
-#export_path f_todo "$p_todo_work/todo.txt"
-# open todo.txt in notepad
-#alias open_todo="open \"$f_todo\""
-# --- shopping list ---
-#     shows that you can have different todo.txt files
-#     delete if not needed
-#export_path f_todo_einkauf_cfg "$p_todo_cfg/einkauf.cfg"
-#t_einkauf_command="cls; $EXE_TODO -c -d \"$f_todo_einkauf_cfg\""
-#alias t_einkauf=$t_einkauf_command
-#export_path f_todo_einkauf "$p_todo_work/einkauf.txt"
-#export_path f_todo_einkauf_done "$p_todo_work/einkauf_done.txt"
-#export_path f_todo_einkauf_report "$p_todo_work/einkauf_report.txt"
-#alias open_todo_einkauf="open \"$f_todo_einkauf\""
-
-echo "     header_todo.sh definitions ----"
+echo -e "\r\n     header_todo.sh definitions ----"

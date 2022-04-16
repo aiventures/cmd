@@ -44,23 +44,25 @@ function check_path {
 
 function var_exists {
     : checks whether variable exists
-    if [[ -v $1 ]]; then
+    if [ -v "$1" ]; then
         # echo "INFO:    Variable [$1] exists"
         true
     else
-        echo "WARNING: Variable [$1] not defined"
+        echo "WARNING: Variable ["$1"] not defined"
         false
     fi
 }
 
-function check_var {
-    : check for variable and dereference value
-    var_exists $1
-    if [ $? -eq 0 ]; then
-        p="${!1}"
-        check_path "$p"
-    fi    
-}
+#function check_path {
+#    : check for variable and dereference value
+#    var_exists "$1"
+#    if [ $? -eq 0 ]; then
+#        p="${!1}"
+#        check_path "$p" && return 0 || return 1
+#    else
+#        return 1
+#    fi    
+#}
 
 function export_path {
     : "export_path "$1 ${@:2}""
@@ -70,12 +72,15 @@ function export_path {
     value="${@:2}"
     check_path "$value"
     # only export path if valid path 
-    if [ $? -eq 0 ]; then
+    if [ $? -eq 0 ]; then    
         expr="$param=\"$value\""
+        # echo "CREATE EXPORT $expr"
         eval $expr
         export $param
+        return 0
     else
-        echo "WARNING Variable [$param] was not exported, check path"
+        echo "WARNING Variable [$param] was not exported, check (file) path"
+        return 1
     fi  
     # display declaration 
     # echo "EXPR [$expr]"
