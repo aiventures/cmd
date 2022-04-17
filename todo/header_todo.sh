@@ -17,6 +17,11 @@ export_path p_todo_home "$p_cmd/todo"; [ "$?" -eq 0 ] || return false
 export_path p_todo_cfg "$p_todo_home/todo_cfg"; [ "$?" -eq 0 ] || return false
 export_path EXE_TODO "$p_todo_home/todo_cli/todo.sh"
 
+echo -e "\r\n"
+echo "     TODO.TXT p_todo_home: $p_todo_home"
+echo "     TODO.TXT p_todo_cfg:  $p_todo_cfg"
+echo "     TODO.TXT EXE_TODO:    $EXE_TODO"
+
 # todo file location (should be an absolute path)
 # is used in configuration files
 # the files tobe written are defined in config files
@@ -28,6 +33,7 @@ alias grep_todo="cd \"$p_todo_work\"; ls -a; grepm  \"grep --include='*.txt' --c
 # register todo files and their variabes / aliases
 # optional reading of config files
 register_todo "einkauf"
+
 # read_todo_config "einkauf"
 register_todo "todo"
 # register_todo "todo"

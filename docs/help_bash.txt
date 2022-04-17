@@ -1,3 +1,4 @@
+17.4.2022
 ----------- BASH SHORT CUTS --------------
 exec bash   : reload bash
 
@@ -104,3 +105,13 @@ fi
 Variable Indirection: Variables and their values
 echo 
 "param ${s} ${!s}"
+-----------------------
+Explanantion what CMDER Extension is all about
+1 - "Runtime Engine": Scripte und aliases für die Shell
+2 - In der Shell sind dann einige zusätzliche Befehle verfügbar
+3/4 - In einem Verzeichnis sinf Arbeitsdokumente im TXT Format (lassen sich duchsuchen, wie zB in 4 für ein einzelnes File dargestellt)
+5/6 - In einem anderen Verzeichnis sind Dateien im todo.txt Format (lassen sich entweder so durchsuchen oder mittels todo.txt bash aufrufen)
+7 - Dateiinhalt kann mit Befehl/Alias in der Konsole durchsucht werden
+8- Dito für die todo.txt files
+9 - Wenn die gefundenen Inhalte einen Link haben, kann man damit mit CTRL+Klick direkt auf die URL Navigieren
+10 - Ein paar Sonderfunktionen gibt es auch, zB aus einem Bash Path einen WIN PAth zu machen, damit kann man zB direkt in den Internet Explorer springen oder Bilddateien aus der Konsole öffnen  und vieles mehr ....

@@ -37,6 +37,8 @@ function register_todo () {
     : "creates alias open_<root_name> to open the file and"
     : "alias t_<root_name> to execute todo with config file"
     : "for special case root name todo alias t_ is used"
+    : "it needs to be insured that paths and config and todo files"
+    : "are existent and created paths, this is done in header_todo.sh"
 
     root_name="$1"
 
@@ -68,7 +70,7 @@ function register_todo () {
 
     # create alias to run todo.txt with given configuration
     todo_alias="t_"
-    [ $root_name != "todo" ] && todo_alias="t_${root_name}_"
+    [ $root_name != "todo" ] && todo_alias="t_${root_name}"
     expr_todo="alias ${todo_alias}='\"${EXE_TODO}\" -d \"${f_todo_cfg}\"'"
     echo "     $expr_todo"
     eval $expr_todo

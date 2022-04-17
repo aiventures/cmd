@@ -67,6 +67,16 @@ function open {
                 echo "xls"
                 eval "$xls" &
                 ;;
+            jpg|png|svg)
+			    # try opening with image viewer / only seems to work for local path
+                # todo store old path
+				cd "$d";
+				start "$f"
+                ;;
+            exe|bat)
+				echo "exe $pwin"
+                eval "\"$pwin\" &"
+                ;;	                
             *)
                 # default is to start with notepad++
                 # todo also check out for other extensions
