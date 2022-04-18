@@ -44,7 +44,7 @@ function open {
         
         pwin_path=$(towinpath "$(dirname "$encoded_path")")
         pwin="$pwin_path\\$f"                
-        echo "Opening ($file_ext) file \"$pwin\\$f\""
+        echo "Opening ($file_ext) file \"$pwin\""
         
         # depending on file type open with different applications
         # default is opening in Notepad
@@ -60,17 +60,19 @@ function open {
                 eval "$xls" &
                 ;;
             jpg|png|svg)
-                cd_old=$PWD
-			    # try opening with image viewer / only seems to work for local path
-                # todo store old path
-				cd "$d"
+                p_old="$PWD"
+                p_image=$(dirname "$encoded_path")
+                cd "$p_image"
 				start "$f"
-                cd "$cd_old"
+                cd "$p_old"
                 ;;
             exe|bat)
 				echo "exe $pwin"
                 eval "\"$pwin\" &"
-                ;;	                
+                ;;
+            zip|jar)
+                start "$EXE_7ZIP" "$pwin"
+                ;;	              
             *)
                 # @todo open zip and jar and python files
                 # default is to start with notepad++

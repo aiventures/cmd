@@ -53,17 +53,6 @@ function var_exists {
     fi
 }
 
-#function check_path {
-#    : check for variable and dereference value
-#    var_exists "$1"
-#    if [ $? -eq 0 ]; then
-#        p="${!1}"
-#        check_path "$p" && return 0 || return 1
-#    else
-#        return 1
-#    fi    
-#}
-
 function export_path {
     : "export_path "$1 ${@:2}""
     : "exports (valid) path as variable"
@@ -71,7 +60,7 @@ function export_path {
     # address issue with spaces in path
     value="${@:2}"
     check_path "$value"
-    # only export path if valid path 
+    # only export path if valid path
     if [ $? -eq 0 ]; then    
         expr="$param=\"$value\""
         # echo "CREATE EXPORT $expr"
@@ -240,6 +229,5 @@ function grepm () {
     #echo "$command"
     eval "$command"
 }
-
 
 echo "     END functions_global.sh ----"

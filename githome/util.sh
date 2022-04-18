@@ -29,4 +29,7 @@ echo "     repo: https://github.com/aiventures/cmd"
 # load shortcuts
 . ~/shortcuts.sh
 
+# load shortcuts
+. ~/shortcuts_personal.sh
+
 echo -e "\r\n     END util.sh functions ---- \r\n" 

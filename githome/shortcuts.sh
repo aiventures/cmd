@@ -25,6 +25,8 @@ alias open_links=$open_links
 open_multiple_links="open_multiple_links"
 alias go_links_mult=$open_multiple_links
 
+# grep convenience command
+alias GREP="grep --color=always -in"
 
 # alias for search
 # grep pattern -irn --color=always --include=\*.{cpp,h} rootdir
