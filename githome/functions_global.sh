@@ -3,6 +3,8 @@ echo "---- BEGIN functions_global.sh ----"
 # loading global definitions like exe files and work paths 
 # that need to be defined up front
 
+GREP_PIPE="| grep --color=always -in"
+
 function encode_path () {
 	: encode_path "<path that may contain spaces>"
     : navigates tp open explorer for path in shell notation 
@@ -210,6 +212,7 @@ function grepm () {
     fi
 
     command="$1"
+
     if [[ "$command" =~ ^grep.* ]]; then
         command="${command} \"$2\""
         n=3
@@ -220,14 +223,41 @@ function grepm () {
     # sort first list
     command+="|sort"
 
-    GREP_PIPE="|grep --color=always -in"
-
     for ((i=n; i<=$#; i++))
     do
         command+="$GREP_PIPE \"${!i}\""
     done    
     #echo "$command"
     eval "$command"
+}
+
+function grepm_args () {
+    : like grepm but a given number of arguments first argument 
+    : is taken as part of first command
+    : "usage grepm_args <num> <arg1> <argn> <arg n+1> <arg N>"
+    : takes the first n arguments and adds the remaining argumants
+    : as argument grep chain
+    : "<arg 1>...<arg n>|grep <arg n+1>|...|grep <arg N>"
+    
+    num_command_params=$(($1+1))
+    num_params=$#
+
+    command_part="${@:2:3}"
+    grep_params=""
+    n=0;
+    grep_cmd=""
+    for ((i=2; i<=$#; i++))
+    do
+        # echo "$i - PARAM ${!i}"
+        ((n++))
+        if [ $n -lt $num_command_params ]; then
+            grep_cmd+="${!i} "
+        else
+            grep_cmd+="$GREP_PIPE \"${!i}\""
+        fi
+
+    done    
+    echo "$grep_cmd"
 }
 
 echo "     END functions_global.sh ----"

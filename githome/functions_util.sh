@@ -122,4 +122,24 @@ function walk_dir () {
     done
 }
 
+function grepm_zip () {
+    : calling "grepm_zip <path to zip in bash format> <grep filters>"
+    : constructs command for executing zip    
+    : right now works for 7zip
+    local args=2
+    local exe_7z="\"$EXE_7ZIP_CMD\" l"
+    local grep_args="${@:2}"
+    # convert path into windows format
+    p="${1}"
+    # echo "BASH PATH $p"    
+    d=$(dirname ${p})
+    d="$(towinpath $d)"
+
+    filename="$(basename "$p")"
+    win_p="\"${d}\\${filename}\""
+    grepm_zip_cmd=$(grepm_args 2 "$exe_7z" "${win_p}" $grep_args)
+    echo "$grepm_zip_cmd"
+    eval "$grepm_zip_cmd"
+}
+
 echo "     END functions_util.sh ----" 
