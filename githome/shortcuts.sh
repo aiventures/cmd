@@ -21,6 +21,11 @@ alias lsc="ls --color -a"
 open_links="walk_dir \"$p_links\""
 alias open_links=$open_links
 
+# opening multiple links of a folder in browser
+open_multiple_links="open_multiple_links"
+alias go_links_mult=$open_multiple_links
+
+
 # alias for search
 # grep pattern -irn --color=always --include=\*.{cpp,h} rootdir
 # standard grep with color recursive and non recursive version
@@ -50,7 +55,6 @@ if [[ $? -eq 0 ]]; then
     # compgen -k # will list all the keywords you could run.
     # compgen -A function # will list all the functions you could run.
     # compgen -A function -abck # will list all the above in one go.
-
 fi
 
 echo -e "\r\n     END shortcuts.sh  ----"

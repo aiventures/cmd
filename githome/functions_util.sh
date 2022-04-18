@@ -39,25 +39,17 @@ function open {
         # get extensions and put them into an array
         # right now it can't discern if there is a blank
         # right now only if it has two parts, get the second as extension
-        file_split=$(get_file_extension "$f")
-        file_parts=(`echo ${file_split}`)
-        num_parts=${#file_parts[@]}
-        f_ext=""
-        
-        #for (( i=0; i<$num_parts; i++ )); do; echo "${file_parts[$i]}"; done
-        if [ $num_parts -eq 2 ]; then
-            f_ext=${file_parts[1]}
-            # echo "File has $num_parts parts, extension $f_ext"    
-        fi                                
+        file_ext=$(get_file_extension "$f")
+        file_name=$(get_file_name "$f")                                    
         
         pwin_path=$(towinpath "$(dirname "$encoded_path")")
         pwin="$pwin_path\\$f"                
-        echo "Opening ($f_ext) file \"$pwin\\$f\""
+        echo "Opening ($file_ext) file \"$pwin\\$f\""
         
         # depending on file type open with different applications
         # default is opening in Notepad
         # @TODO add more filetypes to open
-        case $f_ext in 
+        case $file_ext in 
             ml)
                 mlo="$EXE_MLO \"$pwin\""
                 eval "$mlo" &
@@ -68,16 +60,19 @@ function open {
                 eval "$xls" &
                 ;;
             jpg|png|svg)
+                cd_old=$PWD
 			    # try opening with image viewer / only seems to work for local path
                 # todo store old path
-				cd "$d";
+				cd "$d"
 				start "$f"
+                cd "$cd_old"
                 ;;
             exe|bat)
 				echo "exe $pwin"
                 eval "\"$pwin\" &"
                 ;;	                
             *)
+                # @todo open zip and jar and python files
                 # default is to start with notepad++
                 # todo also check out for other extensions
                 start notepad++ "$pwin";;

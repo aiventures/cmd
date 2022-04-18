@@ -129,11 +129,17 @@ function get_file_extension {
     : splits filename into suffix and extension
     : returns array
     filename="$@"
-    # replaces chars  ".<any non . chars> withnothing" 
-    f_prefix=$(echo "$filename" | sed 's/\.[^.]*$//')
     # replaces any characters with nothing until the occurence of dot
     f_ext=$(echo "$filename" | sed 's/^.*\.//')    
-    echo "$f_prefix $f_ext"
+    echo ${f_ext}
+}
+
+function get_file_name {
+    : returns filename without suffix
+    filename="$@"
+    # replaces chars  ".<any non . chars> withnothing" 
+    f_name=$(echo "$filename" | sed 's/\.[^.]*$//')
+    echo ${f_name}
 }
 
 function read_link () {
@@ -146,10 +152,33 @@ function read_link () {
     while read line; do    
         # echo "$line"
         if [[ $line =~ $regex ]]; then
+
             url="${BASH_REMATCH[1]}"
-            echo "$url"
+            echo "${url}"
         fi                
     done < "$encoded_path"
+}
+
+function open_multiple_links () {    
+    : "open_multiple links <path>"
+    : open_links for a given directory
+    encoded_path="$@"
+    echo "OPEN MULTIPLE LINKS IN PATH \"$encoded_path\"" 
+    for filename in "$encoded_path"/*; do
+        if [ -f "$filename" ]; then 
+            fn=$(basename "${filename}")
+            f_ext=$(get_file_extension ${fn})
+            f_name=$(get_file_name ${fn})
+            # echo "EXT [$f_ext] NAME [$f_name]"
+            if [ $(get_file_extension ${fn}) = "url" ]; then
+                echo "Open Link [${fn}]"
+                encoded_path="$(encode_path "$filename")";
+                url=$(read_link ${encoded_path})
+                #echo "          $url"
+                open "${url}"
+            fi
+        fi
+    done
 }
 
 # @todo check if explorer file is present
