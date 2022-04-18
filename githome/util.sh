@@ -23,13 +23,13 @@ echo "     repo: https://github.com/aiventures/cmd"
 . ~/../todo/header_todo.sh
 
 # load util functions / only loaded at this stage
-# due to needed variable definitions
+# due to needed variable definitions from previous scripts
 . ~/functions_util.sh
 
 # load shortcuts
 . ~/shortcuts.sh
 
-# load shortcuts
+# load own shortcuts / use template shortcuts_template.sh
 . ~/shortcuts_personal.sh
 
 echo -e "\r\n     END util.sh functions ---- \r\n" 
