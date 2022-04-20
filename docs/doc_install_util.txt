@@ -252,13 +252,55 @@ In order to check:
 
 #------------------------------------------------------------------------------#
 10 Setting Up CMDER
+Personal settings that make sense to me
+- Setup Tasks > Copy One Configuration as Startup / Name it as START
+- Settings > General > Choose Startup Task
+- Settings > General > Fonts > Use JetBrains Mono
+- Settings > General > Appeareance > Always On Top deactivate
+- Settings > General > Appeareance > Update > 7zip aerchive "C:\<path to>\7-Zip\7zg.exe" x -y "%1"
+- Settings > General > Tab bar > Uncheck Tab on Bottom
+- Settings > Startup > Tasks: Use some Default Configs for Start
+  --------
+  START (Shortcut ALT+B)
+  /icon "%CMDER_ROOT%\icons\cmder.ico"
+  "%ConEmuDir%\..\git-for-windows\usr\bin\bash.exe" --login -i
+  --------
+  git::bash
+  /icon "%CMDER_ROOT%\icons\cmder_blue.ico"
+  "%GIT_BIN_PATH%\bash.exe" --login -i
+  --------
+  git::mintty
+  /icon "%CMDER_ROOT%\icons\cmder_purple.ico"
+  "%GIT_BIN_PATH%\mintty.exe" /bin/bash -l
+  --------
+  git::bash as Admin
+  /icon "%CMDER_ROOT%\icons\cmder_blue.ico"
+  *"%GIT_BIN_PATH%\bash.exe" --login -i  
+  --------
+  git::mintty as Admin
+  /icon "%CMDER_ROOT%\icons\cmder_purple.ico"
+  *"%GIT_BIN_PATH%\mintty.exe" /bin/bash -l   
+   
+- Settings > Features > Colors > Schemes > XTERM (might to be reloaded)
+- Settings > Features > Transparency > Deactivate
+- Settings > Integration > ConEmuInside > Explorer Context Menu Integration Register / Unregister
+  https://conemu.github.io/en/SettingsIntegration.html
+  In CMDER execute .\cmder.exe /REGISTER ALL to register all options (only as ADMIN)
+  Unregister .\cmder.exe /UNREGISTER ALL
+  
+- Settings > Integration > Check Comspec with Test Button
+
 - add keyboard shortcuts for last folder and up one folder [09]
+- Settings > Keys & Macro > All Hotkeys > Assign Close Current Tab to X + CTRL + SHIFT 
 - Settings > Keys & Macro > Click Into List > Macro > Choose Hotkey > Up Additional ALT
   GUI Macro: 
   print "cd ..\n"  => Previous Folder (for example assigned to ALT+UP)
   print "ls \n cd " => show subfolders and display cd
+  Settings > Keys & Macro > Find Text in current console > Ctrl+F  
+- Check Installation Path using echo "$ConEmuDir"  
 
 
+Export all settings 
 
 #------------------------------------------------------------------------------#
 11 TROUBLESHOOTING
@@ -286,7 +328,17 @@ fi
 # FIX END
 
 #------------------------------------------------------------------------------#
-12 LINKS
+12 Misc
+Replace Powershell in Context Menu by Command again
+* WIN key , enter Task > Disable Power Shell Option
+* Check Right Mouse on Windows > Command Prompt again
+* Context Menu > Registry 
+
+
+
+#------------------------------------------------------------------------------#
+
+13 LINKS
 
 CMDER 
 [01] https://github.com/cmderdev/cmder/wiki/Setting-up-Environment-Variables  
