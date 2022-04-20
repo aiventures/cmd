@@ -32,11 +32,19 @@ alias grep_todo="cd \"$p_todo_work\"; ls -a; grepm  \"grep --include='*.txt' --c
 
 # register todo files and their variabes / aliases
 # optional reading of config files
+# TODO - DELETE THIS CUSTOM TODO IF NOT USED
 register_todo "einkauf"
 
-# read_todo_config "einkauf"
+# register todo.txt  DEFAULT list
+# #TODO: Assumes there will be at least 
+# /todo/todo_cfg/todo.cfg (config file)
+# /todo/todo_txt/todo.txt (todo.txt file)
+# check the readme files in the subfolders!
+# this function will create paths to files
+# and will provide a short cut alias
+# execute "t_ ls" to output list
+# execute "open_todo" to open todo.txt in text editor
 register_todo "todo"
-# register_todo "todo"
 
 # shortcut to short help
 alias t_help="t_ shorthelp"

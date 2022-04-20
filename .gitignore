@@ -4,6 +4,7 @@
 *_done.txt
 *_report.txt
 *.bak
+old.*
 global.sh
 todo.sh
 todo.txt
@@ -21,11 +22,14 @@ test.sh
 settings.json
 
 # ignore own links -with exceptions
+.*/
 /links/*
 /links/test.url
 Shell Command Language.url
-# ignore own files except
+# ignore own files except some
 #/docs
 /docs/*.txt 
 !help*.txt 
+!doc_install_util.txt
 */todo_txt/*.txt
+githome/.gitconfig.swp

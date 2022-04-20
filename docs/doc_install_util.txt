@@ -1,0 +1,307 @@
+#------------------------------------------------------------------------------#
+utils.sh: a couple of helper functions to make work on the command line 
+more effective (at least for me). Needed to replace complicated bash commands
+and programming commands by easy to memorize aliases and functions.
+And also leverages the great todo.txt command line client
+Was written with Windows as OS in mind
+
+NOTE: There is a links section. Each link will be referenced in text by 
+bracketed number [##]
+
+#------------------------------------------------------------------------------#
+1   Tool Set Up /Download
+1.1 Notepad++             https://notepad-plus-plus.org/downloads/
+1.2 Git for Windows       https://git-scm.com/downloads  
+1.3 Meld                  https://meldmerge.org/     
+1.4 Visual Studio Code    https://code.visualstudio.com/download
+1.5 CMDER                 https://cmder.net/
+1.6 TODO.TXT CLI          https://github.com/todotxt/todo.txt-cli
+1.7 Jetbrains Mono Font   https://www.jetbrains.com/lp/mono/
+1.8 ZIP Program (opt)     https://7-zip.de/download.html
+
+Install Tools that you may require. It is preferable to install tools in a sepaate
+Folder, eg C:\Tools. This has the advantage for you to have tools in one folder,
+and additionally it helps to avoid any issues resulting from spaces in folder paths
+of standard program folder (C:\Program Files ...).
+#------------------------------------------------------------------------------#
+2   Copy CMD Util files
+Copy the util.sh files into one folder. Either in the C:\Tools folder or into 
+a folder where you are doing regular backups with (maybe in traversal 
+path of MS Drive, for example). resulting folder structure is
+0           /CMD/
+1           +   docs            [document folder]
+2           +   githome         [global githome folder containing scripts]
+3           +   links           [link collections]
+4           +   todo            [todo.txt folder]
+4.1             +   todo_cfg    [todo.txt config files]
+4.2             +   todo_cli    [todo cli script file]
+4.3             +   todo_txt    [todo.txt files]
+
+NOTE: It will ba assumed that global gitconfig folder is set to githome folder
+#------------------------------------------------------------------------------#
+3   Setting Up Windows Paths
+    -----------------
+    Define Variables in User Environment
+    HOME: C:\<...>\CMD\githome
+    CMDER_ROOT: C:\<Tools>\CMDER
+    GIT_BIN_PATH: C:\<Git Installation>\Git\usr\bin
+    GIT_CMD_PATH: C:\<Git Installation>\Git\cmd
+    -----------------
+    Path Variable: Add 
+    %CMDER_ROOT%
+    %GIT_BIN_PATH%
+    %GIT_CMD_PATH%
+    \<Installation To>\Meld
+    \<Installation To>\Notepad++
+    \<Installation To>\<Your ZIP Program>
+    
+    > WIN > Enter "Environment" > Edit System Environment Variables > Tab Advanced >
+    > Button > Environment Variables
+    * As User Variable, define HOME (referenced as $HOME in bash) pointing 
+      to the path of you githome folder
+    * "Path" needs to point to your \Meld...\ Installation folder
+    * "Path" needs to point to your \Git\cmd Installation folder
+    * Optional: "Path" to point to your \Notepad++\ Installation folder" 
+      (usually bash command is available)
+    * Optional: WIN > Font Settings > Install Mono Font. You can change font in 
+      all of the tools above to allow 
+      for a better working experience across all tools
+    * Optional: Set Up environment variables for CMDER [01] / Pls note: Defining 
+      ConEmuDir as variable might interfere
+      with existing git bash installation (some stuff seems not to work), 
+      so it is better to not define it.
+    * Optional: "Path" to point to your zip application (used here:7z)
+    
+    Check whether executables can be found: In CMDER open a new bash console and 
+    check with "where" whether executables can be found:
+    * where code / where git / where cmd / where code / where meld / where notepad++ / where 7z
+    
+#------------------------------------------------------------------------------#
+4 Setting Up / Using utils.sh
+
+bash will always look into bash.rc (located in githome) in folder $HOME (=githome) during startup. 
+In case you do not have a configured .bashrc and .bash_profile [02]/[07]
+you can take the ones from the repo. 
+Add command:
+". ~/util.sh" to .bashrc will bootstrap all required script files on bash startup
+
+In case you start bash in non interactive mode (which is the case when starting bash via
+"%GIT_BIN_PATH%\mintty.exe" /bin/bash -l or
+"%GIT_BIN_PATH%\bash.exe" --login -i
+.bashrc not be regarded instead .bash_profile will be loaded. 
+Then add ". ~/util.sh" as well to file .bash_profile.
+
+the util.sh is a wrapper to call up the following scripts in sequence
+. ~/functions_global.sh          [load functions not dependent on variables]
+. ~/global.sh                  * [load paths to work files / executables]
+. ~/header.sh                    [define paths to structure given above]
+. ~/header_personal.sh         * [define custom paths / executables etc]
+. ~/../todo/functions_todo.sh    [functions for todo.txt]
+. ~/../todo/header_todo.sh     * [define search and todo.txt lists]
+. ~/functions_util.sh          * [functions dependent on previous variables]
+. ~/shortcuts.sh                 [generally valid shortcuts]
+. ~/shortcuts_personal.sh      * [your own shortcuts go in here]
+
+all files marked with (*) can be adjusted to your work environment:
+
+~/global.sh             : Copy ~/global_template.sh as ~/global.sh and adjust
+~/header_personal.sh    : Copy ~/header_personal_template.sh 
+~/../todo/header_todo.sh: Define/Register Todo Files (todo.txt as a starting point)
+~/functions_util.sh     : Define configuration for various file types how to open files
+                          with the "open ..." command. Usual approach is to definen an 
+                          executable $EXE_ variable pointing to an executable in global.sh
+                          and add a "case" in the open function to allow to open files with
+                          file type in a specific application. Same for walk_dir function
+                          (traverses through a folder hierarchy / right now display of links
+                          and contents is supported)
+~/shortcuts_personal.sh : add any shortcuts that you need to define personally. Copy / Rename
+                          shortcuts_template to get started
+                          
+HINTS
+- Enter "grep_alias ." to see all defined aliases 
+- Enter "grep_functions ." to see all defined functions
+- Enter "type <function>"
+- You may filter on any of the grep_ functions, for example "grep_functions op links" will
+  return only functions containing op and links
+- In command console you can see the code of each method / alongside with a short documentation
+  by entering "type <function>", for example "type open"
+
+NAMING Conventions / Usage hints
+To make access easier to memorize the aliases follow a pattern (use double tap for autocomplete feature)
+- alias t_<todo> eg t_ opens todo file with configuration. To see list use "t_<..> ls", for example t_ ls
+- command "git_..." to access some git commands
+- command "grep_ <param> <search term> <search term> ..." to access grep search for a couple of objects 
+  for example enter "grep_docs test" will search through all txt files in docs subfolder
+- command "go_..." to launch certain apps / links etc often use
+- command "open_..." will usually open documents folders 
+- Use autocomplete to open variables "$f_..." (files) and "$p_..." (folder paths) defined in bash
+- alias GREP will provide colored GREP output, usage  "<command> | GREP test | GREP other"
+- command "cdd $p_..." will open the path (adding quotesof variable "$p_.." is not necessary)
+- If you have links in the result list CTRL+Mouse click will open link in browser, ver useful feature
+                         
+#------------------------------------------------------------------------------#
+5 Setting Up Visual Studio Code
+
+you can integrate Bash Console into Visual Studio Code by adjusting preferences and use
+it as default [04],[05]:
+> CTRL+SHIFT+P > "Open Settings (JSON)" (file located in 
+C:\Users\<USER\AppData\Roaming\Code\User\settings.json), add
+   ...
+    "terminal.integrated.profiles.windows": {
+      // Add your custom one with a different profile name from "Git Bash"
+      // "C:\\<path to, use double back slash>\\CMDER\\vendor\\git-for-windows\\bin\\bash.exe"
+      // "C:\\<path to, use double back slash>\\Git\\bin\\bash.exe"
+      "GitBash": {
+        "path": [
+          "C:\\<path to, use double back slash>\\CMDER\\vendor\\git-for-windows\\bin\\bash.exe"
+        ],
+        "args": ["-l"],
+        "icon": "terminal-bash"
+      }
+    },
+    "terminal.integrated.defaultProfile.windows": "GitBash",
+    ...
+
+Now by default bash is used when opening Terminal > Open New Terminal    
+
+Dark Mode: File > Preferences > Color Theme > Dark Mode
+Change Font: File > Preferences > Settings > Text Editor > Font > "JetBrains Mono"
+Alternatively: CTRL+SHIFT+P > Settings (JSON), use:
+    "workbench.colorTheme": "Visual Studio Dark",
+    "terminal.integrated.fontFamily": "JetBrains Mono",
+    "editor.fontFamily": "JetBrains Mono",
+    "editor.fontWeight": "normal",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 13
+
+
+#------------------------------------------------------------------------------#
+6 Customizing Notepad++
+
+Enabling Dark Mode (at least for a recent version of NPP): Settings > Preferences > Dark Mode / Adjustment of themes might be required
+Usually check for Foreground Colors that are dark / these might be changed in dark mode
+Settings > Style Configurator 
+	> Select Theme of your Choice (for example plastic code wrap)
+	> Global Styles > Global Override 
+		Set Foreground Colour (=Font Color) to white / Background Color
+	    Font Style > Mono Medium / Check Enable global font
+	> Default Style 
+        Set Foreground Colour (=Font Color) to white / Background Color
+	> Search Result / Change
+
+You may export settings for reimport by
+> Settings > Preferences > Cloud > Set Your cloud location path
+  Config files are exported / After export you may set back setting to "No Cloud"
+
+xml Files are stored here <Installation Path>\Notepad++\*.xml and <Installation PAth>\Notepad++\themes*.xml  
+
+#------------------------------------------------------------------------------#
+7 MELD 
+Setting up [06]
+Meld > Preferences 
+    Editor >"C:\<Path>\Notepad++\notepad++.exe" {file} -n{line}
+    Font > JetBrains Mono
+    Check Use Syntax Highlighting (Only works with some color schems like oblivion)
+Dark Mode seems to work with a given theme already  
+
+#------------------------------------------------------------------------------#
+8 GIT GUI / GITK 
+Can be started using aliases gti_gui and git_k
+- Dark Mode not available 
+- in git k > Edit > Preferences
+  external diff tool > meld / web browsercmd /c start
+- open meld in diff tool   in the patch/tree list > context menu   > External Diff
+
+#------------------------------------------------------------------------------#
+9 GIT 
+- Set $HOME (see above)
+- CMD COMMAND NOT FOUND error, see below in troubleshooting 
+- set up global .gitconfig file (should be in $HOME)
+[user]
+	name = <user>
+	email = <email>
+[credential "helperselector"]
+	selected = manager-core
+[diff]
+    tool = meld
+[difftool "meld"]
+    path="/c/<path_to>/Meld/Meld.exe"
+    cmd = meld \"$LOCAL\" \"$REMOTE\"
+[difftool]
+    prompt = false
+[merge]
+    tool = meld
+[mergetool "meld"]
+    path="/c/<path_to/Meld/Meld.exe"
+    cmd = meld \"$LOCAL\" \"$MERGED\" \"$REMOTE\" --output \"$MERGED\"
+[mergetool]
+    prompt = false
+    KeepBackup = true
+Note: In the example bash notation for paths is used, it might differ / get complicated
+if ypur path contains spaces. Escaping might be required, see [08], like
+cmd = "\"C:\\Program Files (x86)\\Meld\\Meld.exe\" \"$LOCAL\" \"$REMOTE\""
+cmd = C:\\Program Files\\SourceGear\\Common\\DiffMerge\\sgdm.exe
+...
+In order to check:
+- Verify you end up in the correct git config file by entering in console
+  git config --edit --global &
+- Go into a version controlled repo (has .gut subfolder) and enter 
+  git difftool --dir-diff &
+  meld should open with any changes, same with 
+  git mergetool
+
+#------------------------------------------------------------------------------#
+10 Setting Up CMDER
+- add keyboard shortcuts for last folder and up one folder [09]
+- Settings > Keys & Macro > Click Into List > Macro > Choose Hotkey > Up Additional ALT
+  GUI Macro: 
+  print "cd ..\n"  => Previous Folder (for example assigned to ALT+UP)
+  print "ls \n cd " => show subfolders and display cd
+
+
+
+#------------------------------------------------------------------------------#
+11 TROUBLESHOOTING
+(01) CMD COMMAND NOT FOUND: In Console enter echo "$COMSPEC". It should point to the 
+command line ("C:\Windows\System32\cmd.exe") and shouldn't be blank. 
+
+Fix: Replace single line of code in file /Git/usr/bin/start of your Git installation 
+by the following lines (will COMSPEC by< hard coded red to cmd.exe)
+
+# FIX START
+# use this file when you get a shell cmd command not found error
+# rename old "start" file and store this as file as filename start in
+# \Git\usr\bin\. Will be overwritten at updgrades so do not forget
+# this tweak!
+# 
+
+echo "OPEN FROM $(dirname -- "$0")"
+"$COMSPEC" //c start "${@//&/^&}"
+c=$?
+if [ $c -ne 0 ]; then
+    echo "Variable COMSPEC was not found, using fixed COMSPEC"
+    echo "/C/WINDOWS/System32/cmd.exe" "|params " "${@//&/^&}"
+    "/C/WINDOWS/System32/cmd.exe" //c start "${@//&/^&}"
+fi
+# FIX END
+
+#------------------------------------------------------------------------------#
+12 LINKS
+
+CMDER 
+[01] https://github.com/cmderdev/cmder/wiki/Setting-up-Environment-Variables  
+[02] https://www.baeldung.com/linux/bashrc-vs-bash-profile-vs-profile
+[03] https://stackoverflow.com/questions/44283733/cmd-command-not-found-from-start-command-open-directory-in-windows-explore
+[04] https://stackoverflow.com/questions/42606837/how-do-i-use-bash-on-windows-from-the-visual-studio-code-integrated-terminal
+[05] https://code.visualstudio.com/docs/editor/integrated-terminal
+[06] https://stackoverflow.com/questions/34119866/setting-up-and-using-meld-as-your-git-difftool-and-mergetool
+[07] https://superuser.com/questions/183870/difference-between-bashrc-and-bash-profile/183980#183980
+[08] https://stackoverflow.com/questions/24194569/git-difftool-not-launching-external-diffmerge-program
+[09 ]https://superuser.com/questions/1220418/cmder-conemu-hotkeys-how-to-set-up-for-for-directory-movements
+
+  
+  
+
+
+
+

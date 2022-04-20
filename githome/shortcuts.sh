@@ -16,6 +16,8 @@ alias cls='printf "\033c"'
 
 # aliases for default usage of bash commands
 alias lsc="ls --color -a"
+alias ll='ls -l'
+alias ls='ls -F --color=auto --show-control-chars'
 
 # display links in links folder
 open_links="walk_dir \"$p_links\""
@@ -23,7 +25,7 @@ alias open_links=$open_links
 
 # opening multiple links of a folder in browser
 open_multiple_links="open_multiple_links"
-alias go_links_mult=$open_multiple_links
+alias open_links_mult=$open_multiple_links
 
 # grep convenience command
 alias GREP="grep --color=always -in"
