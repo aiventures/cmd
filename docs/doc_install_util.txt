@@ -313,7 +313,8 @@ by the following lines (will COMSPEC by< hard coded red to cmd.exe)
 # FIX START
 # use this file when you get a shell cmd command not found error
 # rename old "start" file and store this as file as filename start in
-# \Git\usr\bin\. Will be overwritten at updgrades so do not forget
+# \Git\usr\bin\ or C:\<...>\CMDER\vendor\git-for-windows\usr\bin
+# Will be overwritten at updgrades so do not forget
 # this tweak!
 # 
 
