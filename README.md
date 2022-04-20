@@ -7,7 +7,7 @@ Needed to replace complicated bash commands and programming commands by easy to 
 Also leverages the great todo.txt command line client. Was written with Windows as OS in mind.
 
 All you need to know is described in this document:
-[doc_install_util.txt](./docs/doc_install_util.txt)
+**[doc_install_util.txt](./docs/doc_install_util.txt)**
 
 
 
