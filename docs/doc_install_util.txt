@@ -215,12 +215,16 @@ Call "C:\<Path to>\Notepad++\notepad++.exe" {file} -n{line}
 
 #------------------------------------------------------------------------------#
 7 MELD 
-Setting up [06]
-Meld > Preferences 
-    Editor >"C:\<Path>\Notepad++\notepad++.exe" {file} -n{line}
-    Font > JetBrains Mono
-    Check Use Syntax Highlighting (Only works with some color schems like oblivion)
+
+7.1 Setting up Meld [06]
+Check Use Syntax Highlighting (Only works with some color schems like oblivion)
 Dark Mode seems to work with a given theme already  
+
+7.2 Navigating to Code Editor
+Use absolute paths for exe files, eg
+Meld > Preferences 
+"C:\10_Tools\Notepad++\notepad++.exe" {file} -n{line}
+C:\Program Files\Microsoft VS Code\Code.exe" --goto {file}:{line}
 
 #------------------------------------------------------------------------------#
 8 GIT GUI / GITK 
