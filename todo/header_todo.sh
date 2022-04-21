@@ -13,8 +13,10 @@ var_exists p_cmd
 # (needs to be loaded in advance)
 
 # absolute path pointing todo installation
+# will not be processed if the paths are not there
 export_path p_todo_home "$p_cmd/todo"; [ "$?" -eq 0 ] || return false
 export_path p_todo_cfg "$p_todo_home/todo_cfg"; [ "$?" -eq 0 ] || return false
+# will throw a warning if file won't be found
 export_path EXE_TODO "$p_todo_home/todo_cli/todo.sh"
 
 echo -e "\r\n"
@@ -32,7 +34,8 @@ alias grep_todo="cd \"$p_todo_work\"; ls -a; grepm  \"grep --include='*.txt' --c
 
 # register todo files and their variabes / aliases
 # optional reading of config files
-# TODO - DELETE THIS CUSTOM TODO IF NOT USED
+# @TODO - DELETE THIS CUSTOM TODO IF NOT USED
+# or replace by your own custom todo list(s)
 register_todo "einkauf"
 
 # register todo.txt  DEFAULT list

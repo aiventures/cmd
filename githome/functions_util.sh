@@ -87,7 +87,7 @@ function open {
                 ;;
         esac
         # execute when there is a command
-        if [ $s ]; then
+        if [ ! -z {s_cmd} ]; then
             echo "${s_cmd}"
             eval "${s_cmd}"
         fi

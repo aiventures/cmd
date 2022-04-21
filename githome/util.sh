@@ -1,5 +1,7 @@
 echo "---- BEGIN util.sh functions ----" 
 echo "     repo: https://github.com/aiventures/cmd"
+echo "     documentation ../docs/doc_install_util.txt"
+
 
 # load global functions 
 # all functions without need for prior 
@@ -31,9 +33,9 @@ echo "     repo: https://github.com/aiventures/cmd"
 # MAPS TO NOTE_EDITOR for example
 # EXE_NPP=EXE_NOTE_EDITOR
 
-# use the global_template.sh 
+# use template global_template.sh
+# @TODO copy/rename to global.sh 
 # modify the missing variables to your own need
-# and rename it to global.sh
 . ~/global.sh
 
 # load header definitions
@@ -54,7 +56,11 @@ echo "     repo: https://github.com/aiventures/cmd"
 # load shortcuts
 . ~/shortcuts.sh
 
-# load own shortcuts / use template shortcuts_template.sh
+# load own shortcuts / 
+# use template shortcuts_template.sh
+# @TODO copy/rename to shortcuts_personal.sh 
+# you can also use all functions / variables here 
+# that were defined previously
 . ~/shortcuts_personal.sh
 
 echo -e "\r\n     END util.sh functions ---- \r\n" 

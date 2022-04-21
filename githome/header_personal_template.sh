@@ -1,37 +1,23 @@
-echo "---- BEGIN header_personal.sh ----"
-echo "     check with tab tab $p_.. $f_... for defined stuff"
+echo "---- BEGIN header.sh  ----"
 
-# your own definitions go in here
+# --- verify variable definitions that were previously 
+#     exported (global.sh) and are needed here  ---
+var_exists p_cmd
+var_exists p_docs
 
-# --- personal files and paths ---
-#     check the 
-#     header_personal_template.sh file
-#     at least p_work is required 
+# --- define help files ---
 
-# path pointing to your work files
-#TODO 
-export p_work="</c/<path to your work files containing CMDS folder>"
+# help documents 
+# use cat <$f_...> to display file
+# use open <$f_...> to open file
+export_path p_docs "$p_cmd/docs"
+export_path help_bash "$p_docs/help_bash.txt"
+export_path help_todo_extended "$p_docs/help_todo_extended.txt"
+export_path help_todo "$p_docs/help_todo.txt"
+export_path help_cmder "$p_docs/help_cmder.txt"
+export_path help_install "$p_docs/doc_install_util.txt"
 
-# several work files adapted to your own needs
-# for example any subfolder you want to have as variables later
-# export p_bat="$p_work/<any subfolder>"
+# @TODO Here you can add your own path definitions
+# (to frequently used documents etc)
 
-# folder containing tool executables 
-# export p_tools="/C/<Tools>" for example
-#TODO
-export p_tools="/c/Program Files"
-
-# --- define executables ---
-
-# 7ZIP Commandline and windows GUI
-
-#TODO 
-p_zip="</c/path to your zip executable>"
-# path zip command line executable
-#TODO 
-export_path EXE_ZIP_CMD "$p_zip/<zip executable>.exe"
-# path to your interactive zip program
-#TODO
-export_path EXE_ZIP "$p_zip/<interactive zip executable>.exe"
-
-echo -e "\r\n     END header_personal.sh ----"
+echo -e "\r\n     END header.sh  ----"

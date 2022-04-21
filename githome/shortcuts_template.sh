@@ -7,4 +7,6 @@ echo "---- BEGIN shortcuts_personal.sh  ----"
 var_exists p_docs
 var_exists p_links
 
+
+
 echo -e "\r\n     END shortcuts_personal.sh  ----"

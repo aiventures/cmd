@@ -1,4 +1,5 @@
 echo "---- BEGIN header.sh  ----"
+
 # --- verify variable definitions that were previously exported (global.sh) and are needed here  ---
 var_exists p_cmd
 var_exists p_docs
