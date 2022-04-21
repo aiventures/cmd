@@ -39,7 +39,7 @@ if [[ $? -eq 0 ]]; then
     grep_multiple="grepm \"grep --color=always -irn\""
     alias grep_m="ls -a; $grep_multiple"
     # search in docs
-    alias grep_docs="cd \"$p_docs\"; ls -a; $grep_multiple"
+    alias grep_docs="cdd \"$p_docs\"; ls -a; $grep_multiple"
     # search in aliases
     alias grep_alias="grepm \"alias\""    
     # search in variables
