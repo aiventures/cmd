@@ -10,16 +10,37 @@ var_exists EXE_XLS
 var_exists OPEN_ZIP
 var_exists EXE_ZIP_CMD
 var_exists OPEN_TEXT_EDITOR
+var_exists NUM_LINE_TEXT_EDITOR
 var_exists OPEN_CODE_EDITOR
+var_exists CODE_EDITOR
 
-function open {
-    : open "<bash path>"
+function get_line_command () {
+    : "gets the code editor command to jump"
+    : "to a file at a given line"
+    : "needs to be coded when it simply cant be appended"
+    : "right now only for VSCODE"
+    p="$1"
+    l="$2"    
+    open_code_at_line=""
+    if [ "$CODE_EDITOR" = "VSCODE" ]; then
+        # replace @ by path and # by line number
+        open_code_at_line="\"CODE\" --goto \"@:#\""
+        open_code_at_line="${open_code_at_line//@/${p}}"
+        open_code_at_line="${open_code_at_line//#/${l}}"        
+    fi
+    echo "$open_code_at_line"
+}
+
+function open () {
+    : open "<bash path> [n]"
     : transforms bash path to windows and opens win explorer     
     : files will be opened with notepad++ as default
     : or with specific application if extension is defined
     : if it is an url it will open default browser instead 
     : breaks with paths that have spaces in it, use encode_path to resolve it
-    
+    : if the optional numeric parameter n is passed it will be tried 
+    : to open the document in editor or code editor at given line
+
     pwin=""
     
     # check if it is url
@@ -30,10 +51,22 @@ function open {
         return 0
     fi
 
+    # check for number of arguments
+    num_args=$#
+    p=""
+    l=""
+    # 2 arguments suggest it contains a line number
+    if [ num_args=2 ]; then
+        p="${1}"
+        l="${2}"
+    else
+        p="$@"
+    fi
+
     # @todo support open text in given line
     
     # now get concatenated string
-	encoded_path="$(encode_path "$@")";
+	encoded_path="$(encode_path "$p")";
 	#local open_explorer="explorer \"$(towinpath "$encoded_path")\"";    
     echo "Encoded Path: \"$encoded_path\""
     
@@ -77,17 +110,29 @@ function open {
             zip|jar)
                 s_cmd="\"$OPEN_ZIP\" \"$pwin\" &"             
                 ;;
-            py|sh|java)            
-                s_cmd="\"$OPEN_CODE_EDITOR\" \"$pwin\""
-                ;;                        
-            *)                
+            py|sh|java)                            
+                # open code at given line
+                if [ ! -z "$l" ]; then
+                    echo "CALL get_line_command"
+                    s_cmd=$( get_line_command "${pwin}" "$l" )                    
+                # open code without given line
+                else
+                    s_cmd="\"$OPEN_CODE_EDITOR\" \"$pwin\""
+                fi                
+                ;;
+            *)  
                 # default is to start with notepad++
                 # todo also check out for other extensions
-                s_cmd="\"$OPEN_TEXT_EDITOR\" \"$pwin\" &"
+                if [ ! -z "$l" ]; then
+                    l="${NUM_LINE_TEXT_EDITOR}${l}"
+                    s_cmd="\"${OPEN_TEXT_EDITOR}\" \"${pwin}\" \"${l}\" &"
+                else
+                    s_cmd="\"$OPEN_TEXT_EDITOR\" \"$pwin\" &"
+                fi
                 ;;
         esac
         # execute when there is a command
-        if [ ! -z {s_cmd} ]; then
+        if [ ! -z "$s_cmd" ]; then
             echo "${s_cmd}"
             eval "${s_cmd}"
         fi
@@ -128,7 +173,8 @@ function walk_dir () {
                     url=$(read_link "$pathname")
                     printf "    - [%s] %s\n" "$f" "$url"
                     ;;
-            *) 
+                *)
+                    ;;
             esac
         fi
     done

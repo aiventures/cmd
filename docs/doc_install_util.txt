@@ -321,7 +321,6 @@ Personal settings that make sense to me
   Settings > Keys & Macro > Find Text in current console > Ctrl+F  
 - Check Installation Path using echo "$ConEmuDir"  
 
-
 Export all settings 
 
 #------------------------------------------------------------------------------#
