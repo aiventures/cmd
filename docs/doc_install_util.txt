@@ -142,6 +142,7 @@ To make access easier to memorize the aliases follow a pattern (use double tap f
 #------------------------------------------------------------------------------#
 5 Setting Up Visual Studio Code
 
+5.1 VSCODE Integration of Bash
 you can integrate Bash Console into Visual Studio Code by adjusting preferences and use
 it as default [04],[05]:
 > CTRL+SHIFT+P > "Open Settings (JSON)" (file located in 
@@ -164,7 +165,10 @@ C:\Users\<USER\AppData\Roaming\Code\User\settings.json), add
 
 Now by default bash is used when opening Terminal > Open New Terminal    
 
+5.2 VSCODE Dark Mode
 Dark Mode: File > Preferences > Color Theme > Dark Mode
+
+5.3 VSCODE Alternative Fonts
 Change Font: File > Preferences > Settings > Text Editor > Font > "JetBrains Mono"
 Alternatively: CTRL+SHIFT+P > Settings (JSON), use:
     "workbench.colorTheme": "Visual Studio Dark",
@@ -174,10 +178,18 @@ Alternatively: CTRL+SHIFT+P > Settings (JSON), use:
     "editor.fontLigatures": true,
     "editor.fontSize": 13
 
+5.4 VSCODE Disable Tab PReview / Always open in new tab => [10]
+
+CTRL+SHIFT P> Settings (JSON), add to settings.json
+"workbench.editor.enablePreview": false,
+
+5.5.VSCODE Open File at given line
+[12] [13] => Code.exe --goto "C:\file path\filename.txt:450:11" 
 
 #------------------------------------------------------------------------------#
 6 Customizing Notepad++
 
+6.1 Notepad++ Dark Mode
 Enabling Dark Mode (at least for a recent version of NPP): Settings > Preferences > Dark Mode / Adjustment of themes might be required
 Usually check for Foreground Colors that are dark / these might be changed in dark mode
 Settings > Style Configurator 
@@ -189,11 +201,17 @@ Settings > Style Configurator
         Set Foreground Colour (=Font Color) to white / Background Color
 	> Search Result / Change
 
+6.2 Notepad++ Export Settings
 You may export settings for reimport by
 > Settings > Preferences > Cloud > Set Your cloud location path
   Config files are exported / After export you may set back setting to "No Cloud"
 
 xml Files are stored here <Installation Path>\Notepad++\*.xml and <Installation PAth>\Notepad++\themes*.xml  
+
+6.3 Notepad++ Open File at line
+Call "C:\<Path to>\Notepad++\notepad++.exe" {file} -n{line}
+
+6.4 Notepad++ Call from command line [11]
 
 #------------------------------------------------------------------------------#
 7 MELD 
@@ -292,10 +310,14 @@ Personal settings that make sense to me
 
 - add keyboard shortcuts for last folder and up one folder [09]
 - Settings > Keys & Macro > All Hotkeys > Assign Close Current Tab to X + CTRL + SHIFT 
-- Settings > Keys & Macro > Click Into List > Macro > Choose Hotkey > Up Additional ALT
-  GUI Macro: 
-  print "cd ..\n"  => Previous Folder (for example assigned to ALT+UP)
-  print "ls \n cd " => show subfolders and display cd
+- Settings > Keys & Macro > Click Into List > Macro > Choose Hotkey > 
+  Up Additional ALT / Down Additional ALT / Left Additional Alt
+  GUI Macros: 
+  print "cdd ..\n"  => Previous Folder (for example assigned to ALT+UP)
+  print "ls \n cdd " => show subfolders and display cd
+  print "cdl\n" => Using macro to display last directory when using cdd function to 
+                   change directory (stores last path in variabl $p_last)
+  Note cdd/cdl are defined functions in functions_global.sh
   Settings > Keys & Macro > Find Text in current console > Ctrl+F  
 - Check Installation Path using echo "$ConEmuDir"  
 
@@ -303,8 +325,11 @@ Personal settings that make sense to me
 Export all settings 
 
 #------------------------------------------------------------------------------#
-11 TROUBLESHOOTING
-(01) CMD COMMAND NOT FOUND: In Console enter echo "$COMSPEC". It should point to the 
+11 Eclipse
+
+#------------------------------------------------------------------------------#
+12 TROUBLESHOOTING
+12.1 CMD COMMAND NOT FOUND: In Console enter echo "$COMSPEC". It should point to the 
 command line ("C:\Windows\System32\cmd.exe") and shouldn't be blank. 
 
 Fix: Replace single line of code in file /Git/usr/bin/start of your Git installation 
@@ -328,6 +353,13 @@ if [ $c -ne 0 ]; then
 fi
 # FIX END
 
+12.2 Checking what variables where created
+if scripts are working you may use command "grep_env p_" or "grep_env f_" or 
+"grep_env EXE_" to display variables and executables. Or use commands like
+env | grep p_ --color=always to check for variables
+
+
+
 #------------------------------------------------------------------------------#
 12 Misc
 Replace Powershell in Context Menu by Command again
@@ -338,7 +370,6 @@ Replace Powershell in Context Menu by Command again
 
 
 #------------------------------------------------------------------------------#
-
 13 LINKS
 
 CMDER 
@@ -350,7 +381,11 @@ CMDER
 [06] https://stackoverflow.com/questions/34119866/setting-up-and-using-meld-as-your-git-difftool-and-mergetool
 [07] https://superuser.com/questions/183870/difference-between-bashrc-and-bash-profile/183980#183980
 [08] https://stackoverflow.com/questions/24194569/git-difftool-not-launching-external-diffmerge-program
-[09 ]https://superuser.com/questions/1220418/cmder-conemu-hotkeys-how-to-set-up-for-for-directory-movements
+[09] ]https://superuser.com/questions/1220418/cmder-conemu-hotkeys-how-to-set-up-for-for-directory-movements
+[10] https://stackoverflow.com/questions/38713405/open-files-always-in-a-new-tab
+[11] https://npp-user-manual.org/docs/command-prompt/
+[12] https://stackoverflow.com/questions/39453951/open-file-at-specific-line-in-vscode
+[13] https://code.visualstudio.com/docs/editor/command-line
 
   
   

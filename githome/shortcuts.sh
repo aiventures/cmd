@@ -15,9 +15,8 @@ alias r="source ~/.bashrc"
 alias cls='printf "\033c"'
 
 # aliases for default usage of bash commands
-alias lsc="ls --color -a"
 alias ll='ls -l'
-alias ls='ls -F --color=auto --show-control-chars'
+alias lc='ls -F --color=auto --show-control-chars'
 
 # display links in links folder
 open_links="walk_dir \"$p_links\""
@@ -53,6 +52,8 @@ if [[ $? -eq 0 ]]; then
     alias grep_export="grepm \"export -p\""
     # list links in links folder
     alias grep_links="grepm \"$open_links\""
+    # list environment variables
+    alias grep_env="grepm \"env\""
     # https://unix.stackexchange.com/questions/94775/list-all-commands-that-a-shell-knows
     # compgen -a # will list all the aliases you could run.
     # compgen -b # will list all the built-ins you could run.

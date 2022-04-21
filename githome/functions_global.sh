@@ -2,7 +2,6 @@ echo "---- BEGIN functions_global.sh ----"
 
 # loading global definitions like exe files and work paths 
 # that need to be defined up front
-
 GREP_PIPE="| grep --color=always -in"
 
 function encode_path () {
@@ -184,15 +183,27 @@ function go () {
 	eval $open_explorer
 }
 
+p_last=""
 function cdd () {
 	: "cdd <bash path>", 
     : opens path in bash
 	: is used to avoid add quotes so that paths containing spaces
 	: can be used directly without the need to enclose them with quotes
-	encoded_path="$(encode_path "$@")";
-	local cdd="cd \"$encoded_path\"";
-	echo "$cdd";
-	eval $cdd;  
+    : will also store last visited path in variable p_last also available as alias
+    p_last="${PWD}"
+	encoded_path="$(encode_path "$@")"
+	local d="cd \"$encoded_path\""
+	echo "$d"; eval $d
+}
+
+function cdl () {
+    : "cdl"
+    : visits last path stored in variable p_last
+    : when called with command cdd
+    encoded_path="$(encode_path "$p_last")";
+    p_last="${PWD}"
+    local d="cd \"$encoded_path\"";
+	echo "$d"; eval $d
 }
 
 function grepm () {

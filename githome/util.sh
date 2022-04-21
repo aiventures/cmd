@@ -6,7 +6,32 @@ echo "     repo: https://github.com/aiventures/cmd"
 # variable definition go here
 . ~/functions_global.sh
 
-# load global definitions use the global_template.sh 
+# load global definitions 
+# - main paths / application paths
+#  p_cmd, p_home, p_docs, p_links
+#  P_PROGRAM_FILES_..
+# export_path
+# - executable paths
+# EXE_MLO, EXE_NPP, EXE_XLS, EXE_ZIP
+# MAP Specific TOOLS to gerneric aliases
+# (so that you do not need to touch
+# functions_util.sh later)
+# EXE_MLO (specific)
+# EXE_XLS (doesnt need to be mapped)
+# EXE_<your zip> => EXE_ZIP
+# EXE_<your zip command line> => EXE_ZIP_CMD
+# EXE_<your difftool> > EXE_DIFFTOOL
+# EXE_<youre mergetool> > EXE_MERGETOOL
+# EXE_PYTHON (YOUR RUNTIME)
+# EXE_CODE > Visual Studio Code
+# MAPS TO CODE_EDITOR, for example
+# EXE_CODE => EXE_CODE_EDITOR
+# Your note tool, for example
+# EXE_NPP (Notepad++)
+# MAPS TO NOTE_EDITOR for example
+# EXE_NPP=EXE_NOTE_EDITOR
+
+# use the global_template.sh 
 # modify the missing variables to your own need
 # and rename it to global.sh
 . ~/global.sh

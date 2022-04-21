@@ -115,3 +115,6 @@ Explanantion what CMDER Extension is all about
 8- Dito für die todo.txt files
 9 - Wenn die gefundenen Inhalte einen Link haben, kann man damit mit CTRL+Klick direkt auf die URL Navigieren
 10 - Ein paar Sonderfunktionen gibt es auch, zB aus einem Bash Path einen WIN PAth zu machen, damit kann man zB direkt in den Internet Explorer springen oder Bilddateien aus der Konsole öffnen  und vieles mehr ....
+----------------------
+ Check if variable exists
+ [ ${EXE_NPP} ] && echo "exists" || echo "doesnt exist";

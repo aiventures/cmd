@@ -1,14 +1,16 @@
 echo "---- BEGIN functions_util.sh ----" 
 
-# check for existing variables
-var_exists EXE_NPP
-var_exists EXE_XLS
-var_exists EXE_MLO
-var_exists f_mlo
+# check for existing commands
 var_exists P_PROGRAM_FILES
 var_exists P_PROGRAM_FILES_X86
 var_exists p_work
 var_exists p_tools
+var_exists EXE_MLO
+var_exists EXE_XLS
+var_exists OPEN_ZIP
+var_exists EXE_ZIP_CMD
+var_exists OPEN_TEXT_EDITOR
+var_exists OPEN_CODE_EDITOR
 
 function open {
     : open "<bash path>"
@@ -27,6 +29,8 @@ function open {
         start "$1"
         return 0
     fi
+
+    # @todo support open text in given line
     
     # now get concatenated string
 	encoded_path="$(encode_path "$@")";
@@ -49,36 +53,44 @@ function open {
         # depending on file type open with different applications
         # default is opening in Notepad
         # @TODO add more filetypes to open
+        s_cmd=""
         case $file_ext in 
+            # filetype My Life Organized
             ml)
-                mlo="$EXE_MLO \"$pwin\""
-                eval "$mlo" &
+                s_cmd="$EXE_MLO \"$pwin\" &"
                 ;;
+            # filetype Excel
             xlsx)
-                xls="\"$EXE_XLS\" \"$pwin\""
-                echo "xls"
-                eval "$xls" &
+                s_cmd="\"$EXE_XLS\" \"$pwin\" &"
                 ;;
+            # filetype: Images / opened with default editor
             jpg|png|svg)
-                p_old="$PWD"
+                p_curr="$PWD"
                 p_image=$(dirname "$encoded_path")
                 cd "$p_image"
 				start "$f"
-                cd "$p_old"
+                cd "$p_curr"
                 ;;
-            exe|bat)
-				echo "exe $pwin"
-                eval "\"$pwin\" &"
+            exe|bat)			
+                s_cmd="\"$pwin\" &"
                 ;;
             zip|jar)
-                start "$EXE_7ZIP" "$pwin"
-                ;;	              
-            *)
-                # @todo open zip and jar and python files
+                s_cmd="\"$OPEN_ZIP\" \"$pwin\" &"             
+                ;;
+            py|sh|java)            
+                s_cmd="\"$OPEN_CODE_EDITOR\" \"$pwin\""
+                ;;                        
+            *)                
                 # default is to start with notepad++
                 # todo also check out for other extensions
-                start notepad++ "$pwin";;
-        esac       
+                s_cmd="\"$OPEN_TEXT_EDITOR\" \"$pwin\" &"
+                ;;
+        esac
+        # execute when there is a command
+        if [ $s ]; then
+            echo "${s_cmd}"
+            eval "${s_cmd}"
+        fi
         
     elif [ -d "$encoded_path" ]; then
         pwin=$(towinpath "$encoded_path")
@@ -88,12 +100,12 @@ function open {
         pwin="$encoded_path"
         echo "\"$pwin\" is not a valid file object"
     fi
-    # @TODO add other file types
-    
 }
 
 function walk_dir () {    
-    : recursively check files
+    : "walk_dir <path>"
+    : recursively check files opens link files
+    : and displays them in output for opening
     : https://unix.stackexchange.com/questions/494143/recursive-shell-script-to-list-files
     shopt -s nullglob dotglob    
     encoded_path="$@"
@@ -125,19 +137,18 @@ function walk_dir () {
 function grepm_zip () {
     : calling "grepm_zip <path to zip in bash format> <grep filters>"
     : constructs command for executing zip    
-    : right now works for 7zip
+    : right now works with arguments for 7zip
     local args=2
-    local exe_7z="\"$EXE_7ZIP_CMD\" l"
+    local exe_zip_cmd_command="\"$EXE_ZIP_CMD\" l"
     local grep_args="${@:2}"
     # convert path into windows format
     p="${1}"
     # echo "BASH PATH $p"    
     d=$(dirname ${p})
     d="$(towinpath $d)"
-
     filename="$(basename "$p")"
     win_p="\"${d}\\${filename}\""
-    grepm_zip_cmd=$(grepm_args 2 "$exe_7z" "${win_p}" $grep_args)
+    grepm_zip_cmd=$(grepm_args $args "$exe_zip_cmd_command" "${win_p}" $grep_args)
     echo "$grepm_zip_cmd"
     eval "$grepm_zip_cmd"
 }
