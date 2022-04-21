@@ -9,5 +9,7 @@ Also leverages the great todo.txt command line client. Was written with Windows 
 All you need to know is described in this document:
 **[doc_install_util.txt](./docs/doc_install_util.txt)**
 
+** CAVEAT ** It's better to clone this repo into another Root Folder named differently from ``CMD``. Reason: In Win explorer you can't enter cmd any more to get to the Windows command console 
+
 
 
