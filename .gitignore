@@ -9,9 +9,6 @@ global.sh
 todo.sh
 todo.txt
 einkauf.txt
-todo.cfg
-einkauf.cfg
-*done.cfg
 shortcuts_personal.sh
 header_personal.sh
 .inputrc
@@ -22,9 +19,14 @@ test.sh
 settings.json
 
 # ignore own links -with exceptions
+# any folders starting with a dot
 .*/
 /links/*
+*/todo_backup/*
+*/todo_cfg/*.cfg
 /links/test.url
+/tools_cmd_python/
+
 Shell Command Language.url
 # ignore own files except some
 #/docs

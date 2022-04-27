@@ -37,6 +37,7 @@ alias grep_todo="cd \"$p_todo_work\"; ls -a; grepm  \"grep --include='*.txt' --c
 # @TODO - DELETE THIS CUSTOM TODO IF NOT USED
 # or replace by your own custom todo list(s)
 register_todo "einkauf"
+register_todo "info"
 
 # register todo.txt  DEFAULT list
 # #TODO: Assumes there will be at least 

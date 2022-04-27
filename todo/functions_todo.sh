@@ -74,6 +74,12 @@ function register_todo () {
     expr_todo="alias ${todo_alias}='\"${EXE_TODO}\" -d \"${f_todo_cfg}\"'"
     echo "     $expr_todo"
     eval $expr_todo
+    # create alias for ls
+    t_ls_alias="${todo_alias}_ls"
+    [ $root_name = "todo" ] && t_ls_alias="t_ls"
+    expr_todo_ls="alias ${t_ls_alias}=\"${todo_alias} ls\""
+    eval $expr_todo_ls
+    
     
 }
 
