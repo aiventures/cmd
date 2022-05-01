@@ -171,13 +171,43 @@ function open_multiple_links () {
     done
 }
 
+function display_multiple_links () {    
+    : "display_multiple links <path>"
+    : "displays  for a given directory"
+    # @todo merge with open_multiple_links function / use getopts
+    encoded_path="$@"
+    echo "DISPLAY MULTIPLE LINKS IN PATH \"$encoded_path\"" 
+    for filename in "$encoded_path"/*; do
+        if [ -f "$filename" ]; then 
+            fn=$(basename "${filename}")
+            f_ext=$(get_file_extension ${fn})
+            f_name=$(get_file_name ${fn})
+            # echo "EXT [$f_ext] NAME [$f_name]"
+            if [ $(get_file_extension ${fn}) = "url" ]; then
+                encoded_path="$(encode_path "$filename")";
+                url=$(read_link ${encoded_path})
+                echo "[${fn}] \"$url\""        
+            fi
+        fi
+    done
+}
+
 # @todo check if explorer file is present
 function go () {   
     : go "<bash path>" 
     : opens windows explorer
 	: is used to avoid add quotes so that paths containing spaces
 	: can be used directly without the need to enclose them with quotes
+
 	encoded_path="$(encode_path "$@")";
+
+    # check if path is a valid path
+    check_path "${encoded_path}"
+    if [ $? -ne 0 ]; then    
+        echo "WARNING Variable [${encoded_path}] was not exported, check (file) path"
+        return 1
+    fi 
+
 	local open_explorer="explorer \"$(towinpath "$encoded_path")\"";
 	echo " $open_explorer"
 	eval $open_explorer
@@ -201,6 +231,14 @@ function cdl () {
     : visits last path stored in variable p_last
     : when called with command cdd
     encoded_path="$(encode_path "$p_last")";
+
+    # check if path is a valid path
+    check_path "${encoded_path}"
+    if [ $? -ne 0 ]; then    
+        echo "WARNING Variable [${encoded_path}] was not exported, check (file) path"
+        return 1
+    fi 
+
     p_last="${PWD}"
     local d="cd \"$encoded_path\"";
 	echo "$d"; eval $d
@@ -212,6 +250,8 @@ function grepm () {
     : usage grepm "first command" "list of search terms"
     : will create a piped grep search using first
     : parameter as initial command
+    : can be replaced by more convenient grepmf method
+    : using input flags    
     
     local num_arguments=$#;
     local command=""
@@ -223,6 +263,11 @@ function grepm () {
     fi
 
     command="$1"
+    # @todo restrict command execution
+    # @todo drop grepm_args 
+    # echo "GREPM COMMANDS EXECUTED ${command}"
+    # check if commands contain valid operations
+    # export / walk_dir / declare / compgen / grep / alias     
 
     if [[ "$command" =~ ^grep.* ]]; then
         command="${command} \"$2\""
@@ -238,7 +283,8 @@ function grepm () {
     do
         command+="$GREP_PIPE \"${!i}\""
     done    
-    #echo "$command"
+    #echo "$command"    
+    # @todo validate command
     eval "$command"
 }
 
@@ -249,6 +295,8 @@ function grepm_args () {
     : takes the first n arguments and adds the remaining argumants
     : as argument grep chain
     : "<arg 1>...<arg n>|grep <arg n+1>|...|grep <arg N>"
+    : can be replaced by more convenient grepmf method
+    : using input flags
     
     num_command_params=$(($1+1))
     num_params=$#
@@ -269,6 +317,139 @@ function grepm_args () {
 
     done    
     echo "$grep_cmd"
+}
+
+function register_shortcuts () {
+    : "register a file object to automatically create aliases"
+    : "for opening files or directories"
+    : "check register -h for help"
+    local OPTIND
+    local name=""
+    local param=""
+    local prefix=""
+    local fp=""
+    local status=""
+    while getopts "f:n:vochl" opt; do
+        case "${opt}" in
+            f)  fp="${OPTARG}"
+                base=$(basename -- ${fp})            
+                echo -e "\n     REGISTER [PATH: ${fp}] [BASENAME: ${base}]"
+                if [ -f "$fp" ]; then
+                    prefix="f_"                    
+                    name=$(get_file_name "$base")                    
+                elif [ -d "$fp" ]; then                
+                    prefix="p_"
+                    name="${base}"
+                else
+                    echo "${fp} is not a file object"
+                    return 1
+                fi
+                param="${prefix}${name}"
+                ;;
+            n)
+                name=${OPTARG}
+                if [ ${#prefix} -eq 0 ]; then 
+                    echo "${name} -n:Prefix is empty filepath needs to be first argument"
+                    return 1
+                fi
+                param="${prefix}${name}"
+                ;;
+            o)  
+                if [[ ${#name} -eq 0 || ${#fp} -eq 0 || ${#prefix} -eq 0 ]]; then 
+                    echo "${fp} -o:  Name or Path is empty/wrong, check order of arguments"
+                    continue
+                fi
+                alias "open_${name}"="open \"${fp}\""
+                status+="[ALIAS: open_${name}] "
+                ;;
+            c)  
+                if [[ ${#name} -eq 0 || ${#fp} -eq 0 || "${prefix}" != "p_" ]]; then 
+                    echo "${fp} -c: Name or Path is empty/wrong/not a path, check order of arguments"
+                    continue
+                fi
+                alias "cdd_${name}"="cdd \"${fp}\";lc"
+                status+="[CDD: cdd_${name}] "
+                ;;                
+            v)  if [[ ${#param} -eq 0 || ${#fp} -eq 0 ]]; then 
+                    echo "${fp} -v: Parameter or Path is empty/wrong/not a path, check order of arguments"
+                    continue
+                fi
+                export_path "${param}" "${fp}"
+                status+="[PARAM: ${param}]"
+                ;;     
+            l)  if [[ ${#param} -eq 0 || "$prefix" != "p_" ]]; then 
+                    echo "${fp} -v: Parameter or Path is empty/wrong/not a path, check order of arguments"
+                    continue
+                fi
+                alias "lc_${name}"="lc \"${fp}\""
+                status+=" [LC: lc_${name}] "                
+                ;;                    
+            h)  echo "usage register [-f \"path to file/path\"] [-n \"shortcut_name\"]"
+                echo "                    if -n is not given name will be derived from basename"                
+                echo "               (-o) create alias open_<shortcut_name> to open object"
+                echo "               (-c) create alias cdd_<shortcut_name> to change to path object"
+                echo "               (-v) export variable {p_f}_<shortcut_name> to point to file object"                
+                echo "                    prefix f for files or p for paths will be created"
+                echo "               (-l) create alias ls_<shortcut_name> to list directory"                
+                echo "               (-h) Open help options"                        
+                ;;
+        esac
+    done
+    echo "     [NAME: $name] [VARIABLE: \$$param]"    
+    echo "     ${status}"
+}
+
+function grepp () {
+    : "convenience wrapper for grep command with params"    
+    : "for help check grepp -h "
+   
+    local OPTIND
+    local s_arg=""
+    # command for grep command
+    local s_cmd="grep --color=always -irn"
+    local s_grep_pipe="|grep --color=always -in"
+
+    # disable wildcard expansion; piut entries into list
+    set -f
+    while getopts "i:e:h" opt; do
+        case "${opt}" in
+            i)
+                arr=(${OPTARG})
+                # echo "$OPTIND ARGS[${OPTARG}] ERR $OPTERR ARR LENGTH ${#arr[@]}"
+                for k in ${!arr[@]}; do
+                  s_arg+=" --include=\"${arr[$k]}\""
+                done
+                ;;
+            e)    
+                arr=(${OPTARG})
+                for k in ${!arr[@]}; do
+                  s_arg+=" --exclude=\"${arr[$k]}\""
+                done
+                ;;
+            h)  echo "usage grepp_args [-i \"list of including terms\"] [-e \"list of excluding terms\"] list of search terms for grep" 
+                echo "                 arguments need to be put in string!"               
+                echo "                 example grepp -i \"*.sh\" -e \"*.txt\" search1 search2  (search in specific filetypes)"               
+                ;;
+        esac
+    done    
+    
+    shift $((OPTIND-1))
+    # process the remaining arguments    
+    arg_list=($@)      
+    set +f    
+    
+    #s_cmd+="${s_arg}"    
+    num_args=${#arg_list[@]}
+    for ((k=0; k<num_args; k++)); do
+        # echo " ${arg_list[$k]}"
+        if [ $k -eq 0 ]; then
+            s_cmd+=" ${s_arg} ${arg_list[$k]}"
+        else
+            s_cmd+="${s_grep_pipe} ${arg_list[$k]}"
+        fi
+    done           
+    echo "grepp() [${s_cmd}]"
+    eval "${s_cmd}"
 }
 
 echo "     END functions_global.sh ----"

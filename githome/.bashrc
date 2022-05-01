@@ -8,7 +8,5 @@ echo "---- $HOME/.bashrc ----"
 # load util functions and global definitions
 . ~/util.sh
 
-# show available aliases
-alias
 
 

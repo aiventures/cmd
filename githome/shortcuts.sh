@@ -40,8 +40,10 @@ if [[ $? -eq 0 ]]; then
     alias grep_m="ls -a; $grep_multiple"
     # search in docs
     alias grep_docs="cdd \"$p_docs\"; ls -a; $grep_multiple"
+    # search in cmd
+    alias grep_cmd="cdd \"$p_cmd\"; ls -a; $grep_multiple"
     # search in aliases
-    alias grep_alias="grepm \"alias\""    
+    alias grep_alias="grepm \"alias\"" 
     # search in variables
     alias grep_variables="grepm \"compgen -v\""  
     # search for available commands

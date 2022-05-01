@@ -2,9 +2,10 @@
 ----------- BASH SHORT CUTS --------------
 exec bash   : reload bash
 
-grep     
+# @grep     
         https://git-scm.com/docs/git-grep
         https://stackoverflow.com/questions/10619160/how-do-i-use-the-grep-include-option-for-multiple-file-types
+        [unix - Use grep --exclude---include syntax to not grep through certain files - Stack Overflow.url] "https://stackoverflow.com/questions/221921/use-grep-exclude-include-syntax-to-not-grep-through-certain-files"        
         -i case inensitive
         -r recursive
         -l result filename only
@@ -33,42 +34,42 @@ grep
         (filter environment variables)
         
         
-compgen 
+# @compgen 
         compgen -v | grep --color=always p_       
         (show environment variables)
     
-cd      /c/path cd ~ (root dir , defined in HOME in env variables)
-pwd 
+# @cd      /c/path cd ~ (root dir , defined in HOME in env variables)
+# @pwd 
         current work dir
-ls  
+# @ls  
         list directory (ls -a / ls-1 / line ls --color -R -1)
 
-cat 
+# @cat 
         https://git-scm.com/docs/git-cat-file
         cat <file path> display file contents
         cat -n (line numbers) -T (distinguish tabs and spaces)
         
-less    less <file>  one page at a time
+# @less    less <file>  one page at a time
         less -N (line numbers) / -X (cleared command file)
         
-more    more filename loads file at once in contrast to less
+# @more    more filename loads file at once in contrast to less
         -p  (clear output) +100 (display from line 100)
     
-find     
+# @find     
         find . -name "*ora*"
         find path/to/dir -name "*.ext1" -o -name "*.ext2" (-o: or)
         find . -type f  -name 'text_for_search'   (type t=file)
         find . -type f  -iname 'text_for_search' (iname = regex)
         find . -type f -name "*.iso" (extension)
         
-type    type <funcname> will print source code of bash function
+# @type    type <funcname> will print source code of bash function
 
-declare "declare -F|grep -iv _git" shows list of functions not containing git
+# @declare "declare -F|grep -iv _git" shows list of functions not containing git
 
 https://dev.to/awwsmm/101-bash-commands-and-tips-for-beginners-to-experts-30je#whereis-which-whatis
         
 ----------- BASH NAMING Conventions --------------
-Personal Naming Conventions aticking to naming conventions helps with autocomplete feature to get variables / aliases ...
+# @Personal Naming Conventions aticking to naming conventions helps with autocomplete feature to get variables / aliases ...
 and it can also help to filter available aliases variables using grep command
 
 files and win representations
@@ -91,7 +92,7 @@ explorer "<win path to folder>"         Open windows explorer wit path / note do
 start notepad++ "<win path to file>"    OPens file in notepad++ 
 start "<url>"                           Opens URL in default browser (note double quote again)
 -----------------------
-Cooking Recipes
+# @Bash Cooking Recipes
 
 Check whether grep returns results
 ex=$(grepm "export -p" test); ret=$?;  echo "$ret"
@@ -102,9 +103,7 @@ else
     echo not found
 fi
 -----------------------
-Variable Indirection: Variables and their values
-echo 
-"param ${s} ${!s}"
+# @Bash Variable Indirection: Variables and their values "param ${s} ${!s}"
 -----------------------
 Explanantion what CMDER Extension is all about
 1 - "Runtime Engine": Scripte und aliases für die Shell
@@ -116,5 +115,99 @@ Explanantion what CMDER Extension is all about
 9 - Wenn die gefundenen Inhalte einen Link haben, kann man damit mit CTRL+Klick direkt auf die URL Navigieren
 10 - Ein paar Sonderfunktionen gibt es auch, zB aus einem Bash Path einen WIN PAth zu machen, damit kann man zB direkt in den Internet Explorer springen oder Bilddateien aus der Konsole öffnen  und vieles mehr ....
 ----------------------
- Check if variable exists
- [ ${EXE_NPP} ] && echo "exists" || echo "doesnt exist";
+# @Bash Check if variable exists  [ ${EXE_NPP} ] && echo "exists" || echo "doesnt exist";
+ # @Bash Check if string is empty   if [ ! -z "$s_cmd" ]; then
+ 
+------------------------
+# @Bash getopts in functions
+[Bash getopts builtin command help and examples.url] "https://www.computerhope.com/unix/bash/getopts.htm#:~:text=On%20Unix%2Dlike%20operating%20systems,passed%20to%20a%20shell%20script."
+[Bash Script- Flags usage with arguments examples - Linux Tutorials - Learn Linux Configuration.url] "https://linuxconfig.org/bash-script-flags-usage-with-arguments-examples"
+[Cmder 1.3.16 keyboard shortcuts ‒ defkey.url] "https://defkey.com/cmder-1-3-shortcuts"
+[grep Linux Tutorial mit Beispielen - kushellig.de.url] "https://kushellig.de/linux-unix-grep-befehl-beispiele/"
+[How to Use Command Line Arguments in a Bash Script - Baeldung on Linux.url] "https://www.baeldung.com/linux/use-command-line-arguments-in-bash-script"
+[http---wiki.bash-hackers.org-howto-getopts_tutorial.url] "http://wiki.bash-hackers.org/howto/getopts_tutorial"
+[linux - What is the ls option to list entries by lines instead of by columns- - Unix & Linux Stack Exchange.url] "https://unix.stackexchange.com/questions/530086/what-is-the-ls-option-to-list-entries-by-lines-instead-of-by-columns"
+[Manipulating Strings.url] "https://tldp.org/LDP/abs/html/string-manipulation.html"
+[shell - My bash script doesn't print the flags - Stack Overflow.url] "https://stackoverflow.com/questions/37340885/my-bash-script-doesnt-print-the-flags"
+[Small getopts tutorial [Bash Hackers Wiki].url] "https://wiki.bash-hackers.org/howto/getopts_tutorial"
+[unix - Use grep --exclude---include syntax to not grep through certain files - Stack Overflow.url] "https://stackoverflow.com/questions/221921/use-grep-exclude-include-syntax-to-not-grep-through-certain-files"
+[bash - How can I get remaining args after pulling out parsed items using getopts- - Server Fault.url] "https://serverfault.com/questions/95077/how-can-i-get-remaining-args-after-pulling-out-parsed-items-using-getopts"
+[Bash Script- Flags usage with arguments examples - Linux Tutorials - Learn Linux Configuration.url] "https://linuxconfig.org/bash-script-flags-usage-with-arguments-examples"
+[How to Use Command Line Arguments in a Bash Script - Baeldung on Linux.url] "https://www.baeldung.com/linux/use-command-line-arguments-in-bash-script"
+[shell - How to get arguments with flags in Bash - Stack Overflow.url] "https://stackoverflow.com/questions/7069682/how-to-get-arguments-with-flags-in-bash"
+[Using getopts inside a Bash function - Stack Overflow.url] "https://stackoverflow.com/questions/16654607/using-getopts-inside-a-bash-function"
+Bash usage in functions > reset required
+DISPLAY MULTIPLE LINKS IN PATH "/c/Users/Henrik/Desktop/f"
+[bash - How can I get remaining args after pulling out parsed items using getopts- - Server Fault.url] "https://serverfault.com/questions/95077/how-can-i-get-remaining-args-after-pulling-out-parsed-items-using-getopts"
+[bash - Stop shell wildcard character expansion- - Stack Overflow.url] "https://stackoverflow.com/questions/11456403/stop-shell-wildcard-character-expansion"
+[Bash declare an empty array.url] "https://linuxhint.com/declare-empty-array-bash/"
+[Bash Reference Manual.url] "https://www.gnu.org/software/bash/manual/bash.html#Compound-Commands"
+[Bash Script- Flags usage with arguments examples - Linux Tutorials - Learn Linux Configuration.url] "https://linuxconfig.org/bash-script-flags-usage-with-arguments-examples"
+[Dynamic variable names in Bash - Stack Overflow.url] "https://stackoverflow.com/questions/16553089/dynamic-variable-names-in-bash"
+[How to Use Command Line Arguments in a Bash Script - Baeldung on Linux.url] "https://www.baeldung.com/linux/use-command-line-arguments-in-bash-script"
+[shell - How to get arguments with flags in Bash - Stack Overflow.url] "https://stackoverflow.com/questions/7069682/how-to-get-arguments-with-flags-in-bash"
+[unix - Use grep --exclude---include syntax to not grep through certain files - Stack Overflow.url] "https://stackoverflow.com/questions/221921/use-grep-exclude-include-syntax-to-not-grep-through-certain-files"
+[Using getopts inside a Bash function - Stack Overflow.url] "https://stackoverflow.com/questions/16654607/using-getopts-inside-a-bash-function"
+
+
+# while getopts 'lha:' OPTION; do
+#  case "$OPTION" in
+#    l)
+#      echo "linuxconfig"
+#      ;;
+#    h)
+#      echo "you have supplied the -h option"
+#      ;;
+#    a)
+#      avalue="$OPTARG"
+#      echo "The value provided is $OPTARG"
+#      ;;
+#    ?)
+#      echo "script usage: $(basename \$0) [-l] [-h] [-a somevalue]" >&2
+#      exit 1
+#      ;;
+#  esac
+#done
+
+grepm_args3() {
+    local OPTIND
+    # ":" expects params
+    while getopts "a:e:" opt; do
+        echo "OPTION $opt"
+        case "${opt}" in
+            a)
+                echo "xxx $OPTIND ${OPTARG} ERR $OPTERR"
+                ;;
+            e)
+                echo "xxx $OPTIND ${OPTARG} ERR $OPTERR"                
+                ;;                
+        esac
+    done
+    remaining_args="${@:$OPTIND}"
+    echo "REMAINING ${remaining_args}"
+    #echo "string is ${#1} characters long"    
+}
+
+# @Bash getopts in functions 2022-05-01 Create an Array
+# indirection "param ${s} ${!s}"
+my_array=("cat" "dog" "mouse" "frog)
+# @Bash LENGTH of array:  len_array=${#my_array[@]}
+# @Bash  Loop over array for i in ${!my_array[@]}; do; echo "element $i is ${my_array[$i]}"; done
+# @Bash  Loop over array created from string
+    arg_list=($@)      
+    set +f        
+    #s_cmd+="${s_arg}"    
+    num_args=${#arg_list[@]}
+    for ((k=0; k<num_args; k++)); do
+        # echo " ${arg_list[$k]}"
+        if [ $k -eq 0 ]; then
+            s_cmd+=" ${s_arg} ${arg_list[$k]}"
+        else
+            s_cmd+="${s_grep_pipe} ${arg_list[$k]}"
+        fi
+    done           
+    echo "grepp() [${s_cmd}]"
+    eval "${s_cmd}"
+-------------
+
+

@@ -218,7 +218,12 @@ Call "C:\<Path to>\Notepad++\notepad++.exe" {file} -n{line}
 
 7.1 Setting up Meld [06]
 Check Use Syntax Highlighting (Only works with some color schems like oblivion)
-Dark Mode seems to work with a given theme already  
+
+Dark Mode 
+<Meld>\etc\gtk-3.0 > settings.ini
+[Settings]
+gtk-application-prefer-dark-theme=true
+
 
 7.2 Navigating to Code Editor
 Use absolute paths for exe files, eg
@@ -389,6 +394,7 @@ CMDER
 [11] https://npp-user-manual.org/docs/command-prompt/
 [12] https://stackoverflow.com/questions/39453951/open-file-at-specific-line-in-vscode
 [13] https://code.visualstudio.com/docs/editor/command-line
+-----------------
 
   
   
