@@ -4,6 +4,7 @@
 *_done.txt
 *_report.txt
 *.bak
+*.minttyrc
 old.*
 global.sh
 todo.sh
@@ -35,3 +36,5 @@ Shell Command Language.url
 !doc_install_util.txt
 */todo_txt/*.txt
 githome/.gitconfig.swp
+todo/header_todo.sh
+todo/header_todo.sh

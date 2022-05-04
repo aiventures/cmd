@@ -93,9 +93,12 @@ function open () {
                 s_cmd="$EXE_MLO \"$pwin\" &"
                 ;;
             # filetype Excel
-            xlsx)
+            xlsx|xls)
                 s_cmd="\"$EXE_XLS\" \"$pwin\" &"
                 ;;
+            doc|docx)
+                s_cmd="\"$EXE_WORD\" \"$pwin\" &"
+                ;;                
             # filetype: Images / opened with default editor
             jpg|png|svg)
                 p_curr="$PWD"
@@ -107,6 +110,10 @@ function open () {
             exe|bat)			
                 s_cmd="\"$pwin\" &"
                 ;;
+            pdf)			            
+                s_cmd="\"$EXE_PDF\" \"$pwin\" &"
+                echo "${s_cmd}"
+                ;;                                
             zip|jar)
                 s_cmd="\"$OPEN_ZIP\" \"$pwin\" &"             
                 ;;
