@@ -127,6 +127,16 @@ function open () {
                     s_cmd="\"$OPEN_CODE_EDITOR\" \"$pwin\""
                 fi                
                 ;;
+            json)
+                # open code with eclipse at given line
+                if [ ! -z "$l" ]; then
+                    echo "CALL get_line_command"					
+                    s_cmd="${OPEN_ECLIPSE} \"$pwin:"$l"\""                 
+                # open code without given line
+                else
+                    s_cmd="${OPEN_ECLIPSE} \"$pwin\""
+                fi                
+                ;;				
             *)  
                 # default is to start with notepad++
                 # todo also check out for other extensions
@@ -147,7 +157,9 @@ function open () {
     elif [ -d "$encoded_path" ]; then
         pwin=$(towinpath "$encoded_path")
         echo "Opening path \"$pwin\""
-        explorer "$pwin"
+	    explorer_s="\"${WIN_EXPLORER}\" \"${pwin}\""
+        echo "${explorer_s}"
+	    eval "${explorer_s}"
     else
         pwin="$encoded_path"
         echo "\"$pwin\" is not a valid file object"

@@ -15,8 +15,8 @@ alias r="source ~/.bashrc"
 alias cls='printf "\033c"'
 
 # aliases for default usage of bash commands
-alias ll='ls -l'
-alias lc='ls -F --color=auto --show-control-chars'
+alias ll='ls -l -a --color=auto --show-control-chars'
+alias lc='ls -F -a --color=auto --show-control-chars'
 
 # display links in links folder
 open_links="walk_dir \"$p_links\""

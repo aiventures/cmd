@@ -4,6 +4,10 @@ echo "---- BEGIN functions_global.sh ----"
 # that need to be defined up front
 GREP_PIPE="| grep --color=always -in"
 
+# WINDOWS_EXPLORER @TODO DEFINE
+export WIN_EXPLORER="/C/Windows/explorer.exe"
+echo "     Setting WINDOWS_EXPLORER TO \"${WIN_EXPLORER}\""
+
 function encode_path () {
 	: encode_path "<path that may contain spaces>"
     : navigates tp open explorer for path in shell notation 
@@ -57,15 +61,15 @@ function var_exists {
 function export_path {
     : "export_path "$1 ${@:2}""
     : "exports (valid) path as variable"
-    param="$1"
+    param="${1}"
     # address issue with spaces in path
     value="${@:2}"
-    check_path "$value"
+    check_path "${value}"
     # only export path if valid path
     if [ $? -eq 0 ]; then    
-        expr="$param=\"$value\""
+        expr="$param=\"${value}\""
         # echo "CREATE EXPORT $expr"
-        eval $expr
+        eval "${expr}"
         export $param
         return 0
     else
@@ -224,6 +228,7 @@ function cdd () {
 	encoded_path="$(encode_path "$@")"
 	local d="cd \"$encoded_path\""
 	echo "$d"; eval $d
+	ls -F -a --color=auto --show-control-chars
 }
 
 function cdl () {
@@ -241,7 +246,8 @@ function cdl () {
 
     p_last="${PWD}"
     local d="cd \"$encoded_path\"";
-	echo "$d"; eval $d
+    echo "$d"; eval $d
+    ls -F -a --color=auto --show-control-chars
 }
 
 function grepm () {

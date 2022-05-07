@@ -27,10 +27,10 @@ echo "     TODO.TXT EXE_TODO:    $EXE_TODO"
 # todo file location (should be an absolute path)
 # is used in configuration files
 # the files tobe written are defined in config files
-export_path p_todo_work "$p_cmd/todo/todo_txt"
+export_path p_todo_work "${p_cmd}/todo/todo_txt"
 
 # search in todo folder / only in text files
-alias grep_todo="cd \"$p_todo_work\"; ls -a; grepm  \"grep --include='*.txt' --color=always -irn\" "
+alias grep_todo="cd \"{$p_todo_work}\"; ls -a; grepm  \"grep --include='*.txt' --color=always -irn\" "
 
 # register todo files and their variabes / aliases
 # optional reading of config files

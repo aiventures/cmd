@@ -54,8 +54,8 @@ function register_todo () {
     
     # check todo.txt configuration
     local f_todo_cfg="${p_todo_cfg}/${root_name}.cfg"
-    echo "     TODO.TXT CONFIG FILE: $f_todo_cfg"
-    check_path $f_todo_cfg; [ "$?" -eq 0 ] || return false
+    echo "     TODO.TXT CONFIG FILE: ${f_todo_cfg}"
+    # check_path "${f_todo_cfg}"; [ "$?" -eq 0 ] || return false
 
     # export variables
     # echo "EXPORT TO VARIABLE f_${root_name} $f_todo "
@@ -65,8 +65,8 @@ function register_todo () {
     export_path "f_${root_name}_cfg" $f_todo_cfg
 
     # create alias to open todo file
-    expr_open="alias open_${root_name}=\"open \"$f_todo\"\""
-    eval $expr_open 
+    expr_open="alias open_${root_name}='open \"${f_todo}\"'"
+    eval "${expr_open}" 
 
     # create alias to run todo.txt with given configuration
     todo_alias="t_"
