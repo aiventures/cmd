@@ -228,7 +228,7 @@ function cdd () {
 	encoded_path="$(encode_path "$@")"
 	local d="cd \"$encoded_path\""
 	echo "$d"; eval $d
-	ls -F -a --color=auto --show-control-chars
+	# ls -F -a --color=auto --show-control-chars
 }
 
 function cdl () {
@@ -457,5 +457,145 @@ function grepp () {
     echo "grepp() [${s_cmd}]"
     eval "${s_cmd}"
 }
+
+function grep_path_any () {
+    : "convenience wrapper for grep command with params"    
+    : "to match any search terms"      
+    : "i multiple directorues for help check grepp -h "
+   
+    local OPTIND
+    local s_arg=""
+    local s_path=""
+    local s_search_term=""
+    local s_search_arg=""
+    # command for grep command
+    local s_cmd="grep --color=always -irn"
+    local s_grep_pipe="|grep --color=always -in"
+    local s_grep_pipe_cmd=""
+    local s_cmd_all="${s_cmd}"
+
+    # disable wildcard expansion; put entries into list
+    set -f
+    while getopts "p:s:i:e:h" opt; do
+        case "${opt}" in
+            i)
+                arr=(${OPTARG})
+                #echo "PARAM I $OPTIND ARGS[${OPTARG}] ERR $OPTERR ARR LENGTH ${#arr[@]}"
+                for k in ${!arr[@]}; do
+                  s_arg+=" --include=\"${arr[$k]}\""
+                done
+                ;;
+            e)    
+                arr=(${OPTARG})
+                for k in ${!arr[@]}; do
+                  s_arg+=" --exclude=\"${arr[$k]}\""
+                done
+                ;;
+            p)
+                arr=(${OPTARG})
+                for k in ${!arr[@]}; do
+                  s_path+=" \"${arr[$k]}\""
+                  echo "x ${arr[$k]}"
+                done
+                ;;                  
+            s)
+                #echo "ARGUMENT ${OPTARG} first arg is $first_arg"
+                if [ "$s_search_arg" = "" ]; then
+                    s_search_arg="${OPTARG}"
+                    s_cmd_all=${s_cmd}
+                else
+                    #s_grep_pipe_cmd+="${s_grep_pipe} \"${OPTARG}\""
+                    s_search_arg+="\|${OPTARG}"
+                fi
+                ;;                            
+            h)  echo "usage grep_pathm -p path1 -p path2 ... -s search term 1 -s search term 2 ..."
+                echo "                 [-i \"list of including terms\"] [-e \"list of excluding terms\"] list of search terms for grep" 
+                echo "                 arguments need to be put in string!"               
+                echo "                 example grepp -i \"*.sh\" -e \"*.txt\" search1 search2  (search in specific filetypes)"               
+                ;;
+        esac
+    done    
+    set +f 
+    #echo "PATH ${s_path}"
+    s_cmd_all="${s_cmd_all} ${s_arg} \"${s_search_arg}\" ${s_path}"
+    echo "${s_cmd_all}"
+    eval "${s_cmd_all}"
+} 
+
+function grep_path_all () {
+    : "convenience wrapper for grep command with params"  
+    : "to match all search terms"  
+    : "i multiple directories for help check grepp -h "    
+   
+    local OPTIND
+    local s_arg=""
+    local s_path=""
+    local s_search_term=""
+    local s_search_arg=""
+    local s_search_term_list="SEARCH TERMS: "
+    local s_xarg="|xargs grep -il "
+    local s_xargs=""
+    # command for grep command
+    local s_cmd="grep -ril"
+    local s_grep_pipe="|xargs grep --color=always -Hin"
+    local s_grep_pipe_cmd=""
+    local s_cmd_all="${s_cmd}"
+
+    # disable wildcard expansion; put entries into list
+    set -f
+    while getopts "p:s:i:e:h" opt; do
+        case "${opt}" in
+            i)
+                arr=(${OPTARG})
+                #echo "PARAM I $OPTIND ARGS[${OPTARG}] ERR $OPTERR ARR LENGTH ${#arr[@]}"
+                for k in ${!arr[@]}; do
+                  s_arg+=" --include=\"${arr[$k]}\""
+                done
+                ;;
+            e)    
+                arr=(${OPTARG})
+                for k in ${!arr[@]}; do
+                  s_arg+=" --exclude=\"${arr[$k]}\""
+                done
+                ;;
+            p)
+                arr=(${OPTARG})
+                for k in ${!arr[@]}; do
+                  # convert path
+                  #converted_path="$(towinpath ${arr[$k]})"
+                  #s_path+=" \"${converted_path}\""
+                  s_path+="\"${arr[$k]}\" "
+                  #echo "x ${arr[$k]}"
+                done
+                ;;                  
+            s)
+                s_search_term_list+=" \"${OPTARG}\""
+                s_grep_pipe_cmd="${s_grep_pipe} \"${OPTARG}\""
+                #echo "ARGUMENT ${OPTARG} first arg is $first_arg"
+                if [ "$s_search_arg" = "" ]; then
+                    s_search_arg="${OPTARG}"
+                    s_cmd_all=${s_cmd}
+                else
+                    #s_grep_pipe_cmd+="${s_grep_pipe} \"${OPTARG}\""
+                    s_xargs+="${s_xarg} \"${OPTARG}\""
+                fi
+                ;;                            
+            h)  echo "usage grep_pathm -p path1 -p path2 ... -s search term 1 -s search term 2 ..."
+                echo "                 [-i \"list of including terms\"] [-e \"list of excluding terms\"] list of search terms for grep" 
+                echo "                 arguments need to be put in string! Right now p only works with unix notation /c/path/... " 
+                echo "                 (only forward slashes allowed but C:/path/...  is also ok"                 
+                echo "                 example grep_path_all -p \"C:/p/...\" -s \"greptest\" -s \"abc\" -i \"*.txt\""               
+                echo "                 only matches txt files containing both abc and grep test"         
+
+                ;;
+        esac
+    done    
+    set +f 
+    #echo "PATH ${s_path}"
+    s_cmd_all="${s_cmd_all} ${s_arg} \"${s_search_arg}\" ${s_path} ${s_xargs} ${s_grep_pipe_cmd}"
+    echo "${s_search_term_list}"
+    echo "${s_cmd_all}"
+    eval "${s_cmd_all}"
+} 
 
 echo "     END functions_global.sh ----"
