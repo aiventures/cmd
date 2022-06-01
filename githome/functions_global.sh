@@ -325,6 +325,26 @@ function grepm_args () {
     echo "$grep_cmd"
 }
 
+function grep_single_file () {
+    : "usage grep_single_file filepath arg1 arg2 ... " 
+    : "performs search in a single file for arg1 arg2 "
+
+    p=${1}
+    grep_cmd="grep -iHn --color=always \"@\" \"#\""
+    # replace placeholders @ and #
+    grep_cmd="${grep_cmd//#/${p}}"
+    grep_cmd="${grep_cmd//@/${2}}"    
+
+    grep_pipe="|grep --color=always -in"
+    args=("$@")
+    for ((i=2; i<$#; i++))
+    do
+        grep_cmd+="${grep_pipe} ${args[i]}"
+    done     
+    echo "${grep_cmd}"
+    eval "${grep_cmd}"
+}
+
 function register_shortcuts () {
     : "register a file object to automatically create aliases"
     : "for opening files or directories"

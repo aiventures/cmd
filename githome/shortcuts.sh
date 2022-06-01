@@ -29,6 +29,11 @@ alias open_links_mult=$open_multiple_links
 # grep convenience command
 alias GREP="grep --color=always -in"
 
+# todo search for filenames 
+# find . -type f -iname "*.url" -o -iname "*.txt"
+# find ./ -type f -regex '.*\.\(jpg\|png\)$'
+
+
 # alias for search
 # grep pattern -irn --color=always --include=\*.{cpp,h} rootdir
 # standard grep with color recursive and non recursive version

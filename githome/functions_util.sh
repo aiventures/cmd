@@ -117,7 +117,7 @@ function open () {
             zip|jar)
                 s_cmd="\"$OPEN_ZIP\" \"$pwin\" &"             
                 ;;
-            py|sh|java)                            
+            py|sh|java|json)
                 # open code at given line
                 if [ ! -z "$l" ]; then
                     echo "CALL get_line_command"

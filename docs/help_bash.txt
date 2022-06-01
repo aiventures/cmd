@@ -187,7 +187,7 @@ grepm_args3() {
     echo "REMAINING ${remaining_args}"
     #echo "string is ${#1} characters long"    
 }
-
+----------------------
 # @Bash getopts in functions 2022-05-01 Create an Array
 # indirection "param ${s} ${!s}"
 my_array=("cat" "dog" "mouse" "frog)
@@ -209,5 +209,17 @@ my_array=("cat" "dog" "mouse" "frog)
     echo "grepp() [${s_cmd}]"
     eval "${s_cmd}"
 -------------
-
+exec bash multiple in one file
+https://askubuntu.com/questions/334994/which-one-is-better-using-or-to-execute-multiple-commands-in-one-line/539293#539293
+A; B    # Run A and then B, regardless of success of A
+A && B  # Run B if and only if A succeeded
+A || B  # Run B if and only if A failed
+A &     # Run A in background.
+-----------------
+2022-05-29 exec bash find in file names mutliple file types extensions
+https://unix.stackexchange.com/questions/15308/how-to-use-find-command-to-search-for-multiple-extensions
+https://stackoverflow.com/questions/13335837/how-to-grep-for-a-file-extension
+uniq output of stats find . -type f | egrep -i -E -o "\.{1}\w*$" | sort | uniq -c
+find with regex find ./ -type f -regex '.*\.\(txt\|url\)$'|sort
+find with o option  find . -iname "*.url" -o -iname "*.txt"
 
