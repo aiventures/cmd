@@ -228,7 +228,7 @@ function cdd () {
 	encoded_path="$(encode_path "$@")"
 	local d="cd \"$encoded_path\""
 	echo "$d"; eval $d
-	# ls -F -a --color=auto --show-control-chars
+	ls -F -a --color=auto --show-control-chars
 }
 
 function cdl () {
