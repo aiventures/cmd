@@ -1,5 +1,19 @@
-17.4.2022
 ----------- BASH SHORT CUTS --------------
+
+10.08.2022
+Recursively print / find files using find or ls
+https://stackoverflow.com/questions/5905054/how-can-i-recursively-find-all-files-in-current-and-subfolders-based-on-wildcard
+https://linux.die.net/man/1/find
+find . -print | grep -i foo
+find . -name "foo*"
+ls https://linux.die.net/man/1/ls
+--sort=WORD
+sort by WORD instead of name: none -U, extension -X, size -S, time -t, version -v
+-R, --recursive
+list subdirectories recursively
+ls -1 -R -X
+
+17.4.2022
 exec bash   : reload bash
 
 # @grep     
