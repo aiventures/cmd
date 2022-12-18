@@ -63,4 +63,5 @@ echo "     documentation ../docs/doc_install_util.txt"
 # that were defined previously
 . ~/shortcuts_personal.sh
 
-echo -e "\r\n     END util.sh functions ---- \r\n" 
+# decomment
+# echo -e "\r\n     END util.sh functions ---- \r\n" 

@@ -218,4 +218,5 @@ function grepm_zip () {
     eval "$grepm_zip_cmd"
 }
 
-echo "     END functions_util.sh ----" 
+# decomment
+# echo "     END functions_util.sh ----" 

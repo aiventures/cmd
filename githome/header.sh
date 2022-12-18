@@ -16,4 +16,5 @@ export_path help_todo "$p_docs/help_todo.txt"
 export_path help_cmder "$p_docs/help_cmder.txt"
 export_path help_install "$p_docs/doc_install_util.txt"
 
-echo -e "\r\n     END header.sh  ----"
+# decomment
+# echo -e "\r\n     END header.sh  ----"

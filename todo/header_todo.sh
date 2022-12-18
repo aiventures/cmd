@@ -19,10 +19,11 @@ export_path p_todo_cfg "$p_todo_home/todo_cfg"; [ "$?" -eq 0 ] || return false
 # will throw a warning if file won't be found
 export_path EXE_TODO "$p_todo_home/todo_cli/todo.sh"
 
-echo -e "\r\n"
-echo "     TODO.TXT p_todo_home: $p_todo_home"
-echo "     TODO.TXT p_todo_cfg:  $p_todo_cfg"
-echo "     TODO.TXT EXE_TODO:    $EXE_TODO"
+# decomment
+# echo -e "\r\n"
+# echo "     TODO.TXT p_todo_home: $p_todo_home"
+# echo "     TODO.TXT p_todo_cfg:  $p_todo_cfg"
+# echo "     TODO.TXT EXE_TODO:    $EXE_TODO"
 
 # todo file location (should be an absolute path)
 # is used in configuration files
@@ -36,9 +37,9 @@ alias grep_todo="cd \"{$p_todo_work}\"; ls -a; grepm  \"grep --include='*.txt' -
 # optional reading of config files
 # @TODO - DELETE THIS CUSTOM TODO IF NOT USED
 # or replace by your own custom todo list(s)
-register_todo "einkauf"
+# register_todo "einkauf"
 register_todo "info"
-register_todo "entmisteliste"
+# register_todo "entmisteliste"
 
 # register todo.txt  DEFAULT list
 # #TODO: Assumes there will be at least 
@@ -53,5 +54,5 @@ register_todo "todo"
 
 # shortcut to short help
 alias t_help="t_ shorthelp"
-
-echo -e "\r\n     header_todo.sh definitions ----"
+# decomment
+# echo -e "\r\n     header_todo.sh definitions ----"

@@ -69,4 +69,5 @@ if [[ $? -eq 0 ]]; then
     # compgen -A function -abck # will list all the above in one go.
 fi
 
-echo -e "\r\n     END shortcuts.sh  ----"
+# decomment
+# echo -e "\r\n     END shortcuts.sh  ----"

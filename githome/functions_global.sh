@@ -359,7 +359,8 @@ function register_shortcuts () {
         case "${opt}" in
             f)  fp="${OPTARG}"
                 base=$(basename -- ${fp})            
-                echo -e "\n     REGISTER [PATH: ${fp}] [BASENAME: ${base}]"
+                # decomment
+                # echo -e "     REGISTER [PATH: ${fp}] [BASENAME: ${base}]"
                 if [ -f "$fp" ]; then
                     prefix="f_"                    
                     name=$(get_file_name "$base")                    
@@ -421,8 +422,9 @@ function register_shortcuts () {
                 ;;
         esac
     done
-    echo "     [NAME: $name] [VARIABLE: \$$param]"    
-    echo "     ${status}"
+    # DECOMMENTED
+    # echo "     [NAME: $name] [VARIABLE: \$$param]"    
+    # echo "     ${status}"
 }
 
 function grepp () {
@@ -464,7 +466,7 @@ function grepp () {
     arg_list=($@)      
     set +f    
     
-    #s_cmd+="${s_arg}"    
+    # s_cmd+="${s_arg}"    
     num_args=${#arg_list[@]}
     for ((k=0; k<num_args; k++)); do
         # echo " ${arg_list[$k]}"
@@ -618,4 +620,5 @@ function grep_path_all () {
     eval "${s_cmd_all}"
 } 
 
-echo "     END functions_global.sh ----"
+# decomment
+# echo "     END functions_global.sh ----"
