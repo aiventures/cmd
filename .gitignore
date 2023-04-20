@@ -15,6 +15,7 @@ header_personal.sh
 .inputrc
 .gitconfig
 test.sh
+.viminfo
 
 # vs code ignore
 settings.json
@@ -39,3 +40,4 @@ githome/.gitconfig.swp
 todo/header_todo.sh
 todo/header_todo.sh
 TESTDOK.txt
+githome/gitconfig_old

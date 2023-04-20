@@ -56,6 +56,9 @@ echo "     documentation ../docs/doc_install_util.txt"
 # load shortcuts
 . ~/shortcuts.sh
 
+# load color codes
+. ~/colors.sh
+
 # load own shortcuts / 
 # use template shortcuts_template.sh
 # @TODO copy/rename to shortcuts_personal.sh 

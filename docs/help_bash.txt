@@ -1,5 +1,101 @@
 ----------- BASH SHORT CUTS --------------
 
+2023-04-15
+### BASH SHORTCUTS
+
+VIM (vim) :help in editor press ESC, :q!
+
+### CHAR/WORD CORRECTIONS 
+	[CHAR] CTRL + t    	[cA_Bd > cBA_d]  		Tauschen/swap CHAR before/after cursor 			
+	[WORD] ALT  + t    	[ABC_XYZ > XYZ ABC_] 	Tauschen/swap WORD before/after cursor: 
+	[CHAR] CTRL + h    	[c#_bd > c_bd]			Delete CHAR before Cursor                       
+	[CHAR] CTRL + d    	[ca_#d > ca_d]			Delete CHAR after Cursor               			
+	[WORD] ALT  + d    	[abc_### > abc_]		Delete WORD after Cursor                
+	[WORD] ALT  + u    	[abc_xyz > abcXYZ_]		Upper case WORD 						
+	[WORD] ALT  + l    	[abc_XYZ > abcxyz_]		Lower case WORD 						
+	[CHAR] ALT  + c    	[xa_by > xaBy_] 		Capitalize CHAR after Cursor/move to next word  
+	[WORD] CTRL + w    	[###_xyz > xyz]			Cut WORD before cursor to clipboard     
+	[LINE] CTRL + k    	[123_### ### > 123_]	Cut LINE after cursor to clipboard      
+	[LINE] CTRL + u    	[###_abc xyz > _abc xyz]Cut LINE before cursor to clipboard     
+### NAVIGATION 
+	CTRl + a									(anfang) - HOME
+	CTRL + e									(ende) - END
+	ALT  + b									(backwards one word)
+	ALT  + f									(forward one word)
+### EDITING
+	TAB         								Tab completion for file/directory names
+	history #n  								Show last #n entries from history
+	CTRL + R    								History search, type string, go back with CTRL+R
+	![NUM]      								Enter the NUM form history to execute command
+	ALT  + r    								(revert changes like history)
+	CTRL + L 									clear Screen
+	CTRL + p									(previous COMMAND)
+	CTRL + n									(next COMMAND)
+	CTRL + y 									paste last cut
+	CTRL + _    								Undo (CTRL + SHIFT + -)
+	CTRL + +/-  								Change Font Size 
+
+# SOME BASH VARIABLE OF INTEREST
+# History Values
+# HISTFILE,HISTSIZE,HISTFILESIZE
+
+# ALIASES FOR WORK
+# search in folder alias grep_m='ls -a; grepm"grep --color=always -irn"'
+# move to a folder, search in filename with mutliple keywords  alias find_folder='cdd"${FOLDER}"; find . -print | grep --color=always -in'
+# find directories recursively by directory name with keywords  alias find_dirs='find . -mindepth 1 -type d | grep -i --color=always'
+# file statistics alias find_filetype_stats='find . -type f | egrep -i -E -o"\.{1}\w*$" | sort | uniq -c'
+# search for file names alias find_r='find . -print | grep --color=always -in'
+# Bash Command aliases 
+# alias git_config='git config --list --global &'
+# alias git_difftool='git difftool --dir-diff &'
+# alias git_mergetool='git mergetool &'
+# search in available aliases 						alias grep_alias='grepm"alias"'
+# search in all functions / executables 			alias grep_commands='grepm"compgen  -abckA function"'
+# display all functions 							alias grep_functions='grepm"declare -F|grep -iv _git"'
+# search in enviroment variables 					alias grep_env='grepm"env"'
+# display exported variables 						alias grep_export='grepm"export -p"'
+# display all declared variables 					alias grep_variables='grepm"compgen -v"'
+# search in a single file 							alias greps_doc_sf="cdd \"$p\":single_file; grep_single_file \"$single_file\""
+# display a function definition                     type <func_name> [| grep --color=always -in":"] / with or without full code
+
+function bash_shortcuts_info () {
+	: bash shortcuts help 
+    echo "### BASH SHORTCUTS"
+    echo ""
+    echo "VIM (vim) :help in editor press ESC, :q!"
+    echo ""
+    echo "### CHAR/WORD CORRECTIONS"
+    echo "    [CHAR] CTRL + t        [cA_Bd > cBA_d]          Tauschen/swap CHAR before/after cursor"
+    echo "    [WORD] ALT  + t        [ABC_XYZ > XYZ ABC_]     Tauschen/swap WORD before/after cursor:"
+    echo "    [CHAR] CTRL + h        [c#_bd > c_bd]           Delete CHAR before Cursor"
+    echo "    [CHAR] CTRL + d        [ca_#d > ca_d]           Delete CHAR after Cursor"
+    echo "    [WORD] ALT  + d        [abc_### > abc_]         Delete WORD after Cursor"
+    echo "    [WORD] ALT  + u        [abc_xyz > abcXYZ_]      Upper case WORD"
+    echo "    [WORD] ALT  + l        [abc_XYZ > abcxyz_]      Lower case WORD"
+    echo "    [CHAR] ALT  + c        [xa_by > xaBy_]          Capitalize CHAR after Cursor/move to next word"
+    echo "    [WORD] CTRL + w        [###_xyz > xyz]          Cut WORD before cursor to clipboard"
+    echo "    [LINE] CTRL + k        [123_### ### > 123_]     Cut LINE after cursor to clipboard"
+    echo "    [LINE] CTRL + u        [###_abc xyz > _abc xyz] Cut LINE before cursor to clipboard"
+    echo "### NAVIGATION"
+    echo "    CTRl + a                                        (anfang) - HOME"
+    echo "    CTRL + e                                        (ende) - END"
+    echo "    ALT  + b                                        (backwards one word)"
+    echo "    ALT  + f                                        (forward one word)"
+    echo "### EDITING"
+    echo "    TAB                                             Tab completion for file/directory names"
+    echo "    history #n                                      Show last #n entries from history"
+    echo "    CTRL + R                                        History search, type string, go back with CTRL+R"
+    echo "    ![NUM]                                          Enter the NUM form history to execute command"
+    echo "    ALT  + r                                        (revert changes like history)"
+    echo "    CTRL + L                                        clear Screen"
+    echo "    CTRL + p                                        (previous COMMAND)"
+    echo "    CTRL + n                                        (next COMMAND)"
+    echo "    CTRL + y                                        paste last cut"
+    echo "    CTRL + _                                        Undo (CTRL + SHIFT + -)"
+    echo "    CTRL + +/-                                      Change Font Size"
+}	
+alias help_bash="bash_shortcuts_info"
+
 10.08.2022
 Recursively print / find files using find or ls
 https://stackoverflow.com/questions/5905054/how-can-i-recursively-find-all-files-in-current-and-subfolders-based-on-wildcard

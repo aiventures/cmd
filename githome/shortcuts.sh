@@ -2,7 +2,6 @@ echo "---- BEGIN shortcuts.sh  ----"
 
 # --- verify variable definitions that are referenced below---
 var_exists p_docs
-var_exists p_links
 
 # defining shortcuts to some commands
 # notice: aliases to path definitions are loaded from header.sh
@@ -19,12 +18,12 @@ alias ll='ls -l -a --color=auto --show-control-chars'
 alias lc='ls -F -a --color=auto --show-control-chars'
 
 # display links in links folder
-open_links="walk_dir \"$p_links\""
-alias open_links=$open_links
+# open_links="walk_dir \"$p_links\""
+# alias open_links=$open_links
 
 # opening multiple links of a folder in browser
 open_multiple_links="open_multiple_links"
-alias open_links_mult=$open_multiple_links
+alias open_links_mult="$open_multiple_links ."
 
 # grep convenience command
 alias GREP="grep --color=always -in"
@@ -57,8 +56,6 @@ if [[ $? -eq 0 ]]; then
     alias grep_functions="grepm \"declare -F|grep -iv _git\""
     # list exported functions
     alias grep_export="grepm \"export -p\""
-    # list links in links folder
-    alias grep_links="grepm \"$open_links\""
     # list environment variables
     alias grep_env="grepm \"env\""
     # https://unix.stackexchange.com/questions/94775/list-all-commands-that-a-shell-knows
