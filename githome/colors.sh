@@ -50,7 +50,7 @@ export COLOR_UNDERLINE='\033[4m'
 
 function echo_color {
     : output string line with color codes
-    : usage color_echo string color_codes
+    : usage echo_color [string] [color_codes]
     echo -e "$2${1}$COLOR_DEFAULT"
 }
 
