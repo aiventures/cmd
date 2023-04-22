@@ -96,6 +96,9 @@ function bash_shortcuts_info () {
 }	
 alias help_bash="bash_shortcuts_info"
 
+
+
+
 10.08.2022
 Recursively print / find files using find or ls
 https://stackoverflow.com/questions/5905054/how-can-i-recursively-find-all-files-in-current-and-subfolders-based-on-wildcard
@@ -332,4 +335,82 @@ https://stackoverflow.com/questions/13335837/how-to-grep-for-a-file-extension
 uniq output of stats find . -type f | egrep -i -E -o "\.{1}\w*$" | sort | uniq -c
 find with regex find ./ -type f -regex '.*\.\(txt\|url\)$'|sort
 find with o option  find . -iname "*.url" -o -iname "*.txt"
+
+
+#2022-04-23 Colored BASH help
+function bash_shortcuts_info_color () {
+	: bash shortcuts help in color version
+	color_title=$COLOR_CYAN
+	color_char=$COLOR_YELLOW
+	color_word=$COLOR_GREEN
+    color_line=$COLOR_LIGHT_PURPLE
+    color_swap=$COLOR_LIGHTORANGE
+    colorcursor=$COLOR_MAROON_BG
+    color_delete=$COLOR_ORANGE_BG
+	
+
+    # colored chars
+    crsr="$(echo_color _ $colorcursor)"
+    delc="$(echo_color \# $color_delete)"
+    a="$(echo_color a $COLOR_YELLOW)"
+    A="$(echo_color A $COLOR_YELLOW)"
+    b="$(echo_color b $COLOR_LIGHT_CYAN)"
+    B="$(echo_color B $COLOR_LIGHT_CYAN)"
+    ctl="$(echo_color CTRL $COLOR_LIGHT_CYAN)"
+    alt="$(echo_color ALT $COLOR_LIME)"
+    xyz="$(echo_color xyz $COLOR_LAVENDER)"
+    XYZ="$(echo_color XYZ $COLOR_LAVENDER)"
+    abc="$(echo_color abc $COLOR_SKYBLUE)"
+    ABC="$(echo_color ABC $COLOR_SKYBLUE)"      
+
+    echo_color "### BASH SHORTCUTS" $COLOR_HOTPINK_BG
+    echo ""
+    echo_color "### VIM (vim) :help in editor press ESC, :q!" $color_title
+    echo ""
+    echo_color "### CHAR/WORD CORRECTIONS" $color_title     
+
+
+    op="[c${A}${crsr}${B}d > c${B}${A}${crsr}d]"
+    echo "    $(echo_color [CHAR] $color_char) ${ctl} + t        $op          Tauschen/swap $(echo_color CHAR $color_char) before/after cursor"
+    op="[c${delc}${crsr}${b}d > c${crsr}${b}d]"
+    echo "    $(echo_color [CHAR] $color_char) ${ctl} + h        $op           Delete $(echo_color CHAR $color_char) before Cursor"
+    op="[c${a}${crsr}${delc}d > c${a}${crsr}d]"
+    echo "    $(echo_color [CHAR] $color_char) ${ctl} + d        $op           Delete $(echo_color CHAR $color_char) after Cursor"
+    op="[x${a}${crsr}${b}y > x${a}${B}y${crsr}]"
+    echo "    $(echo_color [CHAR] $color_char) ${alt}  + c        $op          Capitalize $(echo_color CHAR $color_char) after Cursor/move to next $(echo_color [WORD] $color_char)"    
+    op="[${ABC}${crsr}${XYZ} > ${XYZ} ${ABC}${crsr}]"
+    echo "    $(echo_color [WORD] $color_word) ${alt}  + t        $op     Tauschen/swap $(echo_color WORD $color_word) before/after cursor:"    
+    op="[${abc}${crsr}${delc}${delc}${delc} > ${abc}${crsr}"
+    echo "    $(echo_color [WORD] $color_word) ${alt}  + d        $op          Delete $(echo_color WORD $color_word) after Cursor"
+    op="[${abc}${crsr}${xyz} > ${abc}${XYZ}${crsr}]"
+    echo "    $(echo_color [WORD] $color_word) ${alt}  + u        $op      Upper case $(echo_color WORD $color_word)"
+    op="[${abc}${crsr}${XYZ} > ${abc}${xyz}${crsr}]"
+    echo "    $(echo_color [WORD] $color_word) ${alt}  + l        $op      Lower case $(echo_color WORD $color_word)"
+    op="[${delc}${delc}${delc}${crsr}${xyz} > ${xyz}]"
+    echo "    $(echo_color [WORD] $color_word) ${ctl} + w        $op          Cut $(echo_color WORD $color_word) before cursor to clipboard"
+    op="[123${crsr}${delc}${delc}${delc} ${delc}${delc}${delc} > 123${crsr}]"
+    echo "    $(echo_color [LINE] $color_line) ${ctl} + k        $op     Cut $(echo_color LINE $color_line)  after cursor to clipboard"
+    op="[${delc}${delc}${delc}${crsr}${abc} ${xyz} > ${crsr}${abc} ${xyz}]"
+    echo "    $(echo_color [LINE] $color_line) ${ctl} + u        $op Cut $(echo_color LINE $color_line) before cursor to clipboard" 
+
+    echo_color "### NAVIGATION" $color_title
+    echo "    ${ctl} + a                                        (anfang) - HOME"
+    echo "    ${ctl} + e                                        (ende) - END"
+    echo "    ${alt}  + b                                        (backwards one word)"
+    echo "    ${alt}  + f                                        (forward one word)"
+    echo_color "### EDITING" $color_title    
+    echo "    TAB                                             Tab completion for file/directory names"
+    echo "    history #n                                      Show last #n entries from history"
+    echo "    ${ctl} + R                                        History search, type string, go back with ${ctl}+R"
+    echo "    ![NUM]                                          Enter the NUM form history to execute command"
+    echo "    ${alt}  + r                                        (revert changes like history)"
+    echo "    ${ctl} + L                                        clear Screen"
+    echo "    ${ctl} + p                                        (previous COMMAND)"
+    echo "    ${ctl} + n                                        (next COMMAND)"
+    echo "    ${ctl} + y                                        paste last cut"
+    echo "    ${ctl} + _                                        Undo (${ctl} + SHIFT + -)"
+    echo "    ${ctl} + +/-                                      Change Font Size"    
+
+}	
+
 
