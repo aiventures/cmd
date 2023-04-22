@@ -155,11 +155,22 @@ function open () {
         fi
         
     elif [ -d "$encoded_path" ]; then
+        # parameter is a path
         pwin=$(towinpath "$encoded_path")
         echo "Opening path \"$pwin\""
-	    explorer_s="\"${WIN_EXPLORER}\" \"${pwin}\""
-        echo "${explorer_s}"
-	    eval "${explorer_s}"
+        # use total commander if it is defined 
+        # (preferably in globals.sh)
+        # otherwise use explorer 
+        var_exists "EXE_TOTAL_COMMANDER"
+        if [ $? -eq 0 ]; then
+            total_commander_s="\"${EXE_TOTAL_COMMANDER}\" /o /L=\"${pwin}\" /R=\"${pwin}\" &"
+            echo "Running ${total_commander_s}"
+            eval "${total_commander_s}"  
+        else
+	        explorer_s="\"${WIN_EXPLORER}\" \"${pwin}\""
+            echo "${explorer_s}"
+	        eval "${explorer_s}"              
+        fi
     else
         pwin="$encoded_path"
         echo "\"$pwin\" is not a valid file object"

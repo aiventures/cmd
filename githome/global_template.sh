@@ -59,6 +59,9 @@ export_path EXE_NPP "$p_tools/Notepad++/notepad++.exe"
 # there is a bash alias already for NPP
 OPEN_NPP="Notepad++"
 
+# total commander define path if you want to use it 
+# export_path EXE_TOTAL_COMMANDER "$p_tools/totalcmd/TOTALCMD64.EXE"
+
 # VS CODE
 # @TODO / CHECK PATH
 export_path EXE_CODE "${P_PROGRAM_FILES}/Microsoft VS Code/code.exe"
