@@ -8,6 +8,9 @@ GREP_PIPE="| grep --color=always -in"
 export WIN_EXPLORER="/C/Windows/explorer.exe"
 echo "     Setting WINDOWS_EXPLORER TO \"${WIN_EXPLORER}\""
 
+# CYGPATH is part of Git and a nice tool for converting paths WIN-POSIX
+export EXE_CYGPATH="cygpath.exe"
+
 function encode_path () {
 	: encode_path "<path that may contain spaces>"
     : navigates tp open explorer for path in shell notation 
@@ -29,6 +32,30 @@ function encode_path () {
 	done
 
 	echo "$s";  
+}
+
+function cygpath_convert () {
+	: "2023-04-30 Uses git provided cygpath to convert to absolute path short version (no spaces) "
+	: "<p> : Path (current if blank) <u|w|d> unix or windows (default) format "
+	: "conversion will provide short form "
+	: "cygpath_convert <p> <d|u|w>"
+	
+	num_elements=$#
+	[[ $num_elements -gt 1 ]] && conversion="$2" || conversion="w"
+	[[ $num_elements -eq 0 ]] && p="." || p="$1"
+	
+	case "${conversion}" in
+		u)
+			p_out=$( $EXE_CYGPATH -a -u "$p" )
+			;;
+		w)    
+			p_out=$( $EXE_CYGPATH -a -w -s "$p" )
+			;;                          
+		*)  echo "wrong usage, use cygpath_convert (path) (w|u) win or unix"
+			p_out=""
+			;;
+    esac	
+	echo ${p_out}
 }
 
 function check_path {
