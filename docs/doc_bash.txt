@@ -1,0 +1,382 @@
+# Archive of bash experiments
+####################################
+
+# 2023-04-29 Checking for integer values splitting grep copy of filename:line:<...> into string filename [line]
+# functions are added to functions_global.sh 
+
+function is_integer () {
+	: "2023-04-29 checks if parameter is integer "
+	: "https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"
+	[ -n "$1" ] && [ "$1" -eq "$1" ] 2>/dev/null
+	if [ $? -ne 0 ]; then	
+		false
+	else
+		true
+	fi
+}
+
+function array_from_string () {
+	: "2023-04-29 array_from_string 's' 'sep'"
+	: "separates string s into array "
+	: "if sep is supplied it will be used as separator default is colon"
+	: "Note for sep usage you need to create separate strings"
+	: "https://stackoverflow.com/questions/918886/how-do-i-split-a-string-on-a-delimiter-in-bash"
+	: "evaluate cut "
+	
+	# separator 
+    sep=":"
+	s="${1}"
+	num_args=$#
+	if [ $num_args -eq 2 ]; then
+		sep="$2"
+	fi
+	# replacing all separators by spacves 
+	array=(${s//"$sep"/ })
+	echo ${array[@]}
+}
+
+function get_file_line_from_string () {
+	: "2023-04-29 separates string of type <s>:<num> string / number"
+	: "can be used to separate filename and num from grep"
+	: "if num is not present only s will be returned "
+	
+	s="$1"
+	array=( $( array_from_string $s )  )
+	num_elements=${#array[@]}
+	if [ $num_elements -eq 1 ]; then
+		echo "$s"
+	elif [ $num_elements -gt 1 ]; then   
+		# check if second aram is integer 
+		line="${array[0]}"
+		num=${array[1]}
+		echo "LINE $line NUM $num" 
+		# check if if second argument is line 
+		$( is_integer $num )
+		if [ $? -eq 0 ]; then
+			echo "$line $num"
+		else
+			echo "$line"
+		fi 
+	fi    	
+	
+}
+
+s_test="doc_tools.txt:14:2022-06-19 So look for "
+echo "TEST STRING ${s_test}"
+echo "$( get_file_line_from_string ${s_test}  )"
+
+s_test="doc_tools.txt"
+echo -e "\nTEST STRING ${s_test}"
+echo "$( get_file_line_from_string ${s_test}  )"
+
+s_test="doc_tools.txt:adadada14:2022-06-19 So look for "
+echo -e "\nTEST STRING ${s_test}"
+echo "$( get_file_line_from_string ${s_test}  )"
+
+
+
+
+########################
+# @bash snippets 2022-04
+
+#!/bin/bash
+
+echo "test"
+
+# function_exists "export_path" && echo "
+
+#echo "$open_links"
+
+#x=$(grepm \"$open_links\""
+#echo "$x"
+#=$(grepm "export -p" s)
+#ex=$(grepm "export -p" test); ret=$?
+#echo "$ret"
+
+#if [ $ret -eq 0 ]; then
+#    echo found
+#else
+#    echo not found
+#fi
+
+#alias grep_todo="cd \"$p_todo_work\"; ls -a; grepm  \"grep --include='*.txt' --color=always -irn\" "
+#alias grep_todo=$grep_todo
+
+#export_path f_todo_cfg "$p_todo_cfg/todo.cfg"
+#todo_command="cls; $EXE_TODO -c -d \"$f_todo_cfg\""
+#alias t_=$todo_command
+
+# you can open the files in notepad++ 
+# by entering "open $f_todo" in console
+#export_path f_todo_done "$p_todo_work/todo_done.txt"
+#export_path f_todo_report "$p_todo_work/todo_report.txt"
+#export_path f_todo "$p_todo_work/todo.txt"
+
+# open todo.txt in notepad
+#alias open_todo="open \"$f_todo\""
+
+#f_todo_txt
+# evaluate and return for negative case
+#[ "$root_name" = "todo" ]; [ "$?" -eq 0 ] || echo not ok
+# && echo ok || echo not ok
+#check_path $f_todo; [ "$?" -eq 0 ] || return false
+
+#read_todo_config
+
+
+# i=0
+# while [[ $i -lt 5 ]]
+# do
+#   echo "Number: $i"
+#   ((i++))
+#   if [[ $i -eq 2 ]]; then
+#     break
+#   fi
+# done
+
+# . ~/../todo/functions_todo.sh
+
+#read_todo_config "/c/<....>e/CMD/todo/todo_cfg/todo.cfg"
+# root_name="todo"
+# register_todo $root_name
+# . ~/../todo/functions_todo.sh
+
+#s="f_todo_cfg"
+#echo "param ${s} ${!s}"
+#var_exists "$s" && echo ok || echo not_ok
+# read_todo_config "todo"
+
+#   var_exists "$config_file_name" || return 1
+#    f="${!$config_file_name}"
+#    echo "     Path: $f"
+
+#    var_exists "$config_file_name" || return 1
+#    f="${!config_file_name}"
+#    echo "     Path: $f ${!f}"
+
+#s="f_einkauf_cfg"
+#t="${!s}"
+#f="${!s}"
+#read_todo_config "todo
+# loop over grep resiult list
+#x=$(compgen -v|grep -in "f_")
+# loop over entries
+# printf "\r\n%s" "$x"
+#regex=".*:(.*)"
+#for line in $x
+#do
+    # echo "line $line"
+#    if [[ $line =~ $regex ]]; then
+#        res="${BASH_REMATCH[1]}"
+#        echo "result $res  value ${!res}"
+#    fi     
+#done
+#compgen -v|grep -ir f_
+
+#p="/c/<ysvssdv>/_UMO/test"
+#open_multiple_links "$p"
+#s="all elements except LAST_one"
+#p_old="/c/05_TRANSIENT/<...>/githome"
+
+# function grepm_args () {
+#     : like grepm but a given number of arguments first argument 
+#     : is taken as part of first command
+#     : "usage grepm_args <num> <arg1> <argn> <arg n+1> <arg N>"
+#     : takes the first n arguments and adds the remaining argumants
+#     : as argument grep chain
+#     : "<arg 1>...<arg n>|grep <arg n+1>|...|grep <arg N>"
+    
+#     num_command_params=$(($1+1))
+#     num_params=$#
+
+#     command_part="${@:2:3}"
+#     grep_params=""
+#     n=0;
+#     cmd=""
+#     for ((i=2; i<=$#; i++))
+#     do
+#         # echo "$i - PARAM ${!i}"
+#         ((n++))
+#         if [ $n -lt $num_command_params ]; then
+#             cmd+="${!i} "
+#         else
+#             cmd+="| grep --color=always -in \"${!i}\""
+#         fi
+
+#     done    
+#     echo "$cmd"
+# }
+
+# specify num of arguments to be taken as command
+# alias grep_7z="grepm \"$EXE_7ZIP_CMD l\""
+#p="/c/Users/<user>/Desktop/jp.zip"
+#tmp_cmd="\"$EXE_7ZIP_CMD\" l"
+# (grepm_zip "$p" bat )
+#alias grep_zip=grepm_zip
+#echo "$grepzip"; 
+#eval "$grepzip"
+
+#s="dee"
+#if [ $s ]; then
+#  echo "is string"
+#else
+#  echo "empty string"
+#fi
+#OPEN_CODE_AT_LINE="\CODE\" --goto \"@:#\""
+#p="/test"
+#n=20
+#cmd_open="${OPEN_CODE_AT_LINE//@/${p}}"          
+#cmd_open="${cmd_open//#/${n}}"    
+#echo "$cmd_open"
+
+#message='The secret code is 12345'
+#echo "${message//[0-9]/X}"           
+## prints 'The secret code is XXXXX'
+
+# grep_template="ls -a; grep --include={'*.txt','*.sh'} --color=always -irn"
+# open_code_at_line="\"CODE\" --goto \"@:#\"
+# first argument is list of include term for grep , for example "'*.txt','*.sh'"
+
+
+#grep_template="ls -a; grep --include={@} --color=always -irn"
+#replace_term="'*.txt','*.sh'"
+#grep_template="${grep_template//@/${replace_term}}"
+#echo "$grep_template"
+
+# alias grep_multiple_ext="ls -a; $grep_template"
+#function testf () { 
+#    echo "${1}"
+#    echo "${@:2:}"
+#}
+#testf "arg1" "arg2" "arg3"
+
+# bash converting string to array
+#s="a1 a2 a3"
+#read -a arr <<< "$s"
+## arr=("$s")
+#arr=("a1" "a2")
+#echo "$arr"
+#n="${#arr[@]}"
+#echo "$n"
+#echo "${#arr[@]}"
+#for str in ${arr[@]}; do
+#  echo $str
+#done
+
+# evaluating flag arguments 
+# https://www.baeldung.com/linux/use-command-line-arguments-in-bash-script
+# https://linuxconfig.org/bash-script-flags-usage-with-arguments-examples
+#while getopts u:a:f: flag
+#do
+#    case "${flag}" in
+#        u) username=${OPTARG};;
+#        a) age=${OPTARG};;
+#        f) fullname=${OPTARG};;
+#    esac
+#done
+
+# https://stackoverflow.com/questions/221921/use-grep-exclude-include-syntax-to-not-grep-through-certain-files
+# grep "z-index" . --include=*.js --exclude=*js/lib/* --exclude=*.min.js
+# -iI I non binary only i case insensitive
+# grep -iIrn --include=*.sh --exclude=g*.sh test
+# open_code_at_line="${open_code_at_line//@/${p}}"
+# open_code_at_line="${open_code_at_line//#/${l}}" 
+#alias grep_cmd="cdd \"$p_cmd\"; ls -a; $grep_multiple"
+# while getopts 'lha:' OPTION; do
+#  case "$OPTION" in
+#    l)
+#      echo "linuxconfig"
+#      ;;
+#    h)
+#      echo "you have supplied the -h option"
+#      ;;
+#    a)
+#      avalue="$OPTARG"
+#      echo "The value provided is $OPTARG"
+#      ;;
+#    ?)
+#      echo "script usage: $(basename \$0) [-l] [-h] [-a somevalue]" >&2
+#      exit 1
+#      ;;
+#  esac
+#done
+#shift "$(($OPTIND -1))"
+# https://stackoverflow.com/questions/7069682/how-to-get-arguments-with-flags-in-bash
+# https://serverfault.com/questions/95077/how-can-i-get-remaining-args-after-pulling-out-parsed-items-using-getopts
+
+# bashopts do not work in functions ! arguments need to be parsed
+# tps://unix.stackexchange.com/questions/430337/getopts-not-working-inside-of-function
+# https://stackoverflow.com/questions/16654607/using-getopts-inside-a-bash-function
+
+grepm_args2() {
+    local OPTIND o a OPTARG
+    #echo "PARAMS PASSED $@ OPTIND is $OPTIND"
+    #getopts "ie" OPTION
+    #echo "OPTIONS $OPTION"
+    while getopts "ie" o; do
+        echo "OPTION --- $o ARG -- ${#OPTARG}"
+        case "${o}" in
+            i)
+                echo "### OPTION i value $OPTION"
+                echo "--- OPTIND $OPTIND ARG $OPTARG"
+                #shift
+                ;;
+            e)
+                a="${OPTARG}"
+                #echo "### option e value $OPTION"
+                #echo "--- OPTIND $OPTIND OPTARG ${a} OPTERR $OPTERR"
+                ;;
+            ?)
+                echo "script usage: $(basename \$0) [-i] [-e] [-a somevalue]" >&2
+                exit 1
+                ;;
+        esac
+    done   
+    
+    shift "$(($OPTIND -1))"
+    echo "OPTIND $OPTIND"
+    echo "a: [${a}], non-option arguments: $*"
+   
+    
+    while test $# -gt 0; do
+        echo "$# rem parameter $1"
+        shift
+    done
+    
+}
+
+# a: and e: require addition arguments!
+# w/o column flag is only used w/o params
+grepm_args3() {
+    local OPTIND
+    while getopts "a:e:" opt; do
+        echo "OPTION $opt"
+        case "${opt}" in
+            a)
+                echo "xxx $OPTIND ${OPTARG} ERR $OPTERR"
+                ;;
+            e)
+                echo "xxx $OPTIND ${OPTARG} ERR $OPTERR"                
+                ;;                
+        esac
+    done
+    remaining_args="${@:$OPTIND}"
+    echo "REMAINING ${remaining_args}"
+    #echo "string is ${#1} characters long"
+    
+}
+
+
+# grepm_args2 -e "*.ext *.sh" "r arg1" "r arg2"
+#grepm_args2 -e "e arg" "r arg1" "r arg2"
+#grepm_args2 -e "value_arg_e" "nonarg"
+echo "--A & E ----------------"
+grepm_args3 -a "arg_a" -e "arg_e" dsg
+echo "--E & A ----------------"
+grepm_args3 -e "arg_e" -a "arg_a" dsg
+echo "--E ----------------"
+grepm_args3 -e "only_arg_e" dsg
+echo "--A ----------------"
+grepm_args3 -a "only_arg_a" dsg
+echo "--NO ARGS ----------------"
+grepm_args3
