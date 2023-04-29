@@ -1,4 +1,119 @@
+2023-04-29 
+
+# 2023-04-29 Checking for integer values splitting grep copy of filename:line:<...> into string filename [line]
+# functions are added to functions_global.sh 
+
+function is_integer () {
+	: "2023-04-29 checks if parameter is integer "
+	: "https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"
+	[ -n "$1" ] && [ "$1" -eq "$1" ] 2>/dev/null
+	if [ $? -ne 0 ]; then	
+		false
+	else
+		true
+	fi
+}
+
+function array_from_string () {
+	: "2023-04-29 array_from_string 's' 'sep'"
+	: "separates string s into array "
+	: "if sep is supplied it will be used as separator default is colon"
+	: "Note for sep usage you need to create separate strings"
+	: "https://stackoverflow.com/questions/918886/how-do-i-split-a-string-on-a-delimiter-in-bash"
+	: "evaluate cut "
+	
+	# separator 
+    sep=":"
+	s="${1}"
+	num_args=$#
+	if [ $num_args -eq 2 ]; then
+		sep="$2"
+	fi
+	# replacing all separators by spacves 
+	array=(${s//"$sep"/ })
+	echo ${array[@]}
+}
+
+function open_extended () {
+    : "2023-04-29"
+    : "like open but you can pass grep links directly to open "
+	: "tries to identify paths and line numbers for input of "
+	: "open command. can be used to separate filename and num from grep"
+	: "if num is not present only s will be returned "
+	: "will only return valid file paths"    
+
+	num_args=$#
+	# echo "INPUT ($@) , num args $num_args"		
+	
+	# all params is path done
+	check_path "${@}"    
+    if [ $? -eq 0 ]; then 
+		f="${@}"
+		l=""
+    else				
+		p="${1}"
+		check_path "$p"; [ $? -eq 0 ] && f="$p" || f=""
+			
+		# check  if second parameter 
+		# can be interpreted as line number
+		if [ $num_args -gt 1 ]; then
+			is_integer "${2}"; [ $? -eq 0 ] && l=$2 || false
+		fi
+		
+		# now check if file part / line can be extracted from 1st parameter
+		if [ -z "$f" ]; then		
+			# match numbers preceded by numbers
+			# http://molk.ch/tips/gnu/bash/rematch.html
+			[[ "${p}" =~ :[0-9]+ ]]; regex_match="${BASH_REMATCH}"
+			l=${regex_match:1}
+			p="${p/$regex_match/''}"  
+			# check if there is a valid file 
+			check_path "$p"; [ $? -eq 0 ] && f="$p" || f=""		
+		fi	
+		
+		# if still no file was found then check for cutting off all parts after number match 
+		if [ -z "$f" ]; then		
+			p="${1}"
+			# match numbers preceded by numbers
+			[[ "$p" =~ :[0-9]+.* ]]; regex_match="${BASH_REMATCH}"
+			p="${p/$regex_match/''}"  
+			# check if there is a valid file 
+			check_path "$p"; [ $? -eq 0 ] && f="$p" || f=""		
+		fi		
+	fi
+	
+	# no file signature found pass over original parameters 
+	if [ -z "$f" ]; then 
+		f="${@}"
+	fi
+	# pass over params either with or without lines
+	if [ -z "$l" ]; then 
+		open "${f}"
+	else
+		open "${f}" "$l"
+	fi	
+
+}
+
+s_test="doc_tools.txt:14:2022-06-19 So look for "
+echo "TEST STRING ${s_test}"
+echo "$( get_file_line_from_string ${s_test}  )"
+
+s_test="doc_tools.txt"
+echo -e "\nTEST STRING ${s_test}"
+echo "$( get_file_line_from_string ${s_test}  )"
+
+s_test="doc_tools.txt:adadada14:2022-06-19 So look for "
+echo -e "\nTEST STRING ${s_test}"
+echo "$( get_file_line_from_string ${s_test}  )"
+
+
+
 ----------- BASH SHORT CUTS --------------
+
+
+
+
 
 2023-04-15
 ### BASH SHORTCUTS

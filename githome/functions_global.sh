@@ -42,7 +42,7 @@ function check_path {
         # echo "EXISTING Path [\"$encoded_path\"]"
         true
     else
-        echo "MISSING File/Path [\"$encoded_path\"]"
+        # echo "MISSING File/Path [\"$encoded_path\"]"
         false
     fi        
 }
@@ -619,6 +619,63 @@ function grep_path_all () {
     echo "${s_cmd_all}"
     eval "${s_cmd_all}"
 } 
+
+function is_integer () {
+	: "2023-04-29 checks if parameter is integer "
+	: "https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"
+	[ -n "$1" ] && [ "$1" -eq "$1" ] 2>/dev/null
+	if [ $? -ne 0 ]; then	
+		false
+	else
+		true
+	fi
+}
+
+function array_from_string () {
+	: "2023-04-29 array_from_string 's' 'sep'"
+	: "separates string s into array "
+	: "if sep is supplied it will be used as separator default is colon"
+	: "Note for sep usage you need to create separate strings"
+	: "https://stackoverflow.com/questions/918886/how-do-i-split-a-string-on-a-delimiter-in-bash"
+	: "evaluate cut "
+	
+	# separator 
+    sep=":"
+	s="${1}"
+	num_args=$#
+	if [ $num_args -eq 2 ]; then
+		sep="$2"
+	fi
+	# replacing all separators by spacves 
+	array=(${s//"$sep"/ })
+	echo ${array[@]}
+}
+
+function get_file_line_from_string () {
+	: "2023-04-29 separates string of type <s>:<num> string / number"
+	: "can be used to separate filename and num from grep"
+	: "if num is not present only s will be returned "
+	
+	s="$1"
+	array=( $( array_from_string $s )  )
+	num_elements=${#array[@]}
+	if [ $num_elements -eq 1 ]; then
+		echo "$s"
+	elif [ $num_elements -gt 1 ]; then   
+		# check if second aram is integer 
+		line="${array[0]}"
+		num=${array[1]}
+		echo "LINE $line NUM $num" 
+		# check if if second argument is line 
+		$( is_integer $num )
+		if [ $? -eq 0 ]; then
+			echo "$line $num"
+		else
+			echo "$line"
+		fi 
+	fi    	
+	
+}
 
 # decomment
 # echo "     END functions_global.sh ----"

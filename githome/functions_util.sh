@@ -49,8 +49,8 @@ function open () {
         echo "Open browser: $1"
         start "$1"
         return 0
-    fi
-
+    fi 
+    
     # check for number of arguments
     num_args=$#
     p=""
@@ -62,8 +62,6 @@ function open () {
     else
         p="$@"
     fi
-
-    # @todo support open text in given line
     
     # now get concatenated string
 	encoded_path="$(encode_path "$p")";
@@ -175,6 +173,67 @@ function open () {
         pwin="$encoded_path"
         echo "\"$pwin\" is not a valid file object"
     fi
+}
+
+function open_extended () {
+    : "2023-04-29"
+    : "like open but you can pass grep links directly to open "
+	: "tries to identify paths and line numbers for input of "
+	: "open command. can be used to separate filename and num from grep"
+	: "if num is not present only s will be returned "
+	: "will only return valid file paths"    
+
+	num_args=$#
+	# echo "INPUT ($@) , num args $num_args"		
+	
+	# all params is path done
+	check_path "${@}"    
+    if [ $? -eq 0 ]; then 
+		f="${@}"
+		l=""
+    else				
+		p="${1}"
+		check_path "$p"; [ $? -eq 0 ] && f="$p" || f=""
+			
+		# check  if second parameter 
+		# can be interpreted as line number
+		if [ $num_args -gt 1 ]; then
+			is_integer "${2}"; [ $? -eq 0 ] && l=$2 || false
+		fi
+		
+		# now check if file part / line can be extracted from 1st parameter
+		if [ -z "$f" ]; then		
+			# match numbers preceded by numbers
+			# http://molk.ch/tips/gnu/bash/rematch.html
+			[[ "${p}" =~ :[0-9]+ ]]; regex_match="${BASH_REMATCH}"
+			l=${regex_match:1}
+			p="${p/$regex_match/''}"  
+			# check if there is a valid file 
+			check_path "$p"; [ $? -eq 0 ] && f="$p" || f=""		
+		fi	
+		
+		# if still no file was found then check for cutting off all parts after number match 
+		if [ -z "$f" ]; then		
+			p="${1}"
+			# match numbers preceded by numbers
+			[[ "$p" =~ :[0-9]+.* ]]; regex_match="${BASH_REMATCH}"
+			p="${p/$regex_match/''}"  
+			# check if there is a valid file 
+			check_path "$p"; [ $? -eq 0 ] && f="$p" || f=""		
+		fi		
+	fi
+	
+	# no file signature found pass over original parameters 
+	if [ -z "$f" ]; then 
+		f="${@}"
+	fi
+	# pass over params either with or without lines
+	if [ -z "$l" ]; then 
+		open "${f}"
+	else
+		open "${f}" "$l"
+	fi	
+
 }
 
 function walk_dir () {    
