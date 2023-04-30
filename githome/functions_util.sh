@@ -31,7 +31,7 @@ function get_line_command () {
     echo "$open_code_at_line"
 }
 
-function open () {
+function func_open () {
     : open "<bash path> [n]"
     : transforms bash path to windows and opens win explorer     
     : files will be opened with notepad++ as default
@@ -43,6 +43,7 @@ function open () {
 
     pwin=""
     
+    echo "test"
     # check if it is url
     is_url "$1";
     if [ $? -eq 0 ]; then
@@ -64,7 +65,7 @@ function open () {
     fi
     
     # now get concatenated string
-	encoded_path="$(encode_path "$p")";
+	encoded_path="$(encode_path $p)";
 	#local open_explorer="explorer \"$(towinpath "$encoded_path")\"";    
     echo "Encoded Path: \"$encoded_path\""
     
@@ -229,9 +230,9 @@ function open_extended () {
 	fi
 	# pass over params either with or without lines
 	if [ -z "$l" ]; then 
-		open "${f}"
+		func_open "${f}"
 	else
-		open "${f}" "$l"
+		func_open "${f}" "$l"
 	fi	
 
 }

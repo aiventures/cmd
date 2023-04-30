@@ -140,7 +140,9 @@ function towinpath {
     : towinpath "<bash path>"
     : encodes path to string
     : spaces in path will leads to breaks
-    { cd "$1" && pwd -W; } | sed 's|/|\\|g'
+    # { cd "$1" && pwd -W; } | sed 's|/|\\|g'
+    # use cygpath to convert
+    cygpath_convert "$1" w
 }
 
 # https://www.gnu.org/software/sed/manual/html_node/The-_0022s_0022-Command.html
@@ -196,7 +198,7 @@ function open_multiple_links () {
                 encoded_path="$(encode_path "$filename")";
                 url=$(read_link ${encoded_path})
                 #echo "          $url"
-                open "${url}"
+                open_extended "${url}" # 2023-04-30
             fi
         fi
     done
@@ -413,7 +415,7 @@ function register_shortcuts () {
                     echo "${fp} -o:  Name or Path is empty/wrong, check order of arguments"
                     continue
                 fi
-                alias "open_${name}"="open \"${fp}\""
+                alias "open_${name}"="open_extended \"${fp}\""
                 status+="[ALIAS: open_${name}] "
                 ;;
             c)  

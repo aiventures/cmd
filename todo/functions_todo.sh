@@ -67,7 +67,7 @@ function register_todo () {
     export_path "f_${root_name}_cfg" $f_todo_cfg
 
     # create alias to open todo file
-    expr_open="alias open_${root_name}='open \"${f_todo}\"'"
+    expr_open="alias open_${root_name}='open_extended \"${f_todo}\"'"
     eval "${expr_open}" 
 
     # create alias to run todo.txt with given configuration
