@@ -18,7 +18,6 @@ export_path p_todo_home "$p_cmd/todo"; [ "$?" -eq 0 ] || return false
 export_path p_todo_cfg "$p_todo_home/todo_cfg"; [ "$?" -eq 0 ] || return false
 # will throw a warning if file won't be found
 export_path EXE_TODO "$p_todo_home/todo_cli/todo.sh"
-
 # decomment
 # echo -e "\r\n"
 # echo "     TODO.TXT p_todo_home: $p_todo_home"
@@ -31,7 +30,7 @@ export_path EXE_TODO "$p_todo_home/todo_cli/todo.sh"
 export_path p_todo_work "${p_cmd}/todo/todo_txt"
 
 # search in todo folder / only in text files
-alias grep_todo="cd \"{$p_todo_work}\"; ls -a; grepm  \"grep --include='*.txt' --color=always -irn\" "
+alias s_todo="cd \"$( cygpath_convert $p_todo_work u )\"; ls -a; grepm  \"grep --include='*.txt' --color=always -irn\" "
 
 # register todo files and their variabes / aliases
 # optional reading of config files
@@ -53,6 +52,6 @@ register_todo "info"
 register_todo "todo"
 
 # shortcut to short help
-alias t_help="t_ shorthelp"
+alias help_todo="echo \"enter q to quit\"; t_ shorthelp;"
 # decomment
 # echo -e "\r\n     header_todo.sh definitions ----"

@@ -208,6 +208,7 @@ function open_extended () {
 			# http://molk.ch/tips/gnu/bash/rematch.html
 			[[ "${p}" =~ :[0-9]+ ]]; regex_match="${BASH_REMATCH}"
 			l=${regex_match:1}
+            # cut substring
 			p="${p/$regex_match/''}"  
 			# check if there is a valid file 
 			check_path "$p"; [ $? -eq 0 ] && f="$p" || f=""		

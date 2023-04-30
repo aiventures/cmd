@@ -22,3 +22,4 @@ t lsa           show all tasks
 t -a do         complete without moving task into archive
 t report        put into report file
 in shell "> export.txt" export to file
+--------------------

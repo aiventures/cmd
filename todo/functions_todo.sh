@@ -81,9 +81,37 @@ function register_todo () {
     t_ls_alias="${todo_alias}_ls"
     [ $root_name = "todo" ] && t_ls_alias="t_ls"
     expr_todo_ls="alias ${t_ls_alias}=\"${todo_alias} ls\""
-    eval $expr_todo_ls
+    eval $expr_todo_ls    
+}
+
+function todo_add_task () {
+    : "2023-04-30"
+    : "adds a task to todo.txt with default prio B"
+    : "additional tag p:[A-Z] is used to change prio"
+    : "configuration path for todo.txt is set according to todo.cfg"
+    todo="${@}"
     
-    
+    # check for prio
+    if [[ "${todo}" =~ ( p:[A-Z]| p:[a-z]) ]]; then
+        prio="${BASH_REMATCH}"
+        todo="${todo/$prio/''}"
+        prio=${prio:3}
+    else 
+        prio="B"
+    fi    
+
+    # #TODO for other todo configurations todo.cfg needs to be changed
+    f_todo_cfg=$( cygpath_convert "$p_todo_cfg/todo.cfg" )
+    exe_todo=$( cygpath_convert "$p_todo_home/todo_cli/todo.sh" u )
+    # add task with timestamp 
+    todo_cmd="\"${exe_todo}\" -d \"${f_todo_cfg}\" -t a \"${todo}\""
+    # echo "${todo_cmd}"
+    out=$( eval "$todo_cmd" )
+    echo "$out"
+    # now get the line number and add a default prio of B 
+    [[ "${out}" =~ [0-9]+ ]]; todo_item="${BASH_REMATCH}"
+    todo_cmd_s="\"${exe_todo}\" -d \"${f_todo_cfg}\" p ${prio} ${todo_item}"
+    eval ${todo_cmd_s}
 }
 
 # decomment

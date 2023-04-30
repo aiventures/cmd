@@ -43,21 +43,21 @@ if [[ $? -eq 0 ]]; then
     grep_multiple="grepm \"grep --color=always -irn\""
     alias grep_m="ls -a; $grep_multiple"
     # search in docs
-    alias grep_docs="cdd \"$p_docs\"; ls -a; $grep_multiple"
+    alias s_docs="cdd \"$p_docs\"; ls -a; $grep_multiple"
     # search in cmd
-    alias grep_cmd="cdd \"$p_cmd\"; ls -a; $grep_multiple"
+    alias s_cmd="cdd \"$p_cmd\"; ls -a; $grep_multiple"
     # search in aliases
-    alias grep_alias="grepm \"alias\"" 
+    alias s_alias="grepm \"alias\"" 
     # search in variables
-    alias grep_variables="grepm \"compgen -v\""  
+    alias s_variables="grepm \"compgen -v\""  
     # search for available commands
-    alias grep_commands="grepm \"compgen  -abckA function\""
+    alias s_commands="grepm \"compgen  -abckA function\""
     # list functions excluding git
-    alias grep_functions="grepm \"declare -F|grep -iv _git\""
+    alias s_functions="grepm \"declare -F|grep -iv _git\""
     # list exported functions
-    alias grep_export="grepm \"export -p\""
+    alias s_export="grepm \"export -p\""
     # list environment variables
-    alias grep_env="grepm \"env\""
+    alias s_env="grepm \"env\""
     # https://unix.stackexchange.com/questions/94775/list-all-commands-that-a-shell-knows
     # compgen -a # will list all the aliases you could run.
     # compgen -b # will list all the built-ins you could run.
