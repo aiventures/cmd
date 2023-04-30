@@ -31,17 +31,19 @@ settings.json
 
 Shell Command Language.url
 
+# add the following files
+!help*.txt 
+!**/doc_bash.txt
+!doc_install_util.txt
+
 # ignore own files except some
-#/docs
 /docs/*.txt 
 test_*.sh
+*local.*
 */todo_txt/*.txt
 githome/.gitconfig.swp
 todo/header_todo.sh
 todo/header_todo.sh
 TESTDOK.txt
 githome/gitconfig_old
-# add the following 
-!help*.txt 
-!**/doc_bash.txt
-!doc_install_util.txt
+

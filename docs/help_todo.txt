@@ -1,25 +1,61 @@
---------- TODO.TXT ---------
-TODO.TXT Frequently used commands
-(t used as alias to execute command)
-General:
-t -t a text +... @... add task with date
--------------------------
-# = Todo Number
-todo.sh [-fhpantvV] [-d todo_config] action [#] [task_description]
-todo.sh add "THING I NEED TO DO +project @context"
+#### COMMAND LINES 
 
-t ls
-t ls +(project) @(context)
-t lsp a...z     List tasks by Prio t lsp a-j is also working
-t lsprj         list projects
-t lsc           list contexts
-t -f del        delete without confirmation
-t p             [A-F] Prioritize
-t dp            Deprioritize
-t prep # "P"    Prefix Task <#>
-t lf            filelist
-t lsa           show all tasks
-t -a do         complete without moving task into archive
-t report        put into report file
-in shell "> export.txt" export to file
---------------------
+Usage: todo.sh [-fhpantvvV@+Pcx] [-d todo_config] action [task_number] [task_description] 
+
+#### GENERAL TODO.TXT CONFIGURATION ####
+
+Options: 
+-f 									: Forces actions without confirmation or interactive input 
+-h 									: Display a short help message; same as action "shorthelp" 
+-p 									: Plain mode turns off colors 
+-a 									: Don't auto-archive tasks automatically on completion -A Auto-archive tasks automatically on completion 
+-n 									: Don't preserve line numbers; automatically remove blank lines on task deletion 
+-N 									: Preserve line numbers 
+-t 									: Prepend the current date to a task automatically when it's added. 
+-T 									: Do not prepend the current date to a task automatically when it's added. 
+-v 									: Verbose mode turns on confirmation messages 
+-vv 								: Extra verbose mode prints some debugging information and additional help text 
+-V 									: Displays version, license and credits 
+-@  								: Hide context names in list output. Use twice to show context names (default). 
+-+ 									: Hide project names in list output. Use twice to show project names (default). 
+-P 									: Hide priority labels in list output. Use twice to show priority labels (default). 
+-c 									: Color mode -d CONFIG_FILE 
+-x 									: Disables TODOTXT_FINAL_FILTER 
+-d 									: Use a configuration file other than the default ~/.todo/config -f 
+
+#### Aliases 
+
+#### workfiles (in todo_txt subfolder)
+
+todo.txt, ... 
+
+#### todo.txt in general 
+t_ help [CMD]						: show help on commands / optional
+									  with commands (scroll q to quit)
+t_ shorthelp						: command overview (q to quit)
+t_ lf				   				: show all files in todo.txt folder
+
+#### LIST OPERATIONS
+t_ 									: shortcut for todo.sh -d [config] 
+other							    : open todo.txt in editor 
+t, t_ls, t_ ls [s] [s] 	    	    : list todo.txt, optionally using search term(s) [s]
+t_ lsa [s] [s]						: list all tasks including finished ones (in archive file)
+t_ lsprj 			    			: list projects
+t_ lsp [PRIO_FROM](-[PRIOTO])    	: list projects fith PRIO (optionally for Prio/Range )
+									  Categories A-D, R Regular, and others
+t_ lsc [s] [s] 	 					: list contexts (optional search terms)
+t_ archive 							: move done tasks to archive file  
+t_ report 							: archive/report (date|#open|done)  
+t_ deduplicate						: delete duplicates
+
+#### TASK OPERATIONS 							
+t_add [p:PRIO] "test +proj @ctx..." : create new task with Prio B (use p:PRIORITY to set prio) 
+t_done [n]		        			: set task [n] to done without archiving it  (added -a -N do)
+t_ del [n]		        			: delete task [n] 
+t_ replace [n] "TEXT"	   			: replace task [n] 
+t_ p [n] PRIO 		       			: prioritize task [n]  !!
+t_ dp [n]		        			: deprioritize task [n] 
+t_ app [n] "TEXT"				    : append text to todo [n]
+t_ prep [n] "TEXT"				    : prepend text to todo [n]
+t_ mv [n] DEST [SRC/todo.txt]		: Moves Todo [N] from SRC file to DEST file (residing in todo folder)
+                                                 
