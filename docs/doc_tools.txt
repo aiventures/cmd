@@ -184,3 +184,13 @@ C:\xxxCMD\docs\ %SystemRoot%\System32\SHELL32.dll
 • since:YYYY-MM-DD
 • near:location within:15mi
 
+################################################
+2023-05-01 @BROWSER @EDGE SHORTCUTS  
+https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad
+
+################################################
+2023-05-01 @BROWSER @CHROME @EDGE SHORTCUTS  
+https://support.google.com/chrome/answer/157179?hl=en-GB&co=GENIE.Platform%3DDesktop#zippy=%2Ctab-and-window-shortcuts%2Cgoogle-chrome-feature-shortcuts%2Caddress-bar-shortcuts%2Cweb-page-shortcuts%2Cmouse-shortcuts
+
+
+
