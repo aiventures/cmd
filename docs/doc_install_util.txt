@@ -228,7 +228,7 @@ gtk-application-prefer-dark-theme=true
 7.2 Navigating to Code Editor
 Use absolute paths for exe files, eg
 Meld > Preferences 
-"C:\10_Tools\Notepad++\notepad++.exe" {file} -n{line}
+"C:\...\Notepad++\notepad++.exe" {file} -n{line}
 C:\Program Files\Microsoft VS Code\Code.exe" --goto {file}:{line}
 
 #------------------------------------------------------------------------------#

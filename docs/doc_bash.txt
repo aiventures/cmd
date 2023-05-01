@@ -1,3 +1,565 @@
+2023-04-29 
+
+# 2023-04-29 Checking for integer values splitting grep copy of filename:line:<...> into string filename [line]
+# functions are added to functions_global.sh 
+
+function is_integer () {
+	: "2023-04-29 checks if parameter is integer "
+	: "https://stackoverflow.com/questions/806906/how-do-i-test-if-a-variable-is-a-number-in-bash"
+	[ -n "$1" ] && [ "$1" -eq "$1" ] 2>/dev/null
+	if [ $? -ne 0 ]; then	
+		false
+	else
+		true
+	fi
+}
+
+function array_from_string () {
+	: "2023-04-29 array_from_string 's' 'sep'"
+	: "separates string s into array "
+	: "if sep is supplied it will be used as separator default is colon"
+	: "Note for sep usage you need to create separate strings"
+	: "https://stackoverflow.com/questions/918886/how-do-i-split-a-string-on-a-delimiter-in-bash"
+	: "evaluate cut "
+	
+	# separator 
+    sep=":"
+	s="${1}"
+	num_args=$#
+	if [ $num_args -eq 2 ]; then
+		sep="$2"
+	fi
+	# replacing all separators by spacves 
+	array=(${s//"$sep"/ })
+	echo ${array[@]}
+}
+
+function open_extended () {
+    : "2023-04-29"
+    : "like open but you can pass grep links directly to open "
+	: "tries to identify paths and line numbers for input of "
+	: "open command. can be used to separate filename and num from grep"
+	: "if num is not present only s will be returned "
+	: "will only return valid file paths"    
+
+	num_args=$#
+	# echo "INPUT ($@) , num args $num_args"		
+	
+	# all params is path done
+	check_path "${@}"    
+    if [ $? -eq 0 ]; then 
+		f="${@}"
+		l=""
+    else				
+		p="${1}"
+		check_path "$p"; [ $? -eq 0 ] && f="$p" || f=""
+			
+		# check  if second parameter 
+		# can be interpreted as line number
+		if [ $num_args -gt 1 ]; then
+			is_integer "${2}"; [ $? -eq 0 ] && l=$2 || false
+		fi
+		
+		# now check if file part / line can be extracted from 1st parameter
+		if [ -z "$f" ]; then		
+			# match numbers preceded by numbers
+			# http://molk.ch/tips/gnu/bash/rematch.html
+			[[ "${p}" =~ :[0-9]+ ]]; regex_match="${BASH_REMATCH}"
+			l=${regex_match:1}
+			p="${p/$regex_match/''}"  
+			# check if there is a valid file 
+			check_path "$p"; [ $? -eq 0 ] && f="$p" || f=""		
+		fi	
+		
+		# if still no file was found then check for cutting off all parts after number match 
+		if [ -z "$f" ]; then		
+			p="${1}"
+			# match numbers preceded by numbers
+			[[ "$p" =~ :[0-9]+.* ]]; regex_match="${BASH_REMATCH}"
+			p="${p/$regex_match/''}"  
+			# check if there is a valid file 
+			check_path "$p"; [ $? -eq 0 ] && f="$p" || f=""		
+		fi		
+	fi
+	
+	# no file signature found pass over original parameters 
+	if [ -z "$f" ]; then 
+		f="${@}"
+	fi
+	# pass over params either with or without lines
+	if [ -z "$l" ]; then 
+		open "${f}"
+	else
+		open "${f}" "$l"
+	fi	
+
+}
+
+s_test="doc_tools.txt:14:2022-06-19 So look for "
+echo "TEST STRING ${s_test}"
+echo "$( get_file_line_from_string ${s_test}  )"
+
+s_test="doc_tools.txt"
+echo -e "\nTEST STRING ${s_test}"
+echo "$( get_file_line_from_string ${s_test}  )"
+
+s_test="doc_tools.txt:adadada14:2022-06-19 So look for "
+echo -e "\nTEST STRING ${s_test}"
+echo "$( get_file_line_from_string ${s_test}  )"
+
+
+
+----------- BASH SHORT CUTS --------------
+
+
+
+
+
+2023-04-15
+### BASH SHORTCUTS
+
+VIM (vim) :help in editor press ESC, :q!
+
+### CHAR/WORD CORRECTIONS 
+	[CHAR] CTRL + t    	[cA_Bd > cBA_d]  		Tauschen/swap CHAR before/after cursor 			
+	[WORD] ALT  + t    	[ABC_XYZ > XYZ ABC_] 	Tauschen/swap WORD before/after cursor: 
+	[CHAR] CTRL + h    	[c#_bd > c_bd]			Delete CHAR before Cursor                       
+	[CHAR] CTRL + d    	[ca_#d > ca_d]			Delete CHAR after Cursor               			
+	[WORD] ALT  + d    	[abc_### > abc_]		Delete WORD after Cursor                
+	[WORD] ALT  + u    	[abc_xyz > abcXYZ_]		Upper case WORD 						
+	[WORD] ALT  + l    	[abc_XYZ > abcxyz_]		Lower case WORD 						
+	[CHAR] ALT  + c    	[xa_by > xaBy_] 		Capitalize CHAR after Cursor/move to next word  
+	[WORD] CTRL + w    	[###_xyz > xyz]			Cut WORD before cursor to clipboard     
+	[LINE] CTRL + k    	[123_### ### > 123_]	Cut LINE after cursor to clipboard      
+	[LINE] CTRL + u    	[###_abc xyz > _abc xyz]Cut LINE before cursor to clipboard     
+### NAVIGATION 
+	CTRl + a									(anfang) - HOME
+	CTRL + e									(ende) - END
+	ALT  + b									(backwards one word)
+	ALT  + f									(forward one word)
+### EDITING
+	TAB         								Tab completion for file/directory names
+	history #n  								Show last #n entries from history
+	CTRL + R    								History search, type string, go back with CTRL+R
+	![NUM]      								Enter the NUM form history to execute command
+	ALT  + r    								(revert changes like history)
+	CTRL + L 									clear Screen
+	CTRL + p									(previous COMMAND)
+	CTRL + n									(next COMMAND)
+	CTRL + y 									paste last cut
+	CTRL + _    								Undo (CTRL + SHIFT + -)
+	CTRL + +/-  								Change Font Size 
+
+# SOME BASH VARIABLE OF INTEREST
+# History Values
+# HISTFILE,HISTSIZE,HISTFILESIZE
+
+# ALIASES FOR WORK
+# search in folder alias grep_m='ls -a; grepm"grep --color=always -irn"'
+# move to a folder, search in filename with mutliple keywords  alias find_folder='cdd"${FOLDER}"; find . -print | grep --color=always -in'
+# find directories recursively by directory name with keywords  alias find_dirs='find . -mindepth 1 -type d | grep -i --color=always'
+# file statistics alias find_filetype_stats='find . -type f | egrep -i -E -o"\.{1}\w*$" | sort | uniq -c'
+# search for file names alias find_r='find . -print | grep --color=always -in'
+# Bash Command aliases 
+# alias git_config='git config --list --global &'
+# alias git_difftool='git difftool --dir-diff &'
+# alias git_mergetool='git mergetool &'
+# search in available aliases 						alias grep_alias='grepm"alias"'
+# search in all functions / executables 			alias grep_commands='grepm"compgen  -abckA function"'
+# display all functions 							alias grep_functions='grepm"declare -F|grep -iv _git"'
+# search in enviroment variables 					alias grep_env='grepm"env"'
+# display exported variables 						alias grep_export='grepm"export -p"'
+# display all declared variables 					alias grep_variables='grepm"compgen -v"'
+# search in a single file 							alias greps_doc_sf="cdd \"$p\":single_file; grep_single_file \"$single_file\""
+# display a function definition                     type <func_name> [| grep --color=always -in":"] / with or without full code
+
+function bash_shortcuts_info () {
+	: bash shortcuts help 
+    echo "### BASH SHORTCUTS"
+    echo ""
+    echo "VIM (vim) :help in editor press ESC, :q!"
+    echo ""
+    echo "### CHAR/WORD CORRECTIONS"
+    echo "    [CHAR] CTRL + t        [cA_Bd > cBA_d]          Tauschen/swap CHAR before/after cursor"
+    echo "    [WORD] ALT  + t        [ABC_XYZ > XYZ ABC_]     Tauschen/swap WORD before/after cursor:"
+    echo "    [CHAR] CTRL + h        [c#_bd > c_bd]           Delete CHAR before Cursor"
+    echo "    [CHAR] CTRL + d        [ca_#d > ca_d]           Delete CHAR after Cursor"
+    echo "    [WORD] ALT  + d        [abc_### > abc_]         Delete WORD after Cursor"
+    echo "    [WORD] ALT  + u        [abc_xyz > abcXYZ_]      Upper case WORD"
+    echo "    [WORD] ALT  + l        [abc_XYZ > abcxyz_]      Lower case WORD"
+    echo "    [CHAR] ALT  + c        [xa_by > xaBy_]          Capitalize CHAR after Cursor/move to next word"
+    echo "    [WORD] CTRL + w        [###_xyz > xyz]          Cut WORD before cursor to clipboard"
+    echo "    [LINE] CTRL + k        [123_### ### > 123_]     Cut LINE after cursor to clipboard"
+    echo "    [LINE] CTRL + u        [###_abc xyz > _abc xyz] Cut LINE before cursor to clipboard"
+    echo "### NAVIGATION"
+    echo "    CTRl + a                                        (anfang) - HOME"
+    echo "    CTRL + e                                        (ende) - END"
+    echo "    ALT  + b                                        (backwards one word)"
+    echo "    ALT  + f                                        (forward one word)"
+    echo "### EDITING"
+    echo "    TAB                                             Tab completion for file/directory names"
+    echo "    history #n                                      Show last #n entries from history"
+    echo "    CTRL + R                                        History search, type string, go back with CTRL+R"
+    echo "    ![NUM]                                          Enter the NUM form history to execute command"
+    echo "    ALT  + r                                        (revert changes like history)"
+    echo "    CTRL + L                                        clear Screen"
+    echo "    CTRL + p                                        (previous COMMAND)"
+    echo "    CTRL + n                                        (next COMMAND)"
+    echo "    CTRL + y                                        paste last cut"
+    echo "    CTRL + _                                        Undo (CTRL + SHIFT + -)"
+    echo "    CTRL + +/-                                      Change Font Size"
+}	
+alias help_bash="bash_shortcuts_info"
+
+
+
+
+10.08.2022
+Recursively print / find files using find or ls
+https://stackoverflow.com/questions/5905054/how-can-i-recursively-find-all-files-in-current-and-subfolders-based-on-wildcard
+https://linux.die.net/man/1/find
+find . -print | grep -i foo
+find . -name "foo*"
+ls https://linux.die.net/man/1/ls
+--sort=WORD
+sort by WORD instead of name: none -U, extension -X, size -S, time -t, version -v
+-R, --recursive
+list subdirectories recursively
+ls -1 -R -X
+
+17.4.2022
+exec bash   : reload bash
+
+# @grep     
+        https://git-scm.com/docs/git-grep
+        https://stackoverflow.com/questions/10619160/how-do-i-use-the-grep-include-option-for-multiple-file-types
+        [unix - Use grep --exclude---include syntax to not grep through certain files - Stack Overflow.url] "https://stackoverflow.com/questions/221921/use-grep-exclude-include-syntax-to-not-grep-through-certain-files"        
+        -i case inensitive
+        -r recursive
+        -l result filename only
+        -R follow symbolic links / regular expression
+        -n each output line is preceded by its relative line number in the file
+        -s silent mode
+        -Rl ...
+        --include / --exclude include/exclude pattern
+
+        Examples
+        
+        grep pattern --max-depth=-1 --include=*.html --include=*.php 
+        grep pattern -r --include=\*.{cpp,h} rootdir
+        (search through all .cpp and .h files rooted in the directory rootdir)        
+        
+        grep -ir pin* | grep start
+        (pipe search for pin , then filter by start)
+                
+        grep --color=always --include="[iI]*.txt" -nri "pin" | grep start
+        (color results search / searches in text starting with i for pin, only shows lines with start)
+        
+        alias | grep --color=always ".txt"
+        (filter alias list containing .txt) 
+        
+        env | grep PATH
+        (filter environment variables)
+        
+        
+# @compgen 
+        compgen -v | grep --color=always p_       
+        (show environment variables)
+    
+# @cd      /c/path cd ~ (root dir , defined in HOME in env variables)
+# @pwd 
+        current work dir
+# @ls  
+        list directory (ls -a / ls-1 / line ls --color -R -1)
+
+# @cat 
+        https://git-scm.com/docs/git-cat-file
+        cat <file path> display file contents
+        cat -n (line numbers) -T (distinguish tabs and spaces)
+        
+# @less    less <file>  one page at a time
+        less -N (line numbers) / -X (cleared command file)
+        
+# @more    more filename loads file at once in contrast to less
+        -p  (clear output) +100 (display from line 100)
+    
+# @find     
+        find . -name "*ora*"
+        find path/to/dir -name "*.ext1" -o -name "*.ext2" (-o: or)
+        find . -type f  -name 'text_for_search'   (type t=file)
+        find . -type f  -iname 'text_for_search' (iname = regex)
+        find . -type f -name "*.iso" (extension)
+        
+# @type    type <funcname> will print source code of bash function
+
+# @declare "declare -F|grep -iv _git" shows list of functions not containing git
+
+https://dev.to/awwsmm/101-bash-commands-and-tips-for-beginners-to-experts-30je#whereis-which-whatis
+        
+----------- BASH NAMING Conventions --------------
+# @Personal Naming Conventions aticking to naming conventions helps with autocomplete feature to get variables / aliases ...
+and it can also help to filter available aliases variables using grep command
+
+files and win representations
+f_...   file in bash representation /c/...<file>      
+fwin_   file in win representation C:\...<file>
+
+paths and win representaion
+p_...   file in bash representation /c/<path>      
+pwin_   path in win representation C:\<path>
+
+work files (changing per task)
+w_{f_,fwin_...} same as above but with prefix w_
+
+executables 
+exe_ / exewin ...  same as f/fwin  but pointing to an executable eg
+                   exe_npp='start notepad++' / exe_explorer=''
+                   
+special excecutable commands
+explorer "<win path to folder>"         Open windows explorer wit path / note double quotes (spaces in path will break opening in path)
+start notepad++ "<win path to file>"    OPens file in notepad++ 
+start "<url>"                           Opens URL in default browser (note double quote again)
+-----------------------
+# @Bash Cooking Recipes
+
+Check whether grep returns results
+ex=$(grepm "export -p" test); ret=$?;  echo "$ret"
+
+if [ $ret -eq 0 ]; then
+    echo found
+else
+    echo not found
+fi
+-----------------------
+# @Bash Variable Indirection: Variables and their values "param ${s} ${!s}"
+-----------------------
+Explanantion what CMDER Extension is all about
+1 - "Runtime Engine": Scripte und aliases für die Shell
+2 - In der Shell sind dann einige zusätzliche Befehle verfügbar
+3/4 - In einem Verzeichnis sinf Arbeitsdokumente im TXT Format (lassen sich duchsuchen, wie zB in 4 für ein einzelnes File dargestellt)
+5/6 - In einem anderen Verzeichnis sind Dateien im todo.txt Format (lassen sich entweder so durchsuchen oder mittels todo.txt bash aufrufen)
+7 - Dateiinhalt kann mit Befehl/Alias in der Konsole durchsucht werden
+8- Dito für die todo.txt files
+9 - Wenn die gefundenen Inhalte einen Link haben, kann man damit mit CTRL+Klick direkt auf die URL Navigieren
+10 - Ein paar Sonderfunktionen gibt es auch, zB aus einem Bash Path einen WIN PAth zu machen, damit kann man zB direkt in den Internet Explorer springen oder Bilddateien aus der Konsole öffnen  und vieles mehr ....
+----------------------
+# @Bash Check if variable exists  [ ${EXE_NPP} ] && echo "exists" || echo "doesnt exist";
+ # @Bash Check if string is empty   if [ ! -z "$s_cmd" ]; then
+ 
+------------------------
+# @Bash getopts in functions
+[Bash getopts builtin command help and examples.url] "https://www.computerhope.com/unix/bash/getopts.htm#:~:text=On%20Unix%2Dlike%20operating%20systems,passed%20to%20a%20shell%20script."
+[Bash Script- Flags usage with arguments examples - Linux Tutorials - Learn Linux Configuration.url] "https://linuxconfig.org/bash-script-flags-usage-with-arguments-examples"
+[Cmder 1.3.16 keyboard shortcuts ‒ defkey.url] "https://defkey.com/cmder-1-3-shortcuts"
+[grep Linux Tutorial mit Beispielen - kushellig.de.url] "https://kushellig.de/linux-unix-grep-befehl-beispiele/"
+[How to Use Command Line Arguments in a Bash Script - Baeldung on Linux.url] "https://www.baeldung.com/linux/use-command-line-arguments-in-bash-script"
+[http---wiki.bash-hackers.org-howto-getopts_tutorial.url] "http://wiki.bash-hackers.org/howto/getopts_tutorial"
+[linux - What is the ls option to list entries by lines instead of by columns- - Unix & Linux Stack Exchange.url] "https://unix.stackexchange.com/questions/530086/what-is-the-ls-option-to-list-entries-by-lines-instead-of-by-columns"
+[Manipulating Strings.url] "https://tldp.org/LDP/abs/html/string-manipulation.html"
+[shell - My bash script doesn't print the flags - Stack Overflow.url] "https://stackoverflow.com/questions/37340885/my-bash-script-doesnt-print-the-flags"
+[Small getopts tutorial [Bash Hackers Wiki].url] "https://wiki.bash-hackers.org/howto/getopts_tutorial"
+[unix - Use grep --exclude---include syntax to not grep through certain files - Stack Overflow.url] "https://stackoverflow.com/questions/221921/use-grep-exclude-include-syntax-to-not-grep-through-certain-files"
+[bash - How can I get remaining args after pulling out parsed items using getopts- - Server Fault.url] "https://serverfault.com/questions/95077/how-can-i-get-remaining-args-after-pulling-out-parsed-items-using-getopts"
+[Bash Script- Flags usage with arguments examples - Linux Tutorials - Learn Linux Configuration.url] "https://linuxconfig.org/bash-script-flags-usage-with-arguments-examples"
+[How to Use Command Line Arguments in a Bash Script - Baeldung on Linux.url] "https://www.baeldung.com/linux/use-command-line-arguments-in-bash-script"
+[shell - How to get arguments with flags in Bash - Stack Overflow.url] "https://stackoverflow.com/questions/7069682/how-to-get-arguments-with-flags-in-bash"
+[Using getopts inside a Bash function - Stack Overflow.url] "https://stackoverflow.com/questions/16654607/using-getopts-inside-a-bash-function"
+Bash usage in functions > reset required
+DISPLAY MULTIPLE LINKS IN PATH "/c/Users/xxx/Desktop/f"
+[bash - How can I get remaining args after pulling out parsed items using getopts- - Server Fault.url] "https://serverfault.com/questions/95077/how-can-i-get-remaining-args-after-pulling-out-parsed-items-using-getopts"
+[bash - Stop shell wildcard character expansion- - Stack Overflow.url] "https://stackoverflow.com/questions/11456403/stop-shell-wildcard-character-expansion"
+[Bash declare an empty array.url] "https://linuxhint.com/declare-empty-array-bash/"
+[Bash Reference Manual.url] "https://www.gnu.org/software/bash/manual/bash.html#Compound-Commands"
+[Bash Script- Flags usage with arguments examples - Linux Tutorials - Learn Linux Configuration.url] "https://linuxconfig.org/bash-script-flags-usage-with-arguments-examples"
+[Dynamic variable names in Bash - Stack Overflow.url] "https://stackoverflow.com/questions/16553089/dynamic-variable-names-in-bash"
+[How to Use Command Line Arguments in a Bash Script - Baeldung on Linux.url] "https://www.baeldung.com/linux/use-command-line-arguments-in-bash-script"
+[shell - How to get arguments with flags in Bash - Stack Overflow.url] "https://stackoverflow.com/questions/7069682/how-to-get-arguments-with-flags-in-bash"
+[unix - Use grep --exclude---include syntax to not grep through certain files - Stack Overflow.url] "https://stackoverflow.com/questions/221921/use-grep-exclude-include-syntax-to-not-grep-through-certain-files"
+[Using getopts inside a Bash function - Stack Overflow.url] "https://stackoverflow.com/questions/16654607/using-getopts-inside-a-bash-function"
+
+
+# while getopts 'lha:' OPTION; do
+#  case "$OPTION" in
+#    l)
+#      echo "linuxconfig"
+#      ;;
+#    h)
+#      echo "you have supplied the -h option"
+#      ;;
+#    a)
+#      avalue="$OPTARG"
+#      echo "The value provided is $OPTARG"
+#      ;;
+#    ?)
+#      echo "script usage: $(basename \$0) [-l] [-h] [-a somevalue]" >&2
+#      exit 1
+#      ;;
+#  esac
+#done
+
+grepm_args3() {
+    local OPTIND
+    # ":" expects params
+    while getopts "a:e:" opt; do
+        echo "OPTION $opt"
+        case "${opt}" in
+            a)
+                echo "xxx $OPTIND ${OPTARG} ERR $OPTERR"
+                ;;
+            e)
+                echo "xxx $OPTIND ${OPTARG} ERR $OPTERR"                
+                ;;                
+        esac
+    done
+    remaining_args="${@:$OPTIND}"
+    echo "REMAINING ${remaining_args}"
+    #echo "string is ${#1} characters long"    
+}
+----------------------
+# @Bash getopts in functions 2022-05-01 Create an Array
+# indirection "param ${s} ${!s}"
+my_array=("cat" "dog" "mouse" "frog)
+# @Bash LENGTH of array:  len_array=${#my_array[@]}
+# @Bash  Loop over array for i in ${!my_array[@]}; do; echo "element $i is ${my_array[$i]}"; done
+# @Bash  Loop over array created from string
+    arg_list=($@)      
+    set +f        
+    #s_cmd+="${s_arg}"    
+    num_args=${#arg_list[@]}
+    for ((k=0; k<num_args; k++)); do
+        # echo " ${arg_list[$k]}"
+        if [ $k -eq 0 ]; then
+            s_cmd+=" ${s_arg} ${arg_list[$k]}"
+        else
+            s_cmd+="${s_grep_pipe} ${arg_list[$k]}"
+        fi
+    done           
+    echo "grepp() [${s_cmd}]"
+    eval "${s_cmd}"
+-------------
+exec bash multiple in one file
+https://askubuntu.com/questions/334994/which-one-is-better-using-or-to-execute-multiple-commands-in-one-line/539293#539293
+A; B    # Run A and then B, regardless of success of A
+A && B  # Run B if and only if A succeeded
+A || B  # Run B if and only if A failed
+A &     # Run A in background.
+-----------------
+2022-05-29 exec bash find in file names mutliple file types extensions
+https://unix.stackexchange.com/questions/15308/how-to-use-find-command-to-search-for-multiple-extensions
+https://stackoverflow.com/questions/13335837/how-to-grep-for-a-file-extension
+uniq output of stats find . -type f | egrep -i -E -o "\.{1}\w*$" | sort | uniq -c
+find with regex find ./ -type f -regex '.*\.\(txt\|url\)$'|sort
+find with o option  find . -iname "*.url" -o -iname "*.txt"
+
+
+#2022-04-23 Colored BASH help
+function bash_shortcuts_info_color () {
+	: bash shortcuts help in color version
+	color_title=$COLOR_CYAN
+	color_char=$COLOR_YELLOW
+	color_word=$COLOR_GREEN
+    color_line=$COLOR_LIGHT_PURPLE
+    color_swap=$COLOR_LIGHTORANGE
+    colorcursor=$COLOR_MAROON_BG
+    color_delete=$COLOR_ORANGE_BG
+	
+
+    # colored chars
+    crsr="$(echo_color _ $colorcursor)"
+    delc="$(echo_color \# $color_delete)"
+    a="$(echo_color a $COLOR_YELLOW)"
+    A="$(echo_color A $COLOR_YELLOW)"
+    b="$(echo_color b $COLOR_LIGHT_CYAN)"
+    B="$(echo_color B $COLOR_LIGHT_CYAN)"
+    ctl="$(echo_color CTRL $COLOR_LIGHT_CYAN)"
+    alt="$(echo_color ALT $COLOR_LIME)"
+    xyz="$(echo_color xyz $COLOR_LAVENDER)"
+    XYZ="$(echo_color XYZ $COLOR_LAVENDER)"
+    abc="$(echo_color abc $COLOR_SKYBLUE)"
+    ABC="$(echo_color ABC $COLOR_SKYBLUE)"      
+
+    echo_color "### BASH SHORTCUTS" $COLOR_HOTPINK_BG
+    echo ""
+    echo_color "### VIM (vim) :help in editor press ESC, :q!" $color_title
+    echo ""
+    echo_color "### CHAR/WORD CORRECTIONS" $color_title     
+
+
+    op="[c${A}${crsr}${B}d > c${B}${A}${crsr}d]"
+    echo "    $(echo_color [CHAR] $color_char) ${ctl} + t        $op          Tauschen/swap $(echo_color CHAR $color_char) before/after cursor"
+    op="[c${delc}${crsr}${b}d > c${crsr}${b}d]"
+    echo "    $(echo_color [CHAR] $color_char) ${ctl} + h        $op           Delete $(echo_color CHAR $color_char) before Cursor"
+    op="[c${a}${crsr}${delc}d > c${a}${crsr}d]"
+    echo "    $(echo_color [CHAR] $color_char) ${ctl} + d        $op           Delete $(echo_color CHAR $color_char) after Cursor"
+    op="[x${a}${crsr}${b}y > x${a}${B}y${crsr}]"
+    echo "    $(echo_color [CHAR] $color_char) ${alt}  + c        $op          Capitalize $(echo_color CHAR $color_char) after Cursor/move to next $(echo_color [WORD] $color_char)"    
+    op="[${ABC}${crsr}${XYZ} > ${XYZ} ${ABC}${crsr}]"
+    echo "    $(echo_color [WORD] $color_word) ${alt}  + t        $op     Tauschen/swap $(echo_color WORD $color_word) before/after cursor:"    
+    op="[${abc}${crsr}${delc}${delc}${delc} > ${abc}${crsr}"
+    echo "    $(echo_color [WORD] $color_word) ${alt}  + d        $op          Delete $(echo_color WORD $color_word) after Cursor"
+    op="[${abc}${crsr}${xyz} > ${abc}${XYZ}${crsr}]"
+    echo "    $(echo_color [WORD] $color_word) ${alt}  + u        $op      Upper case $(echo_color WORD $color_word)"
+    op="[${abc}${crsr}${XYZ} > ${abc}${xyz}${crsr}]"
+    echo "    $(echo_color [WORD] $color_word) ${alt}  + l        $op      Lower case $(echo_color WORD $color_word)"
+    op="[${delc}${delc}${delc}${crsr}${xyz} > ${xyz}]"
+    echo "    $(echo_color [WORD] $color_word) ${ctl} + w        $op          Cut $(echo_color WORD $color_word) before cursor to clipboard"
+    op="[123${crsr}${delc}${delc}${delc} ${delc}${delc}${delc} > 123${crsr}]"
+    echo "    $(echo_color [LINE] $color_line) ${ctl} + k        $op     Cut $(echo_color LINE $color_line)  after cursor to clipboard"
+    op="[${delc}${delc}${delc}${crsr}${abc} ${xyz} > ${crsr}${abc} ${xyz}]"
+    echo "    $(echo_color [LINE] $color_line) ${ctl} + u        $op Cut $(echo_color LINE $color_line) before cursor to clipboard" 
+
+    echo_color "### NAVIGATION" $color_title
+    echo "    ${ctl} + a                                        (anfang) - HOME"
+    echo "    ${ctl} + e                                        (ende) - END"
+    echo "    ${alt}  + b                                        (backwards one word)"
+    echo "    ${alt}  + f                                        (forward one word)"
+    echo_color "### EDITING" $color_title    
+    echo "    TAB                                             Tab completion for file/directory names"
+    echo "    history #n                                      Show last #n entries from history"
+    echo "    ${ctl} + R                                        History search, type string, go back with ${ctl}+R"
+    echo "    ![NUM]                                          Enter the NUM form history to execute command"
+    echo "    ${alt}  + r                                        (revert changes like history)"
+    echo "    ${ctl} + L                                        clear Screen"
+    echo "    ${ctl} + p                                        (previous COMMAND)"
+    echo "    ${ctl} + n                                        (next COMMAND)"
+    echo "    ${ctl} + y                                        paste last cut"
+    echo "    ${ctl} + _                                        Undo (${ctl} + SHIFT + -)"
+    echo "    ${ctl} + +/-                                      Change Font Size"    
+
+}	
+
+BASH Keyboard Commands Plain Text 
+VIM	(vim) :help in editor press ESC, :q!"
+###	CHAR/WORD CORRECTIONS"
+CTRL+t	[cA_Bd > cBA_d] Tauschen/swap CHAR before/after cursor"
+ALT+t	[ABC_XYZ > XYZ ABC_] Tauschen/swap WORD before/after cursor:"
+CTRL+h	[c#_bd > c_bd] Delete CHAR before Cursor"
+CTRL+d	[ca_#d > ca_d] Delete CHAR after Cursor"
+ALT+d	[abc_### > abc_] Delete WORD after Cursor"
+ALT+u	[abc_xyz > abcXYZ_] Upper case WORD"
+ALT+l	[abc_XYZ > abcxyz_] Lower case WORD"
+ALT+c	[xa_by > xaBy_] Capitalize CHAR after Cursor/move to next word"
+CTRL+w	[###_xyz > xyz] Cut WORD before cursor to clipboard"
+CTRL+k	[123_### ### > 123_] Cut LINE after cursor to clipboard"
+CTRL+u	[###_abc xyz > _abc xyz] Cut LINE before cursor to clipboard"
+###	NAVIGATION"
+CTRl+a	(anfang) - HOME"
+CTRL+e	(ende) - END"
+ALT+b	(backwards one word)"
+ALT+f	(forward one word)"
+###	EDITING"
+TAB	Tab completion for file/directory names"
+history	#n Show last #n entries from history"
+CTRL+R	History search, type string, go back with CTRL+R
+!	Enter the NUM form history to execute command"
+ALT+r	(revert changes like history)"
+CTRL+L	clear Screen"
+CTRL+p	(previous COMMAND)
+CTRL+n	(next COMMAND)
+CTRL+y	paste last cut"
+CTRL+_	Undo (CTRL+SHIFT+-)"
+CTRL++/-	Change Font Size"
+
 # Archive of bash experiments
 ####################################
 

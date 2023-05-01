@@ -1,0 +1,78 @@
+20.11.2019 15:03
+
+https://www.markdownguide.org/basic-syntax/
+https://www.markdownguide.org/extended-syntax/#fenced-code-blocks
+https://rdmd.readme.io/docs/code-blocks
+
+----------------------------
+
+Notepad++ Add In MarkDownViewer++
+
+> Blockquote
+> 
+> more 
+
+Code blocks are normally indented four spaces or one tab. When they’re in a list, indent them eight spaces or two tabs.
+    dddd
+    dddd
+
+To denote a word or phrase as code, enclose it in backticks (`).
+
+Escaping Backticks
+If the word or phrase you want to denote as code includes one or more backticks, you can escape it by enclosing the word or phrase in double backticks (``).
+
+``Use `code` in your Markdown file.``
+
+fenced code block
+```
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "age": 11
+}
+```
+fenced code block syntax highlighting
+```json
+
+
+# Header 1
+## Header 2
+### Header 3
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+*This text will be italic*
+_This will also be italic_
+**This text will be bold**
+__This will also be bold__
+
+*You **can** combine them*
+* Item 1
+* Item 2
+  * Item 2a
+  * Item 2b
+  
+1. Item 1
+2. Item 2
+3. Item 3
+   * Item 3a
+   * Item 3b  
+
+> I’ve always been more interested
+> in the future than in the past.   
+
+\*literal asterisks\*
+
+test image with file
+
+![bla blaho](file:C:/Users/<>/Desktop/test.jpg)
+<script type='text/javascript' src='https://<>/embed.js'></script>
+[GitHub](http://github.com)
+
+Separators
+***
+---
+___
+
+Tables
+
+

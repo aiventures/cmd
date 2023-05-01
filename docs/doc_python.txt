@@ -1,0 +1,3590 @@
+
+
+
+
+#2022-07-25 Argparse Parse from Command Line
+
+"C:\<Entwicklung>\WORK_JUPYTER\root\tools\argparse_template.py"
+
+""" template code for argparse """
+
+# https://stackoverflow.com/questions/19124304/what-does-metavar-and-action-mean-in-argparse-in-python
+# https://stackoverflow.com/questions/27694032/difference-between-default-and-store-const-in-argparse
+# https://stackoverflow.com/questions/20165843/argparse-how-to-handle-variable-number-of-arguments-nargs
+
+import sys
+import argparse
+from pathlib import Path
+import os
+parser = argparse.ArgumentParser()
+parser.add_argument("--path","-p",default=".",help="StartPath",metavar='File Path')
+#parser.add_argument("-optparam2",default=2.0,help="help text (int)",type=float,metavar='myvar')
+#parser.add_argument("--opt_param","-o",action="store_true",help="help text")
+#parser.add_argument("--path",default="",help="help text")
+#parser.add_argument("--mult",default="",nargs='+',help="help text")
+# python argparse_
+# test.py 4 --path="n" --m_args dsdsd sdd wegg
+parser.add_argument("--filetypes","-t",default=[],nargs='*',help="File Extensions for filter",metavar='File Extensions')
+
+#parser.add_argument("--content","-c",default=True,help="read file content for supported file types")
+
+# bool handling not out of the box
+parser.add_argument('--content',"-c", dest='content', action='store_true',help="Read File Contents (default when this parameter is omitted)")
+parser.add_argument('--no-content',"-nc", dest='content', action='store_false',help="Do not read file contents")
+parser.set_defaults(content=True)
+
+#parser.add_argument("-optparam2",default=2.0,help="help text (int)",type=float,metavar='myvar')
+#parser.add_argument("--opt_param","-o",action="store_true",help="help text")
+#parser.add_argument("--path",default="",help="help text")
+#parser.add_argument("--mult",default="",nargs='+',help="help text")
+# python argparse_
+# test.py 4 --path="n" --m_args dsdsd sdd wegg
+parser.add_argument("--filetypes","-t",default=[],nargs='*',help="File Extensions for filter",metavar='File Extensions')
+
+args = parser.parse_args()
+print("*** READING FILE INFO ")
+print(f"Arguments {args}")
+
+
+args = parser.parse_args()
+print(f"Arguments {args}")
+# python argparse_test.py 4 --path="n" --m_args "dsdsd" "sdd wegg"
+# python argparse_template.py -t jpg txt
+
+p=args.path
+if os.path.isdir(p):
+    root_path=Path(p).absolute()
+    print(f"Using Path {root_path}")
+    pass
+else:
+    print(f"{p} is not a valid path")
+    sys.exit()
+    
+
+
+#2022-07-20 Call function from string functional assignment
+Original https://github.com/aiventures/tools/blob/master/file_module.py
+
+# functions to read file content
+displayfunctions_dict={"url":"get_url_from_link",
+                       "txt":"read_txt_file",
+                       "jpg":"get_img_metadata_exiftool",
+                       "json":"read_json",
+                       "lnk":"get_fileref_from_shortcut"
+                      }
+
+display_func=displayfunctions_dict.get(filetype)
+file_content=None
+...
+# locals 
+if content and display_func:
+    file_content=globals()[display_func](pf)
+                
+
+#2022-07-06 Filewalk os.walk create a dict 
+
+import os
+import re
+import shutil
+from datetime import date
+from pathlib import Path
+import shlex
+import subprocess
+import json
+import traceback
+import pandas as pd
+
+def read_txt_file(filepath,encoding='utf-8',comment_marker="#",sep=":"):
+    """ reads data as lines from file """
+    lines = []
+    try:
+        with open(filepath,encoding=encoding) as fp:
+            for line in fp:
+                if len(line.strip())==0:
+                    continue
+                if line[0]==comment_marker:
+                    continue
+                lines.append(line.split(sep)[0].strip())
+    except:
+        print(f"Exception reading file {filepath}")
+        print(traceback.format_exc())
+    return lines
+
+fp=r"C:\05_TRANSIENT\Public\SharedPictures\_0000_UMO_FOTOS\Alltag"
+fp=r"C:\Users\xxxxks"
+p_root=Path(fp)
+subpath_dict={}
+for subpath,subdirs,files in os.walk(fp):
+    # get aboslute path
+    # processed_file_checked=False
+    # subpath_info=subpath_dict
+    print("****  ",subpath)
+    p_path=Path(subpath).absolute()
+    subpath_info=subpath_dict.get(subpath,{})
+    file_list=subpath_info.get("files",[])
+    for f in files:
+        pf=Path.joinpath(p_path,f)
+        suffix=pf.suffix
+        stem=pf.stem
+        print(f"{f}, suffix: {pf.suffix}, stem: {pf.stem},")        
+        file_list.append(f)
+    subpath_info["files"]=file_list
+    subpath_dict[subpath]=subpath_info
+subpath_dict
+
+
+#2022-06-29 f strings padding to the left / right {f:<25}  {f:>25}  https://saralgyaan.com/posts/f-string-in-python-usage-guide/#How_to_add_space_padding_in_Python_f-strings?
+
+#2022-06-26 Read / Write Files Command Line subprocess.Popen os.system() : https://janakiev.com/blog/python-shell-commands/ open "C:\<Entwicklung>\MachineLearningInfos\2022_MachineLearning\Subprocess\HowToExecuteShellCommandsWithPython.txt" 
+
+The first and the most straight forward approach to run a shell command is by using os.system():
+import os
+os.system('ls -l')
+
+When you use the .read() function, you will get the whole output as one string. You can also use the .readlines() function, which splits each line (including a trailing \n). 
+
+In this example and in the following examples, you will see that you always have trailing line breaks in the output. To remove them (including blank spaces and tabs in the beginning and end) you can use the .strip() function like with output.strip(). To remove those characters only in the beginning use .lstrip() and for the end .rstrip().
+
+import os
+stream = os.popen('echo Returned output')
+output = stream.read()
+output
+
+The main function you want to keep in mind if you use Python >= 3.5 is subprocess.run(), but before we get there let’s go through the functionality of the subprocess module. The subprocess.Popen() class is responsible for the creation and management of the executed process. In contrast to the previous functions, this class executes only a single command with arguments as a list. This means that you won’t be able to pipe commands:
+
+import subprocess
+process = subprocess.Popen(['echo', 'More output'],
+                     stdout=subprocess.PIPE, 
+                     stderr=subprocess.PIPE)
+stdout, stderr = process.communicate()
+stdout, stderr
+(b'More output\n', b'')
+
+Also note, that you won’t need quotations for arguments with spaces in between like '\"More output\"'. If you are unsure how to tokenize the arguments from the command, you can use the shlex.split() function:
+import shlex
+shlex.split("/bin/prog -i data.txt -o \"more data.txt\"")
+
+
+
+
+#2022-06-26 OLD COllection
+# -----------------------------
+# (1) LISTS
+# -----------------------------
+
+# 1.01 Remove Duplicates from list
+l = [1,1,2,3]
+l = list(dict.fromkeys(l))
+
+# -----------------------------
+# (2) WINDOWS OS Specific Stuff
+# -----------------------------
+
+# 2.01 clipboard access / popup
+import win32clipboard
+import pandas as pd
+
+# get clipboard data
+win32clipboard.OpenClipboard()
+clipboard_data = win32clipboard.GetClipboardData()
+win32clipboard.CloseClipboard()
+
+# copy string to clipboard
+df=pd.DataFrame(["copied contents"])
+df.to_clipboard(index=False,header=False)
+
+# 2.02 Message box
+import win32ui
+win32ui.MessageBox("Text 1", "Text 2")
+
+# 2.03 open file folder in Windows
+import os
+#path = "R:\\<Link To Path>"
+path = r"C:\<link to file>test.txt"
+# open with system command
+os.system(f'start {os.path.realpath(path)}')
+
+# -----------------------------
+# (3) Modules
+# -----------------------------
+
+# 3.01 Reload Modules
+from importlib import reload
+
+import image_meta.persistence
+reload(image_meta.persistence)
+from image_meta.persistence import Persistence 
+
+# ---------------------------------------------
+# (4) Map, Filter, Reduce, Lambda, Sorting
+# ---------------------------------------------
+
+# 4.01 Reduce: Find substring(s) in another string
+
+from functools import reduce
+# finds out if one item in list is contained in s
+# contains at least one extension
+def contains(s:str,substrings:list):
+    l = list(map(lambda i:i in s,substrings))
+    return reduce(lambda a,b:a or b,l)
+
+l = ["bfdsr","aad","dd"]
+s = "dfsdfaadddd"
+contains(s,l)
+
+# 4.02 sorting by dict fields
+
+#sorting dict key by its value
+d1 = {"aaa":2,"ccc":1,"bbb":3}
+print(sorted(d1.keys(),key=lambda k:d1[k]))
+
+# sorting dict structures in a list
+d2 = [{"key":"ccc","order":1},
+      {"key":"aaa","order":2},
+      {"key":"bbb","order":3}]
+print(sorted(d2,key=lambda f:f["order"],reverse=True))
+
+# -----------------------------
+# (5) Pretty Printer, Hash
+# -----------------------------
+
+# 5.01 Get Hash Value from dictionary
+#      Show Pretty Printer features
+import pprint
+import hashlib
+d = {"s":"abc", "i":12, "l":["1","2"]}
+
+# use pretty printer
+pp = pprint.PrettyPrinter(indent=4)
+pp.pprint(d)
+ds = pp.pformat(d)
+
+# create hash from string
+hash_object = hashlib.md5(ds.encode()).hexdigest()
+print(f"Dictionary Hash: {hash_object}")
+
+# -----------------------------
+# (6) SYS functions
+# -----------------------------
+
+# 6.01 redirecting print output to file
+import sys
+
+p = r"C:\<your_directory>\output.txt"
+sys.stdout=open(p,"w")
+print("TEST OUTPUT")
+sys.stdout.close()                  
+        
+# open file in txt editor (win only)
+if os.path.isfile(p):
+    os.system(f'start {os.path.realpath(p)}')
+else:
+    input(f"--- file {p} not found press key to continue ---")
+    
+# 6.02 Find out Python executable
+print(sys.executable)
+    
+# -----------------------------
+# (7) Strings functions
+# -----------------------------
+
+# 7.01 Left Justified
+"1234".ljust(10,"#")
+
+# -----------------------------
+# (8) Exceptions Traceback
+# -----------------------------
+
+# 8.01 Show Stack Trace
+import traceback
+try:
+    raise Exception("Raising an Exception")
+except Exception:
+    print(traceback.format_exc())  
+
+# -----------------------------
+# (9) Miscellaneous
+# -----------------------------
+
+# 9.01 Open url in standard webbrowser
+
+import webbrowser
+url = r"https://github.com/"
+webbrowser.open(url)
+
+# 9.02 Recursion
+
+def rec(amount,year,to_year):
+    if year == to_year:
+        print(f"final year {year} amount {amount}")
+        return amount
+    else:
+        print(f"year {year} amount {amount}")
+        return rec(amount*1.04,year+1,to_year)
+    
+rec(100,2000,2020)
+
+# -----------------------------
+# (10) Numpy
+# -----------------------------
+
+import numpy as np
+
+# 10.1 Conversion list <=> np.array
+my_list = [1,2,3]
+my_array = np.array([1,2,3])
+my_list = [1,2,3]
+np.array(my_list)
+my_matrix = [[1,2,3],[4,5,6],[7,8,9]]
+np.array(my_matrix)
+
+# 10.2 Ranges
+np.arange(0,10)
+Reshape
+arr.reshape(5,5)
+
+# 10.3 Special matrices
+np.zeros(3)
+np.zeros((5,5))
+np.ones(3)
+np.ones((3,3))
+np.eye(4)
+
+# 10.4 linspace 
+np.linspace(0,10,3)
+np.linspace(0,5,21)
+
+# 10.5 random
+np.random.rand(2)
+np.random.rand(5,5)
+np.random.randn(2)
+np.random.randn(5,5)
+np.random.randint(1,100)
+np.random.randint(1,100,10)
+
+# 10.6 seed
+within a cell in jupyter, values are reproducable
+np.random.seed(42)
+np.random.rand(4)
+
+# 10.7 properties
+max / min value, index
+arr.max()
+arr.argmax() 
+arr.min()
+arr.argmin() 
+arr.shape
+arr.dtype
+
+# 10.8 Index & Selection
+arr = np.arange(0,11)
+arr[8] # get element
+arr[1:3] # array range
+arr[1:5] = 4 # broadcast
+slc = arr[:3]  # slicing
+
+# 10.9 two dimensional array / slices
+arr2 = np.array(([1,2,3],[4,5,6],[7,8,9]))
+arr2[<row_slice>,<col_slice>] # slicing as above
+arr2[row][col] # single element
+arr2[row,col]
+arr2[row,col]
+arr2[2::2,3::2] # with steps inbetween
+
+# 10.10 Conditional
+arr = np.arange(0,11)
+bool_arr = arr > 4 # returns same array with boolean vales
+arr[bool_arr] # only returns values that match true
+arr[arr>4] # same result as before
+v = 2
+arr[arr>v] # as before, with variables
+
+# 10.11 Copy
+arr.copy()
+
+# 10.12 Numpy Operations
+arr + scalar
+arr - scalar
+arr +/-/*/ / arr2
+nan / inf
+np.sin(arr) / np.sqrt(arr) / np. ... math operations
+arr.sum() / arr.mean() / arr.var() / arr.std() - standard deviation
+# 2d 
+arr2d.sum(axis=0) # sum across rows (index 0)
+arr2d.sum(axis=1) # sum across columns
+
+# §11 Pandas Series
+
+# Data with an index 
+
+# 11.01 Series creation
+
+import numpy as np
+import pandas as pd
+idx = ["a","b","c"]
+d = [1000,2000,3000]
+s = pd.Series(data=d)
+s = pd.Series(data=d,index=idx)
+s = ["a"]
+d2 = {"a":5,"b":10,"x":15}
+sd = pd.Series(d2)
+
+## 11.02 Series operations
+
+# getting keys
+s.keys() 
+
+same index 
+s * 2 # broadcast 
+s1 + s2 # series operations / matching, keys not present show up as NaN
+s1.add(s2) # series add not marking nonexistent keys as NaN / Fill Value
+# note the .dtype after an operation
+
+# §12 Pandas Data Frame
+
+# 12.01 Instanciate Data Frame
+np.random.seed(101)
+mydata = np.random.randomint(0,101,(4,3))
+myindex = ["R1","R2","R3","R4"]
+mycolumns = ["Q1","Q2","Q3"]
+df = pd.DataFrame(mydata)
+df = pd.DataFrame(mydata,index=myindex,columns=mycolumns)
+df.info()
+
+# 12.02 Read Data from File
+df = pd.read_csv(filepath)
+
+# 12.03 Basics
+df.columns # colum names
+df.index # row names
+df.head() 
+df.tail()
+df.info()
+df.describe() # some stats
+df.transpose()
+
+# 12.04 Columns
+df["column"] > Series Object
+df(["col1","col2"]) # multiple cols
+df["new"] = df["col"]+df["col2"] # broadcast / operations
+np.round(df["col"],2)
+df.drop("col",axis=1) # axis=1 drop column - 
+df.drop("col",axis=1,inplace=True) # permanenet change
+
+# 12.05 Rows - Basic Operations
+df.index # index info
+df = df.set_index("idx_col")
+df.reset_index()
+df.iloc[1] # access with index number
+df.loc["row_key"]
+df.loc[["a","b]"] # multiple rows
+df.iloc[1:3]
+df.drop("key") # drop row
+
+row = df.iloc[0] # one line / needs to match df for adding / doesn't check for unique
+df = df.append(row)
+
+# 12.06 Conditional Filters
+Column Index = "Feature"
+df[df["col"] > 5] # filter out all 
+df[(df["col"] > 5) & (df["col2"] == 2)] # filter & and or |
+options = ["1","2"]
+df["col"].isin(options) # check whether column values are in given options
+
+# 12.07 Apply Function to column(s)
+int(str(num)[-4:]) # extract last 4 digits of a number
+def f(v):
+	return int(str(num)[-4:]) 
+df["col"].apply(f)
+df["col"].apply(lambda f:2*f)
+
+#  apply a function with multiple columns
+def f(a,b):
+	return a+b
+
+df[["a","b"]].apply(lambda df:f(df["a"],df["b"]),axis=1)
+
+# 12.08 same thing, but using vectorize
+np.vectorize(f)(df["a"],df["b"])
+
+# 12.09 Miscellaneous Dataframe Methods
+
+df.describe()[.transpose()] # some stats 
+df.sort_values("col") # sorting
+df.sort_values(["col","colB"])
+df["col"].max() # max value, get index location
+df["col"].idxmax() # max value, get index location
+df.iloc[df["col"].idxmax()]
+df.corr() # correlation of values
+df.head() # first rows
+df["col"].value_counts() # count of attributes
+df["col"].unique() # unique values
+df["col"].nunique() # number of unique values
+df["col"].replace("a","r") # replace value "a" by "r"
+df["col"].replace(["a","b"],["ra","rb"]) # replace values eg "a" by "ra"
+m = {"a":"ra","b":"rb"} # mapping values
+df["col"].map(m)
+df.duplicated() # duplicate rows / only dups not the first occurence
+df.drop_duplicated() # drop duplicate rows 
+df["col"].between(1,100,inclusive=True) # limit
+df.nlargest(10,"col") # top n 
+df.nsmallest(10,"col") # top n 
+df.sample(10) # get random sample
+df.sample(frac=0.10) # get 10% random sample
+
+# 12.10 Handling Missing Values / Dropping Data
+ NaN, pd.NaT (not a timestamp). > keep, remove, replace values
+ Calculate rate what is lost when data is dropped
+ np.nan (cant be compared/no equals) / pd.NA / pd.NaT
+ np.nan is np.nan
+ df.isnull() / df.notnull()
+ df[df["col"].notnull()] # select not null columns
+ df[(df["col"].notnull()) & (..other conditions...)] # select not null columns
+ df.dropna(axis=1) #drop columns that anyone have at least a nan in rows
+ df.dropna() # drop all rows having any nan
+ df.dropna(thres=1) # drop rows / keeop having at least 1 nan value
+ df.dropna(subset=["col"]) # drop enries having nan only in column "col"
+ df.fillna("value") # fill all nan with value
+ df["col"].fillna("value") # fill "col" nan values
+ m = df["col"].mean() # get mean value and fill nans with value
+ df["col"].fillna(m) 
+ s = pd.Series({"a":1,"b":np.nan,"c":3.5})# series interpolation
+ s.interpolate()
+ 
+# 12.11 GroupBy / Multilevel index Operations
+
+df.groupby("col")  # separate by a certain colum / follow up calc as sum() count() mean()
+df.groupby("col").mean()["col_of_interest"] # only use a certain col of interest
+df.groupby(["colA","colB"]).mean()["col_of_interest"] # multilevel index
+df_new = df.groupby(["colA","colB"]).mean()
+df_new.index.levels # returns the list of each subindex
+df_new.index.loc["key"] # returns outer index value table
+df_new.index.loc[["key1","key2"]] # returns outer index value table
+df_new.index.loc[("key1","key3")] # returns certain entry with two indices
+# Cross Section
+df_new.xs(key="value",level="ColA") # subsection for "value" in "ColA" /also works for inner
+# filter 
+df[df["col"].isin([valA,valB])].groupby(["colA,"colB"]).mean # filter then group
+# swap inner vs outer indices
+df.swaplevel()
+df.sortindex(level="colB",ascending=False) # sort in other order
+# pandas reference group by
+df.agg(["std","mean"]) # global std deviation and mean
+df.agg({"colA":["mean","max"]},...)  # aggregate function over certain columns
+
+# 12.12 Concatenating Dataframes
+pd.concat() # Concatenation for rows and columns
+# different cols same index
+pd.concat([df1,df2],axis=1)
+# different cols same i
+pd.concat([df1,df2],axis=0) # duplicates values and adds duplicate indeices
+# cols C,D relabel it to 
+df2.columns = df1.columns # rename column names
+df2.columns = ["a","b"]
+pd.concat([df1,df2],axis=0) # adds rows but index still duplicate
+mydf.index = range(len(mydf)) # reindex
+
+# 12.13 Inner/left/Right/Outer Merge Dataframes
+pd.merge # inner / outer / left or right
+# merge on "id" column
+pd.merge(df1,df2,how="inner",on="id")
+pd.merge(left=df1,right=df2,how="left",on="id")
+df = df.set_index("id")
+# adding index parameters left_on = "id" / righton / left_index = True / right_index
+pd.merge: When same columns are ther it will be suffixed with _x, _y
+pd.merge(left=df1,right=df2,how="left",on="id",suffixes=("a","b")) # suffix name
+ 
+# 12.14 Dataframe String methods
+s = pd.Series(["a","b","c"]) 
+s.str.<method>, eg upper()
+# splitting items at comma
+s.split(",") => returns array
+s.str.split(",",expand=True) # expand to columns
+s.str.replace(",",""),str, ... 
+s.apply(string_method)
+
+# 12.14 Dataframe Date Time dt methods
+pd,to_datetime(series,dayfirst=True) # parse formatted strings / dayfirst: americam datetime format
+pd,to_datetime(series,format=<format string>)
+pd.read_csv(<file>,parse_dates=[<index number list of date columns>])
+df.set_index("DATE").resample(rule="A"),mean() # group by year / aggregation method / resample
+df["date_column"].dt / year / month# applying date emthods
+
+# 12.15 Dataframe read csv / html / xls
+pd.read_csv("dilename",index=False)
+html 
+conda install lxml / pip install lxml
+read xls requires additional libraries
+openpyxl / xlrd (new and old xks files)
+pd.read_excel(<filename>,sheet="sheetname")
+df.to_excel(<filename>,sheet_name=<sheet_name>)
+
+# 12.16 Dataframe / SQL
+Driver sqlalchemy > Install Python Library 
+<db driver>  + pandas
+pip install  sqlalchemy
+from sqlalchemy import create_engine
+tmp_db = create_engine("sqlite:///:memory:")
+rnd_df = pd.DataFrame(data=np.random.randint(low=0,high=100),size(5,3),columns=["a","b","c"])
+rnd_df.to_sql("name"="dbtable",con=tmp_db)
+df_read = pd.read(sql="dbtable",con=tmp_db)
+pd.read_sql_query(sql="SELECT a,c from dbtable",con=tmp_db) 
+
+# 12.17 Dataframe Pivot Tables
+
+df cols 'foo' (ome two),'bar','baz','val'
+df.pivot(index="foo",columns="bar",values="baz")
+=> values of "foo" = rows, values of "bar" = columns, value = from "baz"
+alternative .groupby ...
+df = pd.read_csv("")
+...
+
+build sum 
+pd.pivot_table(df,index="xxx",aggfunc="sum",values=["cola","colB"])
+# separated by colC and replace NaN by 0 / aggfunc can also be othe like np.sum or multiple = [np.sum,np.mean]
+pd.pivot_table(df,index="xxx",aggfunc="sum",values=["cola","colB"],columns=["colC"],fill_value=0)
+
+# §13 measuring time
+
+# 13.01 timeit
+import timeit
+setup = ''' <setup code> '''
+stmt = ''' <run code> '''
+timeit.timeit(setup=setup,stmt=stmt)
+
+# §14 matplotlib
+
+Functional Part, OOP part
+http://matplotlib.org > cherck library
+
+#14.01 matplotlib basics
+
+plt.plot(x,y)
+plt.show() in direct .py code files
+import matplotlib.pyplot as plt
+# in jupyter notebook 
+%matplotlib inline # eventually
+import numpy as np
+x = np.arange(0,10)
+y = 2 * x 
+plt.plot(x,y)
+plt.xlabel("x")
+plt.ylabel("y")
+plt.plot(x,y); # semicolon no output shown
+plt.xlim(0,10) # limit x/y axis
+plt.ylim(0,10)
+plt.title("a title");
+plt.savefig("file.png")
+plt.savefig("file.png",bbox_inches="tight") # tick marks
+
+# 14.02 matplotlib OOP approach
+import matplotlib.pyplot as plt
+f = plt.figure() # create canvas
+f = plt.figure(figsize=(10,10)) # inches size
+ax = f.add_axes([0,0,1,1]) # relative lower left and upper right corner
+ax.plot(x,y)
+plt.subplots(...) # use this to display multiple graphs
+
+# 14.03 Implement Plots
+import matplotlib.pyplot as plt
+a = np.linspace(0,10,11)
+b = x ** 3
+x = np.linspace(0,1,11)
+y = x ** 2
+f = plt.figure()
+ax = f.add_axes([0,0,1,1])
+ax2 = f.add_axes([0,0.3,0.9,1]) # insert plot
+ax.plot(x,y)
+ax2.plot(a,b)
+plt.show()
+
+f = plt.figure(figsize=(12,6),dpi=100)
+ax = f.add_axes([0,0,1,1])
+ax.plot(x,y)
+plt.show()
+
+# 14.03 matplotlib subplot
+plt.subplots()
+fig,axes = plt.subplots(nrows=1,ncols=2)
+a = np.linspace(0,10,11)
+b = a**2
+x = np.arange(0,10)
+y = 3 * x
+fig,axes = plt.subplots(nrows=1,ncols=2)
+axes[0].plot(x,y)
+axes[1].plot(a,b)
+axes[row][col] # multidimensional from top to bottom / left to right
+plt.tight_layout()  #  condensed layout
+# adjust layout: wspace, hspace fraction of axes width / height
+fig.subplots_adjust()
+fig.suptitle("Overall Title",fontsize=10) # supertitle
+fig.set_... (other options available)
+
+# 14.04 matplotlib legends
+
+a = np.linspace(0,10,11)
+b = x ** 3
+x = np.linspace(0,1,11)
+y = x ** 2
+f = plt.figure()
+ax = f.add_axes([0,0,1,1])
+axes.plot(x,y,label="Label x-y")
+axes.plot(a,b,label="Label a-b")
+ax.legend(loc="lower left")
+loc=(0.1,0.5) # relative location
+
+# 14.05 matplotlib formatting
+# color
+axes.plot(a,b,color="red") / orange blue purple
+# color picker
+axes.plot(a,b,color="#rrggbb#) # hex code
+axes.plot(a,b,lw=10 ) # line width
+axes.plot(a,b,ls="--" ) # line style "-." ":" "-" "--"
+lines = axes.plot(x,y,label="Label x-y")
+lines[0].set_dashes([1,2,3,4]) / solid points, blank points repeated
+axes.plot(a,b,marker="o",markersize=20 ) # adds marker points / matplotlib.markers ratio
+markerfacecolor,markeredgewidth,markeredgecolor
+
+# §15 Seaborn Data Visualization
+
+"Choosing a plot visualization"
+https://seaborn.pydata.org
+PLots: Scatter, Distribution, Categorical,Comparison,Seaborn Grids,Matrix
+
+#15.01 Scatter Plots
+Continuous Feature Visualization
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+df = dataframe
+plt.figure(figize=(5,3),dpi=100) #seaborn based on pyplot
+sns.scatterplot(x="colA",y="colB",data=df)
+sns.scatterplot(x="colA",y="colB",hue="df for coloring",data=df) # coloring based df column
+# Colormaps to set the coloring 
+sns.scatterplot(x="colA",y="colB",hue="df for coloring",data=df,
+palette="<pallete>")
+# https://matplotlib.org/tutorials/colors/colormaps.html
+# Dotsize / s = Size / alpha transparency / style: shape depending on column
+sns.scatterplot(x="colA",y="colB",hue="df for coloring",data=df,
+size="<sizecol>",s=50,alpha=50,style="<df for style>")
+plt.show()
+plt.savefig("filename")
+
+#15.02 Distribution Plots
+Rug Plot, Histogram, KDE Plot (Kernel Density Estimation=Adding Gaussian Curves around single data points)
+df = ...
+plt.figure ... # preparation of plot
+sns.rugplot(x="Col",data=df,height=0.3)
+sns.displot  # new one / distplot will be deprecated
+sns.histplot
+sns.histplot(data=df,x="col")
+sns.set(style="darkgrid") / different styles / white / dark / ticks 
+sns.displot(data=df,x="col",bins=10,color="red",edgecolor="blue",linewidth=4,ls="+") # inherits from pyplot
+sns.displot(data=df,...,kde=True,rug=True) # adding kde curve
+
+sns.kdeplot(data=df,...,shade=True) # show kde curve / with shade
+sns.kdeplot(data=df,...,clip=[50,100]) # clipped off at boundaries
+sns.kdeplot(data=df,...,bw_adjust=0.5) # bandwidth adjust / sample of gaussian curves
+
+np.random.seed(100)
+sample = np.random.randint(0,100,25)
+sample_df = pd.DataFrame(sample,columns=["cols"])
+sns.rugplot(data=sample_df,x="cols")
+
+# 15.02 Categorical Plots
+"Visualization of 'groupby' "
+countplot() # number of rows
+barplot() # additional metrics for display available
+df["col"].value_counts() # metrics of categorical data
+plt.figure(figsize=...,dpi=...)
+sns.countplot(data=df,x="col")
+# matplot lib color map codes 
+sns.countplot(data=df,x="col",hue="colB",palette="Set1") # subdivision
+plt.ylim(100,200)
+
+sns.barplot(data=df,x="col",y="continuousCol",estimator=np.mean,ci=90) 
+# mean columns of a continuous value colluemn
+# ci= conficdence interval ci="sd" standard deviation draws interval
+plt.legend(bbox_to_anchor=(1.05,1)) # outside graph
+
+# 15.03 Category Plots
+
+BoxPlots, ViolinPlot, Swarmplot, Boxenplot (Letter-Value)
+
+Boxplot: Quartiles, 50% = Median, IQR = Interquartile Range Q1-Q3 (50% of all data)
+Whiskers = 1,5 IQR Width / rest is considered outliers
+Violin: KDE Distribution mirrored along the axis / WHite dot = Medium
+Swarmplot Shows all datapoints in distribution (=discrete violin plot showing number of datapoint)
+Boxenplot: "Expanded" Box PLot
+
+df = pd.read_csv(...)
+# ordering by value 
+https://www.python-graph-gallery.com/35-control-order-of-boxplot
+https://www.python-graph-gallery.com/
+sns.boxplot(data=df,y="col",x="col_cats") # separates boxplot by  categories
+sns.boxplot(data=df,y="col",x="col_cats",hue="more_sep")  # separate by additional column
+sns.boxplot(data=df,x="col",y="col_cats",hue="more_sep") # make boxplots vertical along y axis
+sns.violinplot(data=df,x="col",y="col_cats",hue="more_sep",split=True,inner="quartile") # show different categories on violinplot / shows quartiles
+sns.violinplot(data=df,x="col",y="col_cats",hue="more_sep",split=True,inner="stick")  # shows tick per data point
+sns.violinplot(data=df,x="col",y="col_cats",hue="more_sep",bw=0.1)   # bandwidth parameter / smooth kde parameter
+plt.legend(bbox_to_anchor=(1.05,1)) # outside graph
+
+sns.swarmplot(data=df,x="col",y="col2",huer="colC",size=2) # better visualisation of population
+sns.swarmplot(data=df,x="col",y="col2",huer="colC",dodge=True,size=2) # splits hue ointo separate swarmplots
+plt.legend(...)
+
+# 15.04 Seaborn Comparisonplots
+
+jointplot(): adding distribution at axis / also with hexagons / also kde plot
+pairplot(): compare numerical columns in a dataframe: data intensive / symmetric 
+
+df = pd.read_csv...
+
+sns.jointplot(data=df,x="CarA",y="CatB",kind="scatter",alpha=0.1,hue="col") / kind="hex" "hist" ( "kde" shade=True)
+
+sns.jointplot(data=df,hue="ddd",diag_kind="hist",Corner=True) # grabs all columns / COrner discard redundant 
+
+# 15.05 Seaborn Gridplot plots
+
+Category Plot 
+df = ...
+sns.catplot(data=df,x="col",y="col",kind="box",row="catR") # creates separate grids for a category or col=""
+
+gr = sns.PairGrid(df,hue="Col") # init pair grid
+gr = gr.map_upper(sns.scatterplot) # add mappings
+gr = gr.map_upper(sns.kdeplot) 
+gr = gr.map_diag(sns.histplot) 
+gr = gr.add_legend()
+sns.pairplot(df)
+
+# 15.05 Seaborn Matrix plots
+
+Visual equivalent of pivot table
+
+heatmap() clustermap()
+
+df = ...
+df = df.set_index("indexCol")
+plt.figure(dpi=200)
+sns.heatmap(df.drop("dropcol",axis=1),linewidth=0.1,annot=True,cmap="viridis") 
+# only similar cols make sense / add lines and numbers in cells,cmap is coloring scheme
+sns.clustermap(df.drop("dropcol",axis=1),linewidth=0.1,annot=True,cmap="viridis") #additional clustering information
+
+# §16 Machine Learning - Linear Regression
+
+16.01 ML Pathway / Overview
+
+Real World > Problem To Solve: fix or change (App/Program)  / QUestion To Answer: CHange in X affects Y (Analysis) 
+World > Raw Data > Process / Store   > Exploratory Data Analysis (Report/Visualization/Communication) > MAchine Learning
+Supervised : PRedict an Outcome. Main Problems:
+Categorical Prediction: Classification 
+Continuous Value: Regression
+Unsupervised: Discover Patterns: CLuster Analysis
+
+Key Terms
+Bias-Variance
+Cross Validation
+Feature Engineering
+Scikit Learning
+Performance Metrics
+
+ML Motivation
+"Statistic Algorithms that will improve by data" / no fixed coding 
+
+ML Library: Scikit-learn
+
+x: Feature (attributes)  y:label (to be predicted): Training and Test Sets
+model hyperparameters: Additional parameters to optimize ML model (get better accuracy)
+OLS: Ordinary Least Squares / Minimizing Cost Function > Gradient Descent / Cost Function / beta values
+
+16.02 Linear Regression Concepts
+
+sns.regplot(df=... ) # as above but shows linear regression curve
+
+X = df["feature"]
+y = df["label"]
+
+b = np.polyfit(X,y,deg=1) ä returns linear coefficients B[0]*x+B[1]
+
+# output / predict values
+out = np.linspace(1,200,50)
+predicted = b[0]*out+b[1]
+sns.scatterplot(x="colA",y="colB")
+plt.plot(out,predicted,color="yellow")
+
+16.03 Scikit Learn - Schematic Approach
+
+Estimator API. Train and Test Data Split
+
+# schematic approach
+
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test = train_test_split(X,y)
+
+from sklearn.<model_family> import <algorithm>
+mymodel = <Algorithm>(*params)
+mymodel.fit(X_train,y_train)
+predictions = mymodel.predict(X_test)
+
+from sklearn.metrics import <error_metric>
+performance = <error_metric>(y_test,predictions)
+
+16.04 Scikit Learn Example Linear Regression
+
+# preanalyze with visualization
+
+from sklearn.model_selection import train_test_split
+
+df = ...
+
+X = df.drop("label") # drop labels retain features
+y = df["labelCol"]
+# copy commands from help
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.33,random_state=33)
+
+from sklearn.linear_model import LinearRegression
+help(LinearRegression)
+model = LinearRegression()
+model.fit(X_train,y_train)
+y_test_prediction = model.predict(X_test)
+
+Task: regression vs classification
+
+Evaluation Metrics:
+* Mean Absolute Error MAE|y(i) - m|
+* Mean Squared Error MSE
+* Root MEan Square Error RMSE
+
+from sklearn.metrics import mean_axbsolute_error,mean_squared_error
+df["col"].mean()
+sns.histplot(data=df,x="col",bins=20)
+mean_absolute_error(y_test,y_test_prediction)
+mean_squared_error(y_test,y_test_prediction)
+np.sqrt(mean_squared_error(y_test,y_test_prediction))
+
+16.04 Scikit Learn Evaluating Residuals
+
+(y-m) => distribution should match normal dostribution
+
+residual plot (deviation from mean)
+
+test_residuals = y_test - y_test_predictions
+sns.scatterplot(x=y_test,y=test_residuals)
+plt.axhline(y=0,color="blue",ls=".") # add residual plot
+sns.distplot(test_residuals,bins=10,kde=True)
+# normal distribution
+import scipy as split
+fig, ax = plt.subplot(figsize=(6,6),dpi=100)
+# probability plot
+_ = sp.stats.probplot(test_residuals,plot=ax)
+
+16.05 Model Deployment
+
+final_model = LinearRegression()
+final_model.fit(X,y)
+
+final_model.coef_ # data coefficients
+y_hat = final_model.predict(X)
+# compare visually
+...
+#save model
+from joblib import dump,load
+dump(final_model,"mdl.joblib")
+# import model
+loaded_model = load("mdl.joblib")
+# note shape from model (100.3)
+test = [[3,2,5]]
+loaded_model.predict(test)
+
+16.05 polynomial regression
+
+interaction feature
+
+* bias = 1
+* values raised to power, eg x, x^2,...
+* values interaction x1*x2,x1*x3,..
+
+df = ...
+X = df.drop("featureCol",axis=1)
+y = df["featureCol"]
+from sklearn.preprocessing import PolynomialFeatures
+polynomial = PolynomialFeatures(degree=True,bias=False)
+polynomial.fit(X)
+polynomial.transform(X) # transform it 
+#check the model num of features
+X.shape
+poly_features = polynomial.transform(X)
+# fits terms are original values
+# followed by interaction terms and square terms
+# alternatively do fit and transform in one steps
+# only provides new values for regression
+polynomial.fit_transform(X)
+from sklearn.model_selection import train_test_split
+
+X_train,X_test,y_train,y_test = train_test_split(poly_features,y,test_size=0.33,random_state=33)
+
+from sklearn.linear_model import LinearRegression
+model = LinearRegression
+model.fit(X_train,y_train)
+
+test_predictions = model.predict(X_test)
+model.coef_
+
+from sklearn.metrics import mean_absolute_error,mean_squared_error
+df["col"].mean()
+sns.histplot(data=df,x="col",bins=20)
+MAE = mean_absolute_error(y_test,test_predictions)
+MSE = mean_squared_error(y_test,test_predictions)
+RMSE = np.sqrt(mean_squared_error(y_test,test_predictions))
+
+# check which parameters belong
+poly_features[0]
+# check against data set
+X.iloc[0]
+
+16.06 Bias Variance Trade Off
+
+Overfitting vs Underfitting
+
+Optimize model: error vs model complexity
+
+Strategy: Check model complexity on test set and train set.
+=> COmpare Errors Test Set vs Train Set
+
+16,07 Polynomial Regression - Optimal Parameter Selection
+
+Optimizing RMSE / MAE
+
+# Loop over parameter selection for both train and test sets
+train_rmse = []
+test_rmse = []
+for d in range(1,10):
+	poly = PolynomialFeatures(degree=d, include_bias=False)
+	poly_features = poly.fit_transform(X)
+	X_train,X_test,y_train,y_test = train_test_split(poly_features,y,test_size=0.33,random_state=33)
+	model = LinearRegression()
+	model.fit(X_train,y_train)
+	train_pred = model.predict(X_train)
+	test_pred = model.predict(X_test)
+	train_RMSE = np.sqrt(mean_squared_error(y_train,train_pred)	
+	test_RMSE = np.sqrt(mean_squared_error(y_test,test_pred)		
+	train_rmse.append(train_RMSE)
+	test_rmse.append(test_RMSE)
+
+plt.plot(range(1,6),train_rmse[:5],label="TRAIN RMSE")
+plt.plot(range(1,6),test_rmse[:5],label="TEST RMSE",)
+
+plt.ylabel("RMSE")
+plt.xlabel("Polynomial Order")
+plt.legend()
+
+16.07 Model Deployment
+
+final_poly_converter = PolynomialFeatures(degree=3,include_bias=False)
+final_model = LinearRegression()
+full_conv_X = final_poly_converter.fit_transform(X)
+final_model.fit(full_conv_X,y)
+from joblib import dump,load
+dump(final_model,"final_model.joblib")
+dump(final_poly_converter,"final_converter.joblib")
+converter  = load("final_converter.joblib")
+model = load("final_model.joblib")
+data = [[]1,2,3]
+trans_data = converter.fit_transform(data) # convert numbers into polynomials
+model.predict(trans_data)
+
+16.08 Regularization
+
+* Minimize model complexity
+* Penalizing loss function
+* Reducingm model overfitting
+
+Types:
+* L1 Regularization LASSO: Penalty Function / absolute vakue of magnitude of coefficients: Cost function lambda*sum(beta's)
+* L2 Regularization Ridge Regression /  Penalty adding square of coefficients lambda*sum(beta's^2)
+* L1/L2 combined Elastic Net: COmbination of L1 and L2 with a hyperparameter alpha to distribute portion of l1 / l2
+
+16.09 Feature Scaling
+
+* Improve Grad Descent Algorithm
+* Normalize Parameters, increase performance, sometimes needed
+* NEw Data need to be rescaled 
+* More dificult to interprete
+
+Standardization: Rescaling data to have a mean of 0 and standard deviation of sigma (X - mu) / sigma Z Score Normalization
+Normalization: ALl values between 0-1:  (X - MIN) / (MAX-MIN)
+
+scikit fit / transform methods
+fit: statistics (min max mean std deviation) > only to be applied to training data (otherwise data leakage)
+transform scales data
+Y values stay unchanged
+
+16.10 Cross Validation
+
+ISLR 5.1 . Splitting data into training and testing sets: Train on all data, evaluae on all data.
+T: train / S Test Data
+=> Shuffle Data: 
+T-T-T-S-S / S-S-T-T-T > Getting average error / K fold cross validation (~10% > 10 splits)
+
+Training hyper parameters, verify by holding out a test set. Final performance will be evaluated on hold out test set.
+
+16.11 Regularization of Data 
+
+df = pd.read_csv(...)
+X = df.drop("YCol",axis=1)
+< = df["YCol"]
+
+from sklearn import PolynomialFeatures
+polynomial_conv = PolynomialFeatures(degree=3,include_bias=False)
+poly_features = polynomial_conv.fit_transform(X)
+
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test = train_test_split(poly_features,y,test_size=0.33,random_state=33)
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+# no data leakage
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+
+# ridge regression
+lambda hyperparameter => optimize by checking variants
+cross validation: scorer object: higher values are better than lower return values > convention: use negative RMSE. 
+Penalty Strength Parameter called alpha
+
+# 16.l2 Ridge Regression (L1)
+from sklearn.linear_model import Ridge
+
+ridge = Ridge(alpha=10)
+ridge_model.fit(X_train,y_train)
+test_predictions = ridge_model.predict(X_test)
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+MAE = mean_absolute_error(y_test,test_predictions)
+RMSE = np.sqrt(mean_squared_error(y_test,test_predictions))
+
+from sklearn.linear_model import RidgeCV # Cross Validation
+ridge_cv_model = RidgeCV(alphas=array([0.1,1.0,10]),scoring="neg_mean_absolute_error")
+# also uses some sets for cross validation
+ridge_cv_model.fit(X_train,y_train)
+ridge_cv_model.alpha_
+from sklearn.metrics import SCORERS
+# scores
+SCORES.key()
+
+test_predictions = ridge_cv_model.predict(X_test)
+MAE = mean_absolute_error(y_test,test_predictions)
+RMSE = np.sqrt(mean_squared_error(y_test,test_predictions))
+
+ridge_cv_model.coef_
+
+# 16.13 Lasso Regression (L1)
+
+LASSO: Least absolute shrinkage and selection operator
+
+Parameters can get close to zero. Models are easier to interprete.
+
+from sklearn.linear_model import Lasso, , LassoCV
+
+lasso_cv_model = LassoCV(eps=0.001,n_alpha=100,cv=5)
+lasso_cv_model.fit(X_train,y_train,max_iter=10000)
+lasso_cv_model.alpha_
+
+test_predictions = lasso_cv_model.predict(X_test)
+MAE = mean_absolute_error(y_test,test_predictions)
+RMSE = np.sqrt(mean_squared_error(y_test,test_predictions))
+lasso_cv_model.coef_
+
+# 16.14 Elastoc Net (L1+L2)
+
+Penalty ||beta|| <= s and ||beta||^2 <= s
+two separate lambdas for size penalties / ratio
+
+from sklearn.linear_model import ElasticNetCV
+
+l1 ratio, eps, n_alphas
+elastic_cv_model = ElasticNetCV(l1_ratio=[0.1,0,5,0.9],eps?0.001,n_alphas=10000,max_iter=100000)
+elastic_cv_model.fit(X_train,y_train)
+elastic_cv_model.l1_ratio_ (suffix _ > hyperparameter)
+elastic_cv_model.alpha_
+
+test_predictions = elastic_cv_modell.predict(X_test)
+MAE = mean_absolute_error(y_test,test_predictions)
+RMSE = np.sqrt(mean_squared_error(y_test,test_predictions))
+
+# §17 Feature ENgineering
+
+#17.01 Intro
+domain knowledge > extract features as raw data
+Extract > Combine > Transform
+
+Encoding
+INteger ENcoding: Feature > Integer 
+Easy, but might imply an order
+
+OneHot Encoding 
+Feature as separate column (0,1)
+pandas.map() / pandas.apply()
+caveat: dummy variable trap > for example up and down > inverted encoding
+No ordering. Create many feature columns, difficult to create new columns, dummy variable trap
+
+Treating: Outliers, missing data, categorical data
+
+#17.02 Outliers
+
+Range and Limits, Percentage of Data
+Limit: InterQuartile Range, Standard Deviation, Visualized / Domain Limit
+Attention: Percentage of Outliers, should be a few percent only 
+
+Create random distribution
+np.random.seed(seed)
+sample = np.random.normal(loc=mu,scale=sigma,size=n) # create random distr
+sample = np.round(sample,decimals=0)
+sns.displot(sample,bins=20)
+sns.boxplot(sample)
+
+# clean
+ser = pd.Series(sample)
+ser.describe() # get the percentiles
+IQR = <75% Quartile> - <50%Quartile>
+lower limit = <25%> - 1.5 * IQR 
+upper limit = <75%> + 1.5 * IQR 
+ser[ser < lower_limit]
+np.percentile(a=sample,q=[25,75]) # returns percentile values
+
+df = ...
+
+df.corr()["SalesPrice"] # correlation with output olumn
+sns.scatterplot(x="Overall Qual",y="SalesPrice",data=df)
+
+# filter out outliers
+drop_idx = df[(df["col"]>10) & (df["col2"]<10)].index
+df = df.drop(drop_idx,axis=0)
+df.to_csv(...)
+
+17.03 Missing Data
+
+df = pd.read_csv("..")
+with open(".../file.txt") as f:
+	print(f.read())
+df.info()
+df.head()
+df.drop("col",axis=1)
+df.isnull().sum() > list of columns that have null values
+100 * df.isnull().sum() / len(df) # percentage
+def perc_missing(df):
+	per_nan = 100 * df.isnull().sum
+	# only columns with missing values
+	per_nan = per_nan[per_nan > 0].sort_values
+	return per_nan
+	
+sns.barplot(x=per_nan.index,y=per_nan)	
+plt.xticks(rotation=90)
+ply.ylim(0,1)
+
+17.04 Filling or dropping data
+
+df[df["col"].isnull()] # check out all rows with null values
+df = df.dropna(axis=0,subset=["col","colB"])
+per_nan = perc_missing(df)
+
+df[df["colC"].isnull()] # recursively eliminate 
+
+# numeric COlumns modification > fillna with 0
+num_col_list = ["col1","col2",...]
+df[num_col_list] = df[num_col_list].fillna(0)
+
+# string column > 
+str_col_list = ["col1","col2",...]
+df[str_col_list] = df[num_col_list].fillna("Unavailable")
+
+# 17.05 Missing Data Fixing Data From Columns
+* Fill NAN
+* Add statistical data
+
+col_str_cols = ["colA","colB",...] # correlated cols
+df[col_str_cols] = df[col_str_cols].fillna("Zero")
+df = df.drop(["cols"],axis=1) # drop unwanted colums
+df["col"].value_counts() # check poulation
+mean_vals = df.groupby("colA")["colB"].mean() # get mean values of colB grouped by colA
+# fill means into data frame for null values in a given group
+df["colB"] = df.groupby("colA")["colB"].transform(lambda value:value.fillna(value.mean) )
+
+# 17.06 (One Hot) Encoding Options
+
+# convert into str
+df["col"] = df["col"].apply(str)
+options = pd.Series(["valA","valB"]) # OPtions for encoding
+pd.get_dummies(options,drop_first=True) # transforms options into dummy coöumns, drop first column
+# get only specific data types
+df.select_dtypes(include="object")
+df.info()
+my_obj =  df.select_dtypes(include="object")
+my_obj_num =  df.select_dtypes(exclude="object")
+obj_dummies = pd.get_dummies(my_obj,drop_first=True)
+final_df = pd.concat([my_obj_num,my_obj],axis = 1) # adding numerical and one hot encoded object values
+
+# final analyse by correlate
+final_df.corr()["colA"].sort_values()
+
+# §18 Cross Validation with sklearn
+
+Split: Train, Test; Train, Validation, Test Split
+
+# 18.1 Cross Validation
+
+Split into test and train (30%,70%)
+
+df = pd.read_csv(...
+
+general approach
+* clean/adjust/split data for X and y-m
+* Fit/Train scaler
+* Scale X data
+* Create Model
+* Fit / Train on X Train
+* Evaluate on X TEST
+* Adjust parameters
+
+X = df.drop("YCOL",axis=1)
+< = df["YCOL"]
+from sklearn.model_selection import train_test_split
+train_test_split...
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_train = scaler.transform(X_test)
+
+from sklearn.linear_model import Ridge
+model = Ridge(alpha=100) # l1 model
+model.fit(X_train,y_train)
+y_pred = model.predict(X)
+
+from sklearn.metrics import mean_squared_error
+mean_squared_error(y_test,y_pred)
+
+# modify hyperparameter alpha > calculate RMS
+
+Train 70% -Validation 20% - Test 10%
+
+Validation gives some error , final teat set > metrics / final report on performance
+calling train_test_split twice. 
+trainin - (validation-test)
+
+fit on train data
+evaluate on validation data (predict / RMSE)
+final: predict on test data
+
+final model: trained on entire data set
+
+# 18.2 Cross Validation in SKLEARN
+
+Split Data into Training and Test, Fold Split 5, Test Data split ino 5 Chunks one used for validation
+> 5 times > each separate chunk will be used for validation 
+
+cross_val_score function  does this routine automatically
+
+df = pd.read...
+X = ...
+y = 
+from sklearn.model_selection import train_test_split
+
+X_train,X_test,y_train,y_test = train_test_split(poly_features,y,test_size=0.25,random_state=33)
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+# Compute the mean and std to be used for later scaling.
+scaler.fit(X_train)
+X_train = scaler.transform(X_train)
+X_test = scaler.transform(X_test)
+model = Ridge(alpha=100)
+
+from sklearn.model_selection import cross_val_score
+# estimator = model scoring = error metric
+# scores: positive values are the best
+score = cross_val_score(estimator=model,X=X_train,y_train,scoring="neg_mean_squared_error",cv=5) 
+
+score.mean()
+
+# optimize alpha value as hyper parameter
+model.fit(X_train,y_train)
+y_final_test_pred = model.predict(X_test)
+mean_squared_error(y_test,y_final_test_pred)
+
+cross_validate function
+
+from sklearn.model_selection import cross_validate
+model = Ridge(alpha=50)
+# https://scikit-learn.org/0.15/modules/model_evaluation.html
+scores = cross_validate(model,X_train,y_train,scoring=["neg_mean_squared_error", "ne_mean_absolute_error"],cv=10) # fold 10
+scores = pd.DataFrame(scores)
+model = Ridge(alpha=1) 
+
+model.fit(X_train,y_train)
+y_final_test_pred = model.predict(X_test)
+mean_squared_error(y_test,y_final_test_pred)
+
+# 18.3 Grid Search
+
+Grid Search: Running through combinations of hyperparameters
+
+# GridSearchCV Class
+
+from sklearn.linear_model import ElasticNet
+
+base_elastic_net_model = ElasticNet()
+
+# parameter names  fit to attribute names
+param_grid = {"alpha":[0.1,1.,10],"l1_ratio":[.1,.3,.7]}
+
+from sklearn.model_selection import GridSearchCV
+
+grid_model = GridSearchCV(estimator=base_elastic_net_model,param_grid=param_grid,scoring="neg_mean_sqaured_erro",cv=5,verbose=1)
+
+
+grid_model.fit(X_train,y_train)
+
+grid_model.best_estimator_ # returns best parameters
+grid_model.best_paramas_
+pd.DataFrame(grid_model.cv_results_)
+
+y_pred = grid_model.predict(X_Test)
+
+from sklearn.metrics import mean_squared_error
+mean_squared_error(y_test,y_pred)
+
+# §19 Logistic Regression
+
+# 19.1 Theory
+
+* Used for categorization, prediction of labals
+* logistic function
+Interpretation
+* Odds Ratio / Coefficients
+* MEtrics: Accuracy, Precision, Recall
+* ROC Curves Receiver Operator Characteristic Curves
+* Multiclass Classification
+* PRovide a percentage
+
+logistic/sigmoid function: sigma = (1+exp(-x))^-1
+"natural limiting function". Output is a 0,1
+Regression: Fit. as before min(y-sigma).
+Logistic Function: Percentage
+Linear regressen 
+y_hat = b0*x0+...bn*xn
+Logistic Regressen
+p / 1 - p (odds of an event p with 1-p chances of rest, p:0.5 eg 50:50)
+y_hat = sigma(b0*x0+...bn*xn) = (1+exp(-b0*x0-...-bn*xn))^-1
+<=>
+y_hat / 1-y_hat = exp(b0*x0+...bn*xn) 
+=> ln(y_hat / 1-y_hat)  = b0*x0+...bn*xn | same as regression if y' = ln(y_hat / 1-y_hat)
+on log coordinates: p->0 => ln(y_hat / 1-y_hat) => -inf / p->1 => ln(y_hat / 1-y_hat) => inf 
+on sigmoid function graoh is a line
+Fitting: maximum likelihood
+l(beta0, beta1)=PI(p=1;i;p(x(i)))*PI(p=0;j;(1-p(x(j)))) product of elements belonging to class p=1 and p=0
+PI=Product
+ln(odds) = ln(p/1-p) > odds = p / 1 - p
+=> p = e^ln(odds) / 1 + e^ln(odds) = sigma(ln(odds))
+=> probability can be fitted back to sigmoid
+maximizing to be done on the log of likelihood
+Cost function
+J(x) = -1/m sum(j;1;m)[y(j)*log(y_hat(j))+(1-y(j))*log(1-y_hat(j))]
+y_hat(j) = 1 / (1+exp(sum b(i)*x(j;i)))
+x(j;i) = variable for dimension i, data point i
+
+# 19.2 Log Regression in Python - Graphical Analysis
+df = ....
+
+df.describe()
+
+# analysis
+df["col"].value_counts()
+sns.countplot(df["col"])
+sns.countplot(data=df,x="col")
+sns.boxplot(x="colA",y="colB",ylabel="Label")
+sns.scatterplot(x="colA",y="colB",data=df,ylabel="Label",hue="colC",alpha=0.5)
+sns.pairplot(df,hue="colC")
+# variable correlation
+sns.heatmap(df.corr(),annot=True)
+
+sns.scatterplot(x="col0-1",y="colB",ylabel="Result")
+# 3 3d scatterplot
+from mpl_toolkits.mplot3d import Axes3D
+fig = plt.figure()
+ax = fig.add_subplot(111,projection="3d")
+ax.scatter(df["x"],df["y"],df["z"],marker="o",c=df["color"])
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+ax.set_zlabel("z")
+
+# 19.3 Log Regression in Python - Creating Training Model
+
+X = df.drop("labelCol",axis=1)
+y= df["labelCol"]
+
+from sklearn.model_selection import train_test_split
+fron sklearn.preprocessing import StandardScaler
+x... = train_test_split(...
+scalar = StandardScaler()
+# note fit transform and simple transform
+scaled_X_train = scalar.fit_transform(X_train)
+scaled_X_test = scalar.transform(X_test)
+
+from sklearn.linear_model import LogisticRegression
+
+(LogisticRegressionCV also possible)
+
+log_model = LogisticRegression()
+log_model.fit(scaled_X_train,y_train)
+
+log_model.coef_
+y_pred = log_model.predict(scaled_X_test)
+(predict_log_proba,predict_proba)
+=> array of predictions for 0 or 1 value
+
+# 19.4 Log Regression - Metrics, Confusion Matrix
+
+              ACTUAL      
+			    0         1
+PREDICTED 0  TRUE NEG TN   FALSE NEG FN
+          1	 FALSE POS FP   TRUE POS  TP
+Accuracy: (TN+TP) / (TN+TP+FP+FN)
+Recall R / Sensitivity: For positive case how often it is correct
+TP / (TP+FN)
+Precision P :  TP / Total Predicted Positives
+= TP / (TP+FP)
+F1 Score 
+Accuracy Paradox: Imbalanced classes have a bias
+(eg report back only a single prediction)
+ROC Receiver Operator Characteristic Curve
+
+Harmonic Mean: 
+P + R = TP / (TP+FN) + TP / (TP+FP) 
+F1 = 2 x P x R / (P+R)
+If P or R goest to zero F is zero
+
+Classification:
+True Positive Rate over False Positive Rate
+Guassian Curves for TP vs TN: Intersections being TN FN
+Raising / Lower Classification for 0,1 to adjust FP vs FN
+AUC Area Under Curve / Plotting Recall vs Precision
+
+# 19.5 Log Regression - Performance Evaluation
+
+log_model.coef_ # features
+from sklearn.metrics import accuracy_score, confusion_matrix,classification_report
+y_test
+y_pred = log_model.predict(scaled_X_test)
+accuracy_score(y_test,y_pred)
+confusion_matrix(y_test,y_pred)
+from sklearn.metrics import plot_confusion_matrix
+plot_confusion_matrix(log_model,scaled_X_test,y_test)
+print(classification_report(y_test,y_pred))
+
+from sklearn.metrics import precision_score, recall_core
+precision_score(y_test,y_pred)
+recall_score(y_test,y_pred)
+
+from sklearn.metrics import plot_precision_recall_curve,plot_roc_curve
+fig,ax = plt.subplots()
+plot_roc_curve(log_model,scaled_X_test,y_test,ax=ax)
+plot_precision_recall_curve(log_model,scaled_X_test,y_test,ax=ax)
+# probabilities
+log_model.predict_proba(caled_X_test)
+# chances to belong to a certain class
+
+# 19.5 Log Regression - Multi Class Regression
+
+# Iris Model
+df = ...
+
+df["col"].value_counts()
+sns.countplot(x="colA",data=df)
+sns.scatterplot(x="colA",y="...",data=df)
+sns.pairplot(df,hue="...")
+
+X = df.drop(...)
+y = df["..."] # can also take strings
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+train_test_split = ...
+scaler = StandardScaler()
+scaled_X_train = scaler.fit_transform(X_train)
+scaled_X_test = scaler.transform(X_test)
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import GridSearchCV
+
+log_model = LogisticRegression()
+multi_class = ovr ("one versus rest")
+solver: sag Stochastic Average Gradient
+
+log_model = LogisticRegression(solver="saga",multi_class="ovr",max_iter=5000)
+penalty = ["l1","l2","elasticnet"]
+l1_ratio= np.linspace(0,1,10)
+C = np.logspace(0,10,20) # lambda term
+param_grid = {"penalty":penalty,"l1_ratio":l1_ratio,"C":C}
+grid_model = GridSearchCV(log_model,param_grid=param_grid)
+grid_model.fit(scaled_X_train,y_train)
+
+from sklearn import accuracy_score,confusion_matrix,classification_report,plot_confusion_matrix
+grid_model.best_params_
+y_pred = grid_model.predict(scaled_X_test)
+accuracy_score(y_test,y_pred)
+confusion_matrix(y_test,y_pred)
+print(classification_report(y_test,y_test_prediction))
+
+# for roc, auc workaround is required / see online documentation
+https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
+
+# §20 KNN Model
+
+
+# 20.1 Theory 
+
+K Nearest Neighbours <> K means. KNN is supervised
+
+Assigning new label based on distance to already labeled data. MAjority of neighbour points. 
+Break tie / Choose nearest class point.
+Method Minimization: Error = 1 - Accuracy
+Elbow Method > Error Rate decreasing / Cross validate grid search of ultiple K values choose best
+CHoose K
+ESort Feature Vectors by Distance (Minkowski,Euclidean,Manhattan,Chebysheff). Scaling
+
+# 20.2 KNN Coding Parts
+
+df = ...
+sns.scatterplot(...)
+plt.xlim(2,4)
+pl.ylim(3,2)
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+X = df.drop("dataCol")
+y = df["data"]
+train_test_split ...
+scaler = StandardScaler()
+scaled_X_train = scaler.fit_transform(X_train)
+scaled_X_test = scaler.transform(X_test)
+
+from sklearn.neighbors import KNeighborsClassifier
+
+knn_model = KNeighborsClassifier(n_neighbours=1)
+knn_model.fit(scaled_X_train,y_train)
+
+y_pred = knn_model.predict(scaled_X_test)
+
+from sklearn.,metrics import confusion_matrix,classification_report
+confusion_matrix(y_test,y_pred)
+print(classification_report(y_test,y_pred))
+
+# 20.3 KNN Coding - improve accuracy with elbow
+
+from sklearn.metrics import accuracy_score
+error = 1 - accuracy_score(y_test,y_pred)
+
+test_error_rate =[]
+for k in range(1,30):
+	knn_model = KNeighborsClassifier(n_neighbours=k)
+	knn_model.fit(scaled_X_train,y_train)
+	y_pred_test = knn_model.predict(scaled_X_test)
+	error = 1 - accuracy_score(y_test,y_pred_test)
+	test_error_rate.append(error)
+plt.plot(range(1,30),test_error_rate)	
+
+# Using Pipeline
+knn_model = KNeighborsClassifier(n_neighbours=k)
+# dict keys of hyperparameters
+knn_model.get_params().keys()
+
+
+operations = [("scaler",scaler),("knn",knn_model)]
+# knn model has parameter n_neighbours
+from sklearn.pipeline import Pipeline
+# https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html 
+pipe = Pipeline(operations)
+from sklearn.model_selection import GridSearchCV
+k_values = list(range(1,2))
+# do naming conventions for use in pipe
+# also see stack overflow article
+# https://stackoverflow.com/questions/41899132/invalid-parameter-for-sklearn-estimator-pipeline)/n
+# chosen_string_name + **two** underscores + parameter key name
+# model_name + __ + parameter name
+# knn_model + __ + n_neighbors
+# knn_model__n_neighbors
+
+# chosen_string_name + two underscores + parameter key name
+
+param_grid = {"knn__n_neighbours":k_values,knn__metric:[...]}
+full_cv_classifier = GridSearchCV(pipe.param_grid,cv=5,scoring="accuracy")
+full_cv_classifier.fit(X_train,y_train)
+full_cv_classifier.best_estimator_.get_params()
+full_pred = full_cv_classifier.predict(X_test) # scaler is already in pipeline
+print(classification_report(y_test,full_pred))
+new_data = [[1,2]]
+full_cv_classifier.predict(new_data)
+full_cv_classifier.predict_proba(new_data)
+
+# §21 Support Vector Machines
+
+# 21.1 SVM Theory and Intuition
+
+Identifying Hyperplane that effectively separates classes
+In 2D Hyperplane is 
+Maximum Margin Classifiers
+Support Vector Classifiers
+Support Vector Machines
+
+hyperplane set to optimize margin between classes;
+Maximal Margin Classifier
+
+Data Points at margin "support" separator
+weight bias vs. variance
+
+Distance betwen threshold and observatiosn is called "Soft Margin"; Within misclassification are allowed
+Use Cross Validation to optimize size of margins
+
+kernels: Project data to a higher dimension > using a hyperplane in higher dimension to separate data 
+(for example,layered data)
+for example: middle class > project this into quadrant > 
+classes can be separated through parabola.
+G(x) > x^2 
+Kernel Trick > Dot Products of Transpositions of data 
+hyperplane y = sum(b(i)*x(i))
+classify class 1 and class 2 y < 0 and y > 0
+maximize m = margins of the hyperplane
+Math Best explained here:
+https://www.youtube.com/watch?v=_PwhiWxHK8o&t=217s
+kernel trick => makes use of dot products
+
+# 21.2 Support Vector Machines with Python
+
+# plotting out hyperplane
+https://scikit-learn.org/0.15/auto_examples/svm/plot_separating_hyperplane.html
+
+import matplotlib.pyplot as plt
+sns.scatterplot(x="colA",y="colB",hue="Attribute")
+
+#hyperplane - 2d 
+line = np.linspace(0,10,100)
+m = -1
+b = 11
+y = m*x + b
+plt.plot(x,y,"black")
+
+from sklearn.svm import SVC (Support Vector Classifier)
+# C param: allow misclassification
+y = df...
+X = df ...
+# "rbf" radial basis function / C inversely proportional
+model = SVC(kernel="linear",C=100)
+model.fit(X,y)
+# custom modeule from link above not part of standard API
+from svm_margin_plot import plot_svm_boundary
+plot_svm_boundary(model,X,y)
+
+# 21.3 Support Vector Machines with Python - Hyperparameters
+
+model = SVC(kernel="linear",C=0.05)
+model.fit(X,y)
+plot_svm_boundary(model,X,y)
+# C = hyperparameter value
+
+# gamma = affexts bias/variance gamma = "scale"
+model = SVC(kernel="rbf",C=1,gamma="auto")
+model.fit(X,y)
+plot_svm_boundary(model,X,y)
+
+model = SVC(kernel="sigmoid",C=1)
+model = SVC(kernel="poly",C=1,degree=3,C=0.05)
+
+from sklearn.model_selection import GridSearchCV
+svm = model = SVC()
+param_grid = {"C":[0.01,0.1,1]},"kernel":["linear","rbf"]}
+grid = GridSearchCV(svm.param_grid)
+grid.fit(X,y)
+grid.best_paramas_
+
+# 21.4 Support Vector Machines with Python - Support Vector Regression
+
+using margins to predict continuous label (instead of classification)
+
+df = ...
+plt.figure(..)
+sns.heatmap(df.corr(),annot=True)
+
+df.columns > copy column names
+from sklearn.model_selection import train_test_split
+train_test_split ...
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+scaled_X_train = scaler.fit_transform(X_train)
+scaled_X_test = scaler.transform(X_test)
+from sklearn.svm import SVR,LinearSVR # support vector regression / Linear vec. regression
+
+base_model = SVR()
+base_model.fit(scaled_X_train,y_train)
+base_preds = base_model.predict(scaled_X_test)
+
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+mean_absolute_error(y_test,base_preds)
+
+np.sqrt(mean_squared_error(y_test,base_preds))
+
+# verify with numbers
+# on gamma https://scikit-learn.org/stable/modules/svm.html#svm-regression 
+# https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html 
+# epsilon allow error
+param_grid = {"C":[0,1,1,10],"kernel":["linear","poly","rbf"],"gamma":["scale","auto"],
+             "degree":[2,5,6],"epsilon":[0,0.05,0.5,1]}
+
+from sklearn.model_selection import GridSearchCV
+svr = SVR()
+grid = GridSearchCV(svr,param_grid)
+grid.fit(scaled_X_train,y_train)
+grid.best_paramas_
+grid_preds = grid.predict(scaled_X_test)
+mean_absolute_error(y_test,grid_preds)
+
+# §22 Tree Based Algorithms
+
+# 22.1 Tree Based Methods 
+
+* Decision Trees
+* Random Forests
+* Boosted Trees
+
+mapping flow of outcome. 
+
+piecewise constant regression tree: 
+criterion x <= 1
+if TRUE set Y (given value eg average)
+if NO go to next interval x <= 2
+ 
+ Metric node impurity at each node
+ phi(t) = sum(y(i)-y(avg))^2
+ Classification Tree
+ Split COndition Theta Automatic Interaction Detection (THAID)
+ Chi Square Automatic Interaction Detection (CHAID)
+ Classification and Regression Tree Algorithms (CART)
+ Concepts:
+ * Cross Validation
+ * Pruning Trees
+ * Surrogate Splits
+ * Variable Importance Scores
+ * Search for Linear Splits
+ 
+ # 22.2 Decision Trees - Terminology
+ 
+ - Splitting: Data at certain Points
+ - Node: Conditions for test. Root Node / 
+ - Leaf Node / Terminal Node: Contains outcome of decision tree
+ - Parent / Children Nodes / Sub Tree / 
+ - Pruning (Beschneiden): EG combining leaf nodes to a terminal node
+ - information measurement metric: Gini Impurity:
+https://en.wikipedia.org/wiki/Decision_tree_learning#Gini_impurity 
+https://towardsdatascience.com/gini-impurity-measure-dbd3878ead33
+Best explanation given here:
+https://www.learndatasci.com/glossary/gini-impurity/
+Choose Attribute for outcome classification with lowest Gini Impurity
+p(i)*(1-p(i))
+----------------
+For example 
+(A;1),(A;1),(B;0),(B;0),(B;1),(B;0),(A;0)
+Separate into classes A and B
+(A;1),(A;1),(A;0)  -> A: 0,1,1 > G(A) = (1/3)*(1-1/3)+(2/3)*(1-2/3) (0,1)
+(B;0),(B;0),(B;1),(B;0) -> B: 0,0,0,1 => G(B) = (3/4)*(1-3/4)+(1/4)*(1-1/4)
+weighted G = (3*G(A)+4*G(B))/7
+Expand concept toMultiple Features
+Continuous Features > Sort values by size > split at split conditions / separate in two groups
+> minimize Gini for both groups
+Multi Category Features
+---------------
+Split criterion: Calculating Gini Gain by split / mandate max tree hierarchy number
+
+# 22.3 Implementation
+
+# data analysis
+data = ...
+data["col"].unique()
+# check for blanks / null
+df.isnull().sum()
+df.info()
+df = df.dropna()
+df.info()
+# check out
+df[df["col"]=="value"].groupby("colB").describe().transpose()
+# set value
+df.at[222,"col"]="value"
+sns.pairplot(df,hue="col")
+sns.catplot(x="colX",y="colY",df,hue="col",kind="box",col="colSeparate")
+
+# dummy need to be created for catregories
+# drop_first = drop complementary dummy
+pd.get_dummies(df.drop("col",axis=1),drop_first=True)
+y = df["col"]
+# scaling data is not required
+from sklearn.model_selection import train_test_split
+X_train...
+
+from sklearn.tree import DecisionTreeClassifier
+
+model = DecisionTreeClassifier() # tune hyperparameters
+model.fit(X_train,y_train)
+base_pred = model.predict(X_Test)
+# comapre against y_test
+y_test = model.predict(X_test)
+from sklearn.metric import classification_report,plot_confusion_matrix
+print(classification_report(y_test,base_pred))
+plot_confusion_matrix(model,X_test,y_test)
+# importance of feature in decision amking
+model.feature_importances_
+# feature names / importance
+X.columns
+pd.DataFrame(index=X.columns,data=model.feature_importances_,columns=["FeatureImportance"]).sort_values("FeatureImportance")
+
+# visualize tree model
+from sklearn.tree import plot_tree
+plt.figure(figize=(12,12),dpi=200)
+plot_tree(model)
+plot_tree(model,feature_names=X.columns,filled=True)
+plot_tree(model);
+
+def rep_model(model):
+	model_pred = model.predict(X_test)
+	print(classification_report(y_test,model_pred))
+	print("\n")
+	plt.figure(figize=(12,12),dpi=200)
+	plot_tree(model,feature_names=X.columns,filled=True)
+
+pruned_tree = DecisionTreeClassifier(max_depth=2) # maximum depth of tree 
+pruned_tree.fit(X_train,y_train)
+
+max_leaf_tree =  DecisionTreeClassifier(max_leaf_nodes=3) # maximum leafs
+pruned_tree.fit(X_train,y_train)
+
+# https://en.wikipedia.org/wiki/Information_gain_in_decision_trees
+# https://en.wikipedia.org/wiki/Entropy_(information_theory)
+# https://machinelearningmastery.com/what-is-information-entropy/
+H(X) = - sum(i:p(i)*log(p(i))
+entropy_tree =  DecisionTreeClassifier(criterion="entropy") # entropy
+entropy_tree.fit(X_train,y_train)
+
+# 22.5 Random forests - Introduction
+
+Ensemble Learning Model.  Fpr both Classification and Regression
+SVR - Support Vector Regression
+DTR Decision Tree Regression
+Bootstrapping
+
+Default: Not all features are used. Risk of overfitting data.
+
+Random Forest: Pick random features, Classification: One Output per Tree
+for example (0,0,1) => 66% Chance to be 0
+
+Also works for Regression (=choose average)
+
+Additional Hyperparameters: 
+Compare DecisionTreeClassifier vs 
+RandomForestClassifier => 
+additional n_estimators (# decision trees)
+, max_features (#how many features for each tree / splut)
+suggestion log2(N+1) /N: # of features
+other values: sqrt(N), for regression N/3 
+=> could also be a tining parameter
+bootstrap, 
+oob_score (Out Of Bag error) ,n_jobs,verbose,...
+no overfitting: too many trees lead to
+Different selections do not provide more information
+Different trees will resemble
+https://www.stat.berkeley.edu/~breiman/RandomForests/
+
+Bootstrapping: Random Sampling of Datasampling with Repeat:
+* Bootstrap Subset Of Features and Subsets of Row Data
+Reducing correlation betwen trees
+
+OutOfBag OOB Error 
+Prediction: 
+Classification: Most Voted Y Class
+Regression: Average vs. Predicted Ys
+Bagging: Bootstrapped Data and Aggregated Prediction
+Not used Data Rows = Out Of Bag Data Set
+Compare Prediction vs Out Of Bag values => calculate error
+
+#  22.6 - Random Tree Forest Code Examples 
+
+df = read.csv(...)
+df = df.dropna()
+X = pd.get_dummies(df.drop("ycol",axis=1),dropFirst=True)
+y = df["ycol"]
+
+from sklearn.model_selection import train_test_split
+...
+from sklearn.ensemble import RandomForestClassifier
+# max features = int or float / sqrt or log2
+rand_for_cls = RandomForestClassifier(n_estimators=5,max_features="log2",
+randpm_State=50)
+rand_for_cls.fit(X_train,y_train)
+preds = rand_for_cls.predict(X_Test)
+from sklearn.metrics import confusion_matrix,classification_report,plot_confusion_matrix
+plot_confusion_matrix(rand_for_cls,X_Test,y_test)
+print(classification_report(y_test,preds))
+rand_for_cls.feature_importances_
+
+#  22.6 - Random Tree Forest Code Grid Search Classification
+
+df = pd.read_csv ...
+sns.pairplot(df,hue="col")
+X = ..
+y = ...
+from sklearn.model_selection import train_test_split
+...
+from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+n_est = [30,100,150]
+max_features = [2,4,6]
+bootstrap = [True,False]
+# relevant for bootstrap = True
+oob_score = [True,False]
+param_grid = {"n_estimators":n_est,"max_features":max_features,
+              "bootstrap":bootstrap,"oob_score":oob_score}
+
+rand_for_cls = RandomForestClassifier()
+grid = GridSearchCV(rand_for_cls,grid)
+grid.fit(X_train,y_train)
+grid.best_paramas_
+# oob wont be used / use best paramas 
+rand_forest_oob = RandomForestClassifier(n_estimators=5,max_features="log2",
+randpm_State=50,oob_score=True)
+rand_forest_oob.fit(X_train,y_train)
+rand_forest_oob.oob_score_ # returns percentage of correct predictions
+pred = rand_forest_oob.predict(X_test)
+from sklearn.metrics import plot_confusion_matrix,classification_report,accuracy_score
+print(classification_report(y_test,predictions))
+plot_confusion_matrix(rand_forest_oob,X_Test,y_test)
+# error analysis
+errors = []
+misclassifications = []
+for n in range(1,200):
+	rand_forest_oob = RandomForestClassifier(n_estimators=n,max_features=2)
+	rfc.fit(X_train,y_train)
+	preds = rfc.predict(X_test)
+	err = 1 -accuracy_score(y_test,preds)
+	# number of false predictions
+	n_err = np.sum( preds != y_test )
+	errors.append(err)
+	misclassifications.append(n_err)
+
+plt.plot(range(1,200),errors)	
+plt.plot(range(1,200),misclassifications)	
+
+#  22.6 - Regression - Testing Different Models
+
+df = pd.read_csv ...
+sns.scatterplot ...
+# https://stackoverflow.com/questions/18691084/what-does-1-mean-in-numpy-reshape
+# -1 inferred value (matches to given values)
+# https://numpy.org/doc/stable/reference/generated/numpy.reshape.html
+df["col"].values.reshape(-1,1) # for one row of data 
+
+from sklearn.model_selection import train_test_split
+...
+
+# testing multiple models
+from sklearn.linear_model import LinearRegression
+lr_model = LinearRegression()
+lr_model.fit(X_train,y_train)
+# getting an error > reshape 
+# mean square / mean_abs error  
+...
+
+# Random Forest - Polynomial Regression
+# template code
+def run_model(model,X_train,y_train,X_test,y_test):
+	model.fit(X_train,y_train)
+	preds = model.predict(X_Test)
+	rmse = np.sqrt(mean_squared_error(y_test,preds))
+	print(f"RMSE {rmse}")
+	# plot results
+	signal_range = np.arange(0,100)
+	signal_preds = model.predict(signal_range.reshape(-1,1))
+	sns.scatterplot(x="colX",y="colY",data=df,color="red")
+	plt.plot(signal_range,signal_preds)
+
+model = LinearRegression()
+run_model(model,X_train,y_train,X_test,y_test)
+
+# creating a pipeline
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import PolynomialFeatures
+pipe = make_pipeline(PolynomialFeatures(degree=2),LinearRegression())
+run_model(pipe,X_train,y_train,X_test,y_test)
+
+# example KNN
+from sklearn.neighbors import KNeighborsRegressor
+k_vals = [1,3,15]
+for n in k_vals:
+	model = KNeighborsRegressor(n_neighbors=n)
+	run_model(model,,X_train,y_train,X_test,y_test)
+
+from sklearn.tree import DecisionTreeRegressor
+model = ...
+run_model(model,,X_train,y_train,X_test,y_test)
+
+from sklearn.svm import SVR
+from sklearn.model_selection import GridSearchCV
+svr = SCR()
+param_grid = {"C":[0.01,0.1,1,5],
+			  "gamma":["auto","scale"]}
+grid = GridSearchCV(svr,param_grid)
+run_model(grid,X_train,y_train,X_test,y_test)
+
+from sklearn.ensemble import RandomForestRegressor
+rfr = RandomForestRegressor(n_estimators=10)
+run_model(rfr,,X_train,y_train,X_test,y_test)
+
+from sklearn.ensemble import GradientBoostingRegressor,AdaBoostRegressor
+model = GradientBoostingRegressor()
+# model = AdaBoostRegressor()
+run_model(model,,X_train,y_train,X_test,y_test)
+
+# §23 Boosting Methods
+
+# 23.1 Boosting Theory / Sample Model
+
+# https://en.wikipedia.org/wiki/Boosting_(machine_learning)
+methodology not an algorithm: ensemble model (summing up other models).
+ensemble of weak learners to boost into an effecitve learner?
+AdaBoost = Adaptive Boosting / Quite Fitting to Tree Models / using weighted sums
+Learing from weak models. 
+# Adaptive Boosting: https://en.wikipedia.org/wiki/AdaBoost
+AdaBoost subject to overfitting
+
+# model
+
+df = pd-read ...
+df.head()
+sns.countplot(data=df,x="class") # count stats
+att_table = df.describe().transpose().reset_index().sort_values("unique") #sort by unique attr
+plt.fgure(figsize=(10,10),dpi=200)#
+sns.barplot(data)att_table,x="index",ylabel="unique")
+plt.xticks(rotation=90)); # ticks rotated
+X = df.dropp("dataCol")
+# missing data 
+X.isnull().sum()
+y = df["dataCol"]
+# decision Trees require dummy values
+X = pd.get_dummies(X,drop_first=True)
+from sklearn.model_selection import train_test_split
+...
+
+# 23.2 Model Implementation Boosting
+
+from sklearn.ensemble import AdaBoostClassifier
+# get the best attribute
+model = AdaBoostClassifier(n_estimators=1)
+model.fit(X_train,y_train)
+from sklearn.metrics import classification_report,plot_confusion_matrix,accuracy_score
+pred = model.predict(X_Test)
+print(classification_report(y_test.pred))
+model.feature_importances_
+idx = model.feature_importances_.argmax() # get the index with maximm
+X.columns[idx]
+# check instances 
+sns.countplot(data=df,x="colRel",hue="colHue")
+features = pd-DataFrame(index=X.columns,data=mode.feature_importances_,columns="Importance")
+# sort by value
+plt.fgure(figsize=(10,10),dpi=200)#
+sns.barplot(data=features.sort_values("importance"),x=featurs.index,y="Importace")
+plt.xticks(rotation=90)); # ticks rotated
+
+# 23.3 Gradient Boosting
+
+Optimization: Residual Error for Learninf
+https://en.wikipedia.org/wiki/Gradient_boosting
+* create initial model f0
+* train on error e0 = y -f0
+* create new prediction F1 = f0 + eta * f1 (eta:learning rate)
+* Iterate ...
+
+for classification: error metrics is logit
+y_hat = log(p_hat/(1-p_hat))
+p_hat = (1+exp(-y_hat))^-1
+
+gradient boost not susceptible to overfitting.
+
+from sklearn.model_selection import train_test_split
+...
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.model_selection import GridSearchCV
+param_grid = {"n_estimators":[30,100],
+			  "learning_rate":[0.1,0.05,0.2],
+			  "max_depth":[3,4,5]}
+gb_model = GradientBoostingClassifier()
+grid = GridSearchCV(gb_model,param_grid)			  
+grid.fit(X_train,y_train)
+from sklearn.metrics import classification_report,plot_confusion_matrix,accuracy_score
+pred = grid.predict(X_Test)
+grid.best_estimator_ #get optimum paraneters
+grid.best_paramas_ 
+print(classification_report(y_test.pred))
+model.feature_importances_
+# check features
+grid.best_estimator_.feature_importances_
+
+# §24 Naive Bayes NLP - NAtural Language Processing
+
+# #24.1 Introduction
+Processing Raw Text
+Naive Bayes / NLP
+Extracting Featrues
+Text Classification
+Bayes Theorem
+P(A|B) = P(B|A)*P(A)/P(B)
+Feature vector x = (x1;...;xn)
+p(Ck|x)= p(Ck)p(x|CK)/p(x) Ck Classes 
+Joint Probability
+p(Ck,x)=p(Ck)p(x|CK)
+# chain rule
+p(Ck,x)=p(Ck,x1,...xn)
+=p(x1,...xn.Ck)
+=p(x1|x2...Ck)p(x2...xn,Ck)
+...
+Naive Bayes: x features independent of each other
+# https://en.wikipedia.org/wiki/Naive_Bayes_classifier 
+p(x1|x2...Ck)=p(x1|Ck)
+p(Ck,x)~p(Ck)Product(i;p(i|Ck))
+p(i|Ck): num of occurrences of i in Ck / #of members in Ck
+counting frequency of words
+Example: Prior Probabilities #yes or #
+C=(yes;no) # 2 classes
+Count words
+(#word|yes) or (#word|no)
+Adding smoothing factor
+
+# 24.2 Language Processing Feature Extraction with sklearn
+
+* Count Vectorization
+* TF-IDF: Term Frequency - Inverse Document Frequency
+https://en.wikipedia.org/wiki/Tf%E2%80%93idf
+https://de.wikipedia.org/wiki/Tf-idf-Ma%C3%9F
+tf(t,d) = number of times that term occurs in document d
+Increasing weight of rare words.
+D: Number of documents total
+nd(t): number of documents with term occuring
+idf=log(D/nd(t))
+tfidf(t,D,d)=tf(t,d)*idf
+the closer value is to 0, the more common it is
+* Stop Words: Can be removed / But notice document type
+set(<list>) # will return unique entries in a list
+s = set()
+s.update(another_set)
+empty_list = [0]*3 # list with 3 zeros
+pd.DataFrame(data=[doc1words,doc2words],columns=words_list)
+
+# text analyzing with sklearn
+from sklearn.feature_extraction.text import CountVectorizer,TfidfTransformer
+cv = CountVectorizer(stop_words="english") # eliminate general stop words
+# text is an array of strings
+matrix = cv.fit_transform(text)
+# convert sparse to dense matrix
+matrix.todense()
+cv.vocabulary_ # words
+# create Transformer
+tfidf = TfidfTransformer()
+tfidf.fit_transform(matrix) #Bag Of WOrds => TfIDF
+from sklearn.feature_extraction.text import TfidfVectorizer
+tv  = TfidfVectorizer()
+results = tv.fit_transform(text)
+
+# 24.3 Classification of Text - Setup
+
+df = pd.read_csv(...)
+
+sns.countplot(data=...,)
+plt.xticks(rotation=90)
+sns.countplot(data=df,x="negativereason");
+sns.countplot(data=df,x="colIn",hue="colHue")
+
+data = df[["colLabel","col2"]]
+x = data["col2"]
+y = data["colLabel"]
+from sklearn.model_selection import train_test_split ...
+....
+X_train,y_train,...
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+tv  = TfidfVectorizer(stop_words="english")
+tv.fit(X_train)
+X_train_tfidf = tv.transform(X_train)
+X_test_tfidf = tv.transform(X_test)
+
+#24.4  Classification of Text with different models
+
+from sklearn.naive_bayes import MultinomialNB
+nb = MultinomialNB()
+nb.fit(X_train_tfidf,y_train)
+
+from sklearn.linear_model import LogisticRegression
+log_model = LogisticRegression(max_iter=1000)
+log_model.fit(X_train_tfidf,y_train)
+
+from sklearn.svm import SVC,LinearSVC
+# radial based function
+rbf_svc = SVC()
+rbf_svc.fit(X_train_tfidf,y_train)
+
+linear_svc = LinearSVC()
+linear_svc.fit(X_train_tfidf,y_train)
+
+# check for a multitude of ML models
+from sklearn.metrics import plot_confusion_matrix,classification_report
+def report(mdl):
+	preds = mdl.predict()X_test_tfidf
+	print(classification_report(y_test,preds))
+	plot_confusion_matrix(model,X_test_tfidf,y_test)
+	
+# svm => tune hyper parameters
+# for text tree model is not really fitting 	
+
+# adding a pipeline
+from sklearn.pipeline import Pipeline
+pl = Pipeline([("tfidf",TfidfVectorizer()),
+				("svc",LinearSVC())])
+pl.fit(X,y)			
+pl.predict(["test"])
+
+# §25 Unsupervised Learning
+Supervised: Labeled Data, Prediction on Label
+Unsupervised: Unlabeled
+* Clustering by attributes
+* Reduce # of attributes
+* How To Measure Performance / Combine Features
+
+KNN vs K Means:
+https://pythonprogramminglanguage.com/how-is-the-k-nearest-neighbor-algorithm-different-from-k-means-clustering/#:~:text=KNN%20represents%20a%20supervised%20classification,into%20k%20number%20of%20clusters.
+
+But each algorithm Is meant to deal with different problems and provide different meaning of what the variable k stands for.
+
+KNN represents a supervised classification algorithm that will give new data points accordingly to the k number or the closest data points,
+while k-means clustering is an unsupervised clustering algorithm that gathers and groups data into k number of clusters.
+Anyhow, there is a common aspect which can be encountered in both algorithms: KNN and k-means clustering represent distance-based algorithms that rely on a metric.
+
+# 25.1 K-Means Clustering
+
+Intuition: Clustering Data Points. Only features, no values/labels.
+Use distance as metric. Evaluate: #Clusters, Goodness Of Fit.
+No comparison possible / measuring metrics not applicable. 
+https://en.wikipedia.org/wiki/Hugo_Steinhaus
+* Each sample belongs to a single cluster
+* Choose # of clusters: k value
+* Select k random points => starting point
+* Assign all points to nearest cluster point.
+* For each group, calculate center of each cluster (average)
+* Reassign cluster assignment
+* Recalculate new cluster center
+* Iterate until no changes
+
+# 25.2 Example - explore data
+df = pd.read_csv(...)
+df.info()
+df.describe()
+df.columns
+plt.figure(...)
+sns.histplot(data=df,x="colX",bins=15,kde=True)
+sns.histplot(data=df,x="colX",bins=15,hue="ColHue")
+plt.xlim(0,1000);
+df["col"].unique() # unique values
+plt.figure(figsize...)
+# order by values => use index
+df["colX"].value_counts().index
+sns.countplot(data=df,x="colX",order=df["colX"].value_counts().index,hue="x")
+plt.xticks(rotation=90);
+
+# 25.3 - setting up dara / model fit
+labels => create dummy variables 
+X = pd.get_dummies(df)
+# scaling data required
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+scaled_X = scaler.fit_transform() 
+from sklearn.cluster import KMeans
+parameter: n_clusters
+model = KMeans(n_clusters=2)
+# various options
+#model.fit()
+labels = model.fit_predict(scaled_X)
+#model.fit_transform()
+#model.predict()
+# assign labels to original data set
+X["cluster"] = cluster_labels
+# check correlation with coefficients
+X.corr() ["cluster"].sort_values()
+X.corr() ["cluster"].sort_values().plot(kind="bar")
+' num clusters=2 > main separators / features
+
+# 25.4 - measure goodness of fit
+* measure squared distances to centroid / k=n
+* do the same with k=n+1
+* stop increase # clusters if decrease ofsquared distances is steady
+(elbow)
+# squared distance in k means model is 
+model.inertia_ # sum squared distancesd
+for ...:
+	...
+plt.plot(range(2,10),ssd,"o--")
+# calculate differences
+pd.Series(ssd).diff()
+
+# 25.5 - Application 
+
+Reduce # of colors in an image > K Means to ä of target colors
+features R,G,B with X being coordinates.
+(R,G,B) > Cluster # > Average value
+
+# ,jpg .png > nparray
+# https://matplotlib.org/stable/api/image_api.html
+import matplotlib.image as mpimg
+# https://matplotlib.org/stable/tutorials/introductory/images.html
+img_array = mpimg.imread("<file>")
+img_array.shape (width,height,3channels)
+plt.imshow(img_array)
+# image assignment to arry
+(h,w,c) = img_array.shape
+img_2darray = img_array.reshape(h*w,c)
+model = KMeans(n_clusters=6)
+# do the scale down of colors
+labels = model.fit_predict(img_2darray)
+# get the centroids > rgb values
+model.cluster_centers_.round(0).astype(int)
+rgb_codes[labels]
+# reshape back into image format
+q = np.reshape(rgb_codes[labels],(h,w,c))
+plt.imshow(q)
+
+# §26 Hierarchical Clustering
+
+# 26.1 Hierarchical Clustering Concepts
+
+* Similarity of Data Points >(distance metric)
+* Agglomerative: Starting with each point as its own cluster
+* Divisive: Splitting original clusters
+* Similarity MAtrix, Dendrogram, Linkage Matrix
+* Min Max Metric (=1 being most far away
+* Euclidean Distance
+* Dendrogram: y Axis: Length corresponds to similarity
+ SLice Horizontal: # of Clusters
+* Linkage: Criterion which distance to use between observation sets.
+* Algorithm will merge paiss of clusters minimizing this criterion. Linkages:
+- Ward: Minimize Variance of clusters
+- Average: Average distance between sets
+- Min/Max distances between all observations
+
+# 26.2 Code - Graphical Analysis
+
+df = ...
+df.describe()
+df["col"].value_counts()
+# variance => scale
+df_dummy = pd.get_dummies(df.drop("colDrop",axis=1))
+# feature range from 0..1
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+scaled = scaler.fit_transform(df_dummy)
+scaled_df = pd.DataFrame(scaled,columns=df_dummy.columns)
+# visualize with sns
+plt.figure(figsize=(15,5))
+sns.heatmap(scaled_df)
+sns.clustermap(scaled_df)
+sns.clustermap(scaled_df,row_cluster=False)
+sns.clustermap(scaled_df,col_cluster=False)
+scaled_df.corrr()
+sns.heatmap(scaled_df.corrr())
+# also theres a robust scaler 
+# https://www.geeksforgeeks.org/standardscaler-minmaxscaler-and-robustscaler-techniques-ml/
+# https://stackoverflow.com/questions/40758562/can-anyone-explain-me-standardscaler
+
+# 26.3 CLusters / Dendrograms 
+
+from sklearn.cluster import AgglomerativeClustering
+# params n_cluster or distance_thershold
+# affinity=""eudlidean distance metric
+model = AgglomerativeClustering(n_clusters=4)
+cluster_labels = model.fit_predict(scaled_df)
+# user cluster labels for colors
+sns.scatterplot(data=df,x="colX",y="colY",hue=cluster_labels)
+# max distance: sqrt(num_features)
+model = AgglomerativeClustering(n_clusters=None,distance_threshold=) #0: Nothing will be merged
+
+from scipy.cluster.hierarchy import dendrogram
+from scipy.cluster import hierarchy
+
+linkage_matrix = hierarchy.linkage(model.children_)
+element col 1/2 > cluster #, element in col 3 distance between clusters given in col#1 and col#2
+col #3 contains number of points in cluster
+increasing rows: will add lpoints to clusters
+
+plt.figure(figsize=...)
+dendr = dendrogram(linkage_matrix)
+dendr = dendrogram(linkage_matrix,truncate_mode="lastp",p=15)
+dendrogram(linkage_matrix,truncate_mode="level",p=3) #vertical level
+distance is plotted on y axis
+# calculate distance
+a = df.iloc[idx1]
+b = df.iloc[idx2]
+distsance = np.linalg.norm(a-b)
+
+§27 DBSCAN Density Based Spatial Clustering
+
+# 27.1 Theory COncepts
+Density Based Spatial Clustering Applications with Noise
+
+Can be used to detect outliers
+DBSCAN: vs K-Means, Hyperparameters, Outlier Detection
+
+Moon Shaped Data Set > K Means gets issues
+DBSCAN is focussing on density insrtead of distancew
+epsilon: Distance extended from a point
+Min NUmber of Points: in an epsilon distance
+Point Types: Core (with min points in epsilon environment), Border , Outlier
+Border: Doesn't Contain Min # of Points / but contains core points
+Outlier: Isolated Point
+
+DBSCAN Algorithm:
+* Random Point not yet assigned
+* Determine Point Type
+* Once Core Point is found, add all directly reachable points to cluster
+* Repeat
+Visualization: https://www.naftaliharris.com/blog/visualizing-dbscan-clustering/ 
+
+# 27.2 DBSCAN vs K-Means Implementation
+df = ...
+sns.scatterplot(data=...,x="xCol",y="yCol")
+
+def display_categories(model,data):
+	label = model.fit_predict(data)
+	sns.scatterplot(data=df,x="xCol",y="yCol",hue=label,palette="Set1")
+model_k = KMeans(n_clusters=3)
+display_categories(model,df)
+
+from sklearn.cluster import DBSCAN
+# hyperparams eps, min_samples
+model = DBSCAN()	
+def display_categories(model,df)
+
+# variation of hyperparamters 
+* plot elbow/knee diagram #of points classified as outliers over epsilon
+* chart min number of samples and charet against number of outliers
+
+blobs = pd.read...
+outliers = pd.read...
+sns.scatterplot(data=blobs,x="X1",y="X2" )
+from sklearn.cluster import DBSCAN
+model = DBSCAN()	
+dbscan = DBSCAN(eps=1)
+display_categories(dbscan,blobs):
+dbscan.labels_
+# num outliers
+np.sum(dbscan.labels_ == -1)
+# same in %
+100 * np.sum(dbscan.labels_ == -1) / len(dbscan.labels_)
+
+# iterate over hyperparametes / calculate
+outlier_percent = []
+num_outliers = []
+for e in np.linspace(0.1,1,10):
+	dbscan = DBSCAN(eps=e)
+	dbscan.fit(blobs)
+	num_outliers.append(np.sum(dbscan.labels_ == -1))
+	perc_outliers = 100 * np.sum(dbscan.labels_ == -1) / len(dbscan.labels_)
+	outlier_percent.append(perc_outliers)
+# unique labels
+len(np.unique(dbscan.labels_))
+sns.lineplot(x=np.linspace(0.1,1,10),y=num_outliers)
+plt.xlim(0,1)
+plt.ylim(0,4)
+# adda horizontal line to plot
+plt.hlines(y=3,xmin=0,xmax=3,color="blue")
+
+§ 28 Principal Component Analysis PCA 
+
+* Unsupervised Learning based on dimension reduction
+* Identify Important fearures
+* Creaton of new dimensional components
+* Reduce number of dimensions
+* Identify features that explain most of variance in data
+* Reduce Dimensions then train ML model on it
+* Variance: Some features will contribute more to feature / label
+  Which feature accounts for dispersion in data set
+  for example x and y data with a data point cloud 
+  Align principa axes along "main axes" (EIgenvector)
+  Principal Component = Linear Combination of existing axes
+  
+  Z1 = phi(11) X1 + phi(21) X2 + ...
+  ...
+  Set Center at center of data points. Axes correspond to Eigenvectors
+  (each perpendicular to each other).
+  Transformation matrix in 2D
+  |Var(X1) Cov(X1,X2)|
+  |Cov(X1,X2) Var(X2)|
+  Dim.Reduction:
+  Project Values to eigenvector axis with most variance lying om it, drop the others
+  https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors
+  https://en.wikipedia.org/wiki/Principal_component_analysis
+  https://en.wikipedia.org/wiki/Covariance_matrix
+  A * v = lambda * v
+  * Get Sample Data
+  * Calculate Covariance Matrix
+  * Calculate Eigenvectors
+  * Sort Eigenvectors by EigenValues
+  * Choose N largest Eigen Values
+  * Project original Data to Eigenvectors
+  
+# 28.1 Manual PCA implementation
+
+df = ... # data with a lot of columns
+sns.heatmap(df)
+from sklearn.preprocessing import StandardScaler
+# scale features
+sclr = StandardScaler()
+scaled = sclr.fit_transform(df)
+scaled.mean()
+# no rowvariance
+cov_matrix = np.cov(scaled,rowvar=False)
+# requires qudratic matrix
+eigen_values, eigenvectors = np.linalg.eig(cov_matrix)
+
+# sort byy eigen values use subset of eigen vectors
+num = 2
+# returns indices to be used for extracting columns
+# np.argsort([3,2,1]) -> [2,1,0]
+# sort in reverse orde from largest to minimin / only take relevant items
+sorted_key = np.argsort(eigen_values)[::-1}[:num]
+eigen_value,eigen_vectors = eigen_values[sorted_key],eigen_vectors[:,sorted_key]
+# projection Original Data projevted onto eigenvectors
+principal_components = np.dot(scaled,eigen_vectors)
+plt.scatter(principal_components[:0],principal_components[:1])
+
+# directly load daraset 
+from sklearn.datasets import  load_breast_cancer
+c_dict = load_breast_cancer()
+c_dict.keys() ...
+# color dataset / shows benign or malignant
+plt.scatter(principal_components[:0],principal_components[:1],c=c_dict["target"])
+
+# 28.2 PCA call in SciKit Learn
+from sklearn.preprocessing import StandardScaler
+# scale features
+sclr = StandardScaler()
+scaled = sclr.fit_transform(df)
+from sklearn.decomposition import PCA
+pca_model = PCA(n_components=2)
+pca_model.fit(scaled) 
+pca_model.transform(scaled)
+# alternatively
+results = pca_model.fit_transform(scaled) 
+plt.scatter(results[:0],results[:1])  
+# principal components
+pca_model.components_  
+df_comp = pd.DataFrame(pca_model.components_,index=["PC1","PC2"],columns=df.columns)
+sns.heatmap(df_comp,annot=True)
+# excplanation metrics
+pca_model.explained_variance_
+pca_model.explained_variance_ratio_
+
+@ #2022-05-29 So dataframe read csv https://github.com/aiventures/tools/blob/47c3d93ebaaa5795e5334df61ae37db425da328e/compound_interest.py#L44
+https://pandas.pydata.org/docs/reference/api/pandas.Grouper.html timeseries offset https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#offset-aliases
+pandas .dt accessor for timeseries https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.html https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.time.html
+@ #2022-05-29 dataframe group by https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.groupby.html 
+@ #2022-05-29 resize ipython notebook output window https://stackoverflow.com/questions/18770504/resize-ipython-notebook-output-window
+%%html
+<style>
+.output_wrapper .output {
+  overflow-y: visible;
+  height: fit-content;
+}
+</style>
+boxplot simple http://localhost:8888/notebooks/2022_WORK_JUPYTER/glucose_sensor_data.ipynb
+@ #2022-06-01 PILLOW EXIF UNICODE ENCODE DECODE
+https://stackoverflow.com/questions/12468179/unicodedecodeerror-utf8-codec-cant-decode-byte-0x9c
+https://docs.python.org/3.7/library/codecs.html#standard-encodings
+https://stackoverflow.com/questions/606191/convert-bytes-to-a-string#27527728
+https://stackoverflow.com/questions/62312679/why-is-the-encoding-from-exif-tags-fail-after-updating-image  str(exifDataRaw[i].decode('utf_16_le'))
+https://python3-exiv2.readthedocs.io/en/latest/tutorial.html
+https://code.launchpad.net/py3exiv2
+https://stackoverflow.com/questions/41075975/impossible-to-install-py3exiv2-with-pip
+https://stackoverflow.com/questions/1051254/check-if-python-package-is-installed
+
+#2022-06-01 get installed python packages snippet
+import subprocess
+import sys
+reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
+installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
+installed_packages
+#reqs.decode().split("\r\n")
+#reqs
+Excel XLS export fails No module named 'xlwt' > !pip install xlwt
+
+#2022-06-01 DICT JSON PRETTY PRINT FORMATTER 
+https://tutorial.eyehunts.com/python/python-format-dictionary-print-example-code/#:~:text=Use%20format()%20function%20to,a%20value%20to%20be%20formattedimport json
+d = {'a': 2, 'b': {'x': 3, 'y': {'t1': 4, 't2': 5}}}
+res = json.dumps(d, sort_keys=True, indent=4)
+print(json.dumps(dct_arr, sort_keys=False, indent=4))
+
+import pprint
+import hashlib
+d = {"s":"abc", "i":12, "l":["1","2"]}
+
+# use pretty printer
+pp = pprint.PrettyPrinter(indent=4)
+pp.pprint(d)
+ds = pp.pformat(d)
+
+# create hash from string
+hash_object = hashlib.md5(ds.encode()).hexdigest()
+print(f"Dictionary Hash: {hash_object}")
+
+@ #2022-06-26 READ / Write TO A Text TXT File
+
+"C:\<Entwicklung>\WORK_JUPYTER\root\image_meta\persistence.py" 
+
+def read_exif_attributes(filepath,encoding='utf-8',comment_marker="#",sep=":"):
+    """ reads data as lines from file """
+    lines = []
+    try:
+        with open(filepath,encoding=encoding) as fp:
+            for line in fp:
+                if len(line.strip())==0:
+                    continue
+                if line[0]==comment_marker:
+                    continue
+                lines.append(line.split(sep)[0].strip())
+    except:
+        print(f"Exception reading file {filepath}")
+        print(traceback.format_exc())
+    return lines
+    
+    @staticmethod            
+    def save_json(filepath,data:dict):     
+        """ Saves dictionary data as UTF8 """         
+        
+        with open(filepath, 'w', encoding='utf-8') as json_file:
+            try:
+                json.dump(data, json_file, indent=4,ensure_ascii=False)
+            except:
+                print(f"Exception writing file {filepath}")
+                print(traceback.format_exc())
+                
+        return None         
+
+     def save_file( .... )
+        with open(file_path, 'w', encoding=encoding) as f:
+            try:
+                f.write(data)
+                s = "Data saved to " + file_path
+            except:
+                print(f"Exception writing file {filename}")
+                print(traceback.format_exc())     
+                s = "No data was saved" 
+                
+        return s         
+
+    @staticmethod 
+    def read_file(filepath,encoding='utf-8',show=False):
+        """reads plain file, if show is set it will be displayed"""
+        lines = []
+        try:
+            with open(filepath,encoding=encoding) as fp:   
+                for line in fp:
+                    lines.append(line)
+        except:
+            print(f"Exception reading file {filepath}")
+            print(traceback.format_exc())   
+        
+        if show is True:
+            for line in lines:
+                print(line.strip())
+                     
+        return lines     
+        
+#2022-10-02 Recursion DIctionary
+def get_dummy_dict(d:dict):
+""" gets a dummy dict from a real dictionary (can be used to document dict structures) """
+logging.debug("START")
+for k, v in d.copy().items():
+if isinstance(v, dict): # For DICT
+d[k]=get_dummy_dict(v)
+elif isinstance(v, list): # For LIST
+d[k] = [get_dummy_dict(i) for i in v]
+elif isinstance(v, str): # Update Key-Value
+d.pop(k)
+d[k] = "<"+k+">"
+else:
+d.pop(k)
+d[k] = "<"+str(k)+">"
+return d
+--------------------------
+
+#2022-10-02 Encryption of Dictionary
+
+""" Helper module to encrypt sensitive config data """
+
+from copy import deepcopy
+import ... as util
+import json
+import logging
+import sys
+from cryptography.fernet import Fernet
+from cryptography.fernet import InvalidToken
+
+# https://stackoverflow.com/questions/61607367/how-to-encrypt-json-in-python
+
+MODE_ENCRYPT="encrypt"
+MODE_DECRYPT="decrypt"
+
+def create_key(f:str):
+""" creates key and saves to a file """
+logging.debug("START")
+key = str(Fernet.generate_key(),"utf-8")
+util.save_file(key,f)
+return key
+
+def read_key(f:str):
+""" reads key and transforms it into byte object """
+logging.debug("START")
+key = util.read_file(f)
+return bytes(key[0], "utf8")
+
+def encrypt(s:str,secret:bytes):
+""" encrypts a string """
+logging.debug("START")
+try:
+fernet = Fernet(secret)
+return str(fernet.encrypt(bytes(s,"utf-8")),"utf-8")
+except (ValueError, InvalidToken) as e:
+logging.error(f"Couldn't decrypt String, Exception: {e.__class__.__name__}")
+return ""
+
+def decrypt(s:str,secret:bytes):
+""" decrypts a string """
+logging.debug("START")
+try:
+fernet = Fernet(secret)
+# string needs to be encoded to bytes for decrypting and back to string
+b_decrypted=fernet.decrypt(bytes(s,"utf-8"))
+return b_decrypted.decode("utf-8")
+except (ValueError, InvalidToken) as e:
+logging.error(f"Couldn't decrypt String, Exception: {e.__class__.__name__}")
+return ""
+
+def update_dict(d:dict,secret:bytes,operation):
+""" recursively encrypt / decrypt string values of a dictionary """
+logging.debug("START")
+for k, v in d.copy().items():
+if isinstance(v, dict): # For DICT
+d[k] = update_dict(v,secret,operation)
+elif isinstance(v, list): # For LIST
+d[k] = [update_dict(i,secret,operation) for i in v]
+elif isinstance(v, str): # Update Key-Value
+d.pop(k)
+d[k] = operation(v,secret)
+
+return d
+
+def get_dict(dict_in:dict,secret:bytes,mode=MODE_ENCRYPT):
+""" creates a copy of a dict with values either encrypted or decrypted
+mode is either encrypt or decrypt
+"""
+logging.debug("START")
+d = deepcopy(dict_in)
+
+operation=globals()["encrypt"]
+if not mode == MODE_ENCRYPT:
+operation=globals()["decrypt"]
+
+return update_dict(d,secret,operation)
+
+def encrypt_json(f_plain:str,f_encrypted:str,secret):
+""" encrypts a json file based on a secret
+returns encoded dict
+"""
+logging.debug("START")
+dict_in={}
+
+try:
+dict_in=util.read_json(f_plain)
+except FileNotFoundError as e:
+print(e)
+
+dict_enc=get_dict(dict_in,secret,mode=MODE_ENCRYPT)
+util.save_json(f_encrypted,dict_enc)
+return dict_enc
+
+def decrypt_json(f_encrypted:str,secret:bytes):
+""" reads / decrypts and encrypted json
+"""
+logging.debug("START")
+dict_enc={}
+
+try:
+dict_enc=util.read_json(f_encrypted)
+except FileNotFoundError as e:
+print(e)
+InvalidToken
+
+return get_dict(dict_enc,secret,mode=MODE_DECRYPT)
+
+def save_dict_enc(d:dict,f_encrypted:str,secret:bytes):
+""" encodes dict and saves as string
+returns filenanme
+"""
+logging.debug("START")
+env_s=json.dumps(d,ensure_ascii=False)
+env_s_enc=encrypt(env_s,secret)
+return util.save_file(env_s_enc,f_encrypted)
+
+def read_dict_enc(f_encrypted:str,secret:bytes):
+""" reads string from file and decode as dictionary dict and saves as string
+returns dictionary
+"""
+logging.debug("START")
+env_s_enc=util.read_file(f_encrypted)[0]
+env_dict=json.loads(decrypt(env_s_enc,secret))
+return env_dict
+
+2022-10-04 UTC Local Time Conversion Datetime
+
+# https://stackoverflow.com/questions/79797/how-to-convert-local-time-string-to-utc
+# http://feihonghsu.blogspot.com/2008/02/converting-from-local-time-to-utc.html
+# PARSE as datetime
+import time
+import calendar
+import datetime
+import pytz
+from datetime import timedelta
+from dateutil.parser import parse
+s_timestamp_geotracker="2022-10-03T09:46:18Z"
+dt_geotracker=parse(s_timestamp_geotracker)
+
+tz_utc="UTC"
+tz_code="Europe/Berlin"
+timezone_loc = pytz.timezone(tz_code)
+timezone_utc=pytz.utc
+
+# parse doesnt go well with colons
+s_timestamp_camera="2022-03-03 11:45:27"
+#s_timestamp_camera="2022-03-03 11:45:27"
+dt_camera=parse(s_timestamp_camera)
+dt_camera = timezone_loc.localize(dt_camera)
+print(f"{dt_camera} DST OFFSET {dt_camera.tzinfo.dst(dt_camera).seconds}")
+
+# check for daylight saving date 
+is_dst=(dt_camera.tzinfo.dst(dt_camera).seconds!=0)
+
+# dt_camera.utctimetuple()
+
+# #utc_time = dt_camera.astimezone(tz_utc)
+# #tc_time
+dt_utc=dt_camera.astimezone(timezone_utc)
+print(f"{dt_camera} LOCAL TIME  DST {is_dst}")
+print(f"{dt_utc} UTC")
+dt_local=dt_utc.astimezone(timezone_loc)
+print(f"{dt_local} LOCAL TIME CONVERTED FROM UTC")
+
+import datetime
+import pytz
+from pytz import UTC
+from pytz import timezone
+from zoneinfo import ZoneInfo
+import zoneinfo
+zoneinfo.available_timezones()
+
+tz_code="Europe/Berlin"
+timezone_loc = pytz.timezone(tz_code)
+timezone_utc = pytz.utc
+
+ts="2022-10-08T15:22:47Z"
+dt = datetime.datetime.strptime(ts,'%Y-%m-%dT%H:%M:%SZ')
+dt = dt.replace(tzinfo=UTC)
+print(dt)
+#.astimezone(timezone_loc)
+dt=dt.astimezone(timezone_loc)
+print(dt)
+
+2022-10-09 Environment VENV stored in Anaconda C:\<Entwicklung>\Anaconda3\envs\dsmc21
+Fehler No Python at 'C:\<Entwicklung>\Anaconda3\envs\dsmc21\python.exe' 
+Computer\HKEY_USERS ... \SOFTWARE\Classes\Applications\python.exe\shell\open\command > BINGO !
+
+python -m pip list
+cd C:\...\VENV\
+python -m venv ENV22
+
+"C:\<Entwicklung>\VENV\...\pyvenv.cfg" contains 
+home = C:\...\Python_3_10   )***)
+include-system-site-packages = false
+version = 3.10.7
+
+pip list now works!
+
+2022-10-09 Installing Packages 
+pip install jupyterlab
+pip install numpy
+pip install sklearn
+pip install seaborn
+
+Get all packages
+https://stackoverflow.com/questions/31684375/automatically-create-requirements-txt
+pip freeze > requirements.txt
+(pipreqs)
+
+2022-10-09 Parse XML with lxml und Beautiful soup
+https://linuxhint.com/parse_xml_python_beautifulsoup/
+https://stackoverflow.com/questions/26666345/convert-xml-to-dictionary-in-python-using-lxml
+pip install lxml
+pip install bs4
+2022-10-16 Windows Library  WIN32 API
+https://stackoverflow.com/questions/21343774/importerror-no-module-named-win32api    
+pip install pywin32
+and after that, you must run
+python.exe ... /Scripts/pywin32_postinstall.py -install
+
+"C:\<Entwicklung>\MachineLearningInfos\doc_python_snippets.txt"
+
+2022-05-26 Recipe save dataframe to xls "https://github.com/aiventures/tools/blob/47c3d93ebaaa5795e5334df61ae37db425da328e/health_data.py#L147" @python @github
+2022-05-26 Recipe read txt file open "C:\<Entwicklung>\WORK_JUPYTER\root\tools\health_data.py" "https://github.com/aiventures/tools/blob/47c3d93ebaaa5795e5334df61ae37db425da328e/health_data.py#L7" @python @github
+2022-05-26 Recipe read save csv file to from dataframe "https://github.com/aiventures/tools/blob/47c3d93ebaaa5795e5334df61ae37db425da328e/compound_interest.py#L44" @python @github
+2022-05-26 my gists https://gist.github.com/aiventures @python @github
+2022-05-26 python snippets python_snippets.py "https://gist.github.com/aiventures/182681f4b2b4f0f22a6b6e1445e41e8f" open "C:\<Entwicklung>\MachineLearningInfos\doc_python_snippets.txt" @local @python @github
+2022-06-26 Read / Write Files Command Line Shell subprocess.Popen os.system() : https://janakiev.com/blog/python-shell-commands/ open "C:\<Entwicklung>\MachineLearningInfos\2022_MachineLearning\Subprocess\HowToExecuteShellCommandsWithPython.txt" @local @python 
+2022-10-09 Environment VENV stored in Anaconda C:\<Entwicklung>\Anaconda3\envs\dsmc21
+Fehler No Python at 'C:\<Entwicklung>\Anaconda3\envs\dsmc21\python.exe' 
+Computer\HKEY_USERS\S-1-5-21-1281368689-1136685193-432592569-1001\SOFTWARE\Classes\Applications\python.exe\shell\open\command > BINGO !
+REGEDIT > Computer\HKEY_USERS\S-1-5-21-1281368689-1136685193-432592569-1001\SOFTWARE\Classes\Python.NoConFile\shell\Edit with Pythonwin\command
+
+OTHER OCCURENCES
+Computer\HKEY_USERS\S-1-5-21-1281368689-1136685193-432592569-1001\SOFTWARE\Classes\Python.NoConFile\shell\Edit with Pythonwin\command
+Computer\HKEY_USERS\S-1-5-21-1281368689-1136685193-432592569-1001\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Pythonwin.exe
+Computer\HKEY_USERS\S-1-5-21-1281368689-1136685193-432592569-1001_Classes\Python.File\shell\Edit with Pythonwin\command
+Computer\HKEY_USERS\S-1-5-21-1281368689-1136685193-432592569-1001_Classes\Python.NoConFile\shell\Edit with Pythonwin\command
+
+python -m pip list
+cd C:\<Entwicklung>\VENV\
+python -m venv HFENV22
+
+"C:\<Entwicklung>\VENV\HFENV22\pyvenv.cfg" contains 
+home = C:\<Entwicklung>\Python_3_10   )***)
+include-system-site-packages = false
+version = 3.10.7
+
+pip list now works!
+
+2022-10-09 Installing Packages 
+pip install jupyterlab
+pip install numpy
+pip install sklearn
+pip install seaborn
+
+Get all packages
+https://stackoverflow.com/questions/31684375/automatically-create-requirements-txt
+pip freeze > requirements.txt
+(pipreqs)
+
+2022-10-09 Parse XML with lxml und Beautiful soup
+https://linuxhint.com/parse_xml_python_beautifulsoup/
+https://stackoverflow.com/questions/26666345/convert-xml-to-dictionary-in-python-using-lxml
+pip install lxml
+pip install bs4
+
+2022-10-09 Visual Studio Code Settings.json location
+"C:\Users\xxxxData\Roaming\Code\User\settings.json"
+
+
+2022-10-09 Here's a summary of common Python time conversions.
+https://stackoverflow.com/questions/79797/how-to-convert-local-time-string-to-utc
+Some methods drop fractions of seconds, and are marked with (s). An explicit formula such as ts = (d - epoch) / unit can be used instead (thanks jfs).
+from pytz import UTC
+struct_time (UTC) → POSIX (s):
+calendar.timegm(struct_time)
+Naïve datetime (local) → POSIX (s):
+calendar.timegm(stz.localize(dt, is_dst=None).utctimetuple())
+(exception during DST transitions, see comment from jfs)
+Naïve datetime (UTC) → POSIX (s):
+calendar.timegm(dt.utctimetuple())
+Aware datetime → POSIX (s):
+calendar.timegm(dt.utctimetuple())
+POSIX → struct_time (UTC, s):
+time.gmtime(t)
+(see comment from jfs)
+Naïve datetime (local) → struct_time (UTC, s):
+stz.localize(dt, is_dst=None).utctimetuple()
+(exception during DST transitions, see comment from jfs)
+Naïve datetime (UTC) → struct_time (UTC, s):
+dt.utctimetuple()
+Aware datetime → struct_time (UTC, s):
+dt.utctimetuple()
+POSIX → Naïve datetime (local):
+datetime.fromtimestamp(t, None)
+(may fail in certain conditions, see comment from jfs below)
+struct_time (UTC) → Naïve datetime (local, s):
+datetime.datetime(struct_time[:6], tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+(can't represent leap seconds, see comment from jfs)
+Naïve datetime (UTC) → Naïve datetime (local):
+dt.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+Aware datetime → Naïve datetime (local):
+dt.astimezone(tz).replace(tzinfo=None)
+POSIX → Naïve datetime (UTC):
+datetime.utcfromtimestamp(t)
+struct_time (UTC) → Naïve datetime (UTC, s):
+datetime.datetime(*struct_time[:6])
+(can't represent leap seconds, see comment from jfs)
+Naïve datetime (local) → Naïve datetime (UTC):
+stz.localize(dt, is_dst=None).astimezone(UTC).replace(tzinfo=None)
+(exception during DST transitions, see comment from jfs)
+Aware datetime → Naïve datetime (UTC):
+dt.astimezone(UTC).replace(tzinfo=None)
+POSIX → Aware datetime:
+datetime.fromtimestamp(t, tz)
+(may fail for non-pytz timezones)
+struct_time (UTC) → Aware datetime (s):
+datetime.datetime(struct_time[:6], tzinfo=UTC).astimezone(tz)
+(can't represent leap seconds, see comment from jfs)
+Naïve datetime (local) → Aware datetime:
+stz.localize(dt, is_dst=None)
+(exception during DST transitions, see comment from jfs)
+Naïve datetime (UTC) → Aware datetime:
+dt.replace(tzinfo=UTC)
+Source: taaviburns.ca
+
+1.1.2023
+1.1.2023 workplace setup
+4.4.1.1. Git Installation
+Git SCM 
+https://git-scm.com/downloads
+Smoke test: Enter git -v in command line
+MinGW / Visual Studio / Linux Subvsystem WSL
+Virtual Environment
+Create Virtual Environment: https://docs.python.org/3/library/venv.html
+Create new environment (in this example subfolder "C:\TOOLS\...._env" is used to store virtual env)
+python -m venv "C:\TOOLS\..._env"
+Activate environment in bat (Windows)
+run batch file in bash using:  start "C:\...\Scripts\activate.bat"
+run batch file in command line directly using "C:\...\Scripts\activate.bat"
+
+In Bash (for Windows using CMDER )
+in scripts folder of environment, enter: . activate 
+alternatively use: source "C:\...\Scripts\activate"
+activation of environment can be seen in path command prompt (cd)
+
+Links https://code.visualstudio.com/docs/python/environments
+
+4.4.6. Download Python Packages from  Repository 
+
+Define new download repository links by entering:
+
+pip config --user set global.index-url https://<repository>/api/pypi/build-releases-pypi/simple
+pip config --user set global.extra-index-url https://<repository>/api/pypi/build-milestones-pypi/simple
+pip config --user set global.trusted-host <repository>
+
+To install new packages, use either a requirements file or install single packages
+python -m pip install -r requirements.txt
+python -m pip install <package>
+
+https://packaging.python.org/en/latest/tutorials/installing-packages/
+
+4.4.6.2. Jupyter Notebooks
+Steps described for Windows: In command line, enter 
+
+python -m pip install notebook (https://docs.jupyter.org/en/latest/running.html)
+where jupyter (should display the executable)
+jupyter notebook (run notebook from command line, change to target directory first)
+Notebook Download Locations
+
+WSL / Docker
+https://docs.microsoft.com/en-us/windows/wsl/install
+https://docs.docker.com/get-docker/
+
+4.5.1. Microsoft Visual Code
+4.5.1.1. Install MS Visual Code
+
+Disable Telemetry Reporting: https://code.visualstudio.com/docs/supporting/faq#_how-to-disable-telemetry-reporting)
+(Menu File > Telemetry Setting > Turn off)
+
+Links
+
+Visual Studio Code Python Extension (https://code.visualstudio.com/docs/python/python-tutorial) 
+Python Tutorial https://code.visualstudio.com/docs/python/python-tutorial
+Develop in Containers https://code.visualstudio.com/learn/develop-cloud/containers
+Python Container https://code.visualstudio.com/docs/containers/quickstart-python
+https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
+
+Setting Up VS Code to search for VENV
+According to VS Code documentation, dedicated folders can also be defined in Settings to automatically look for VENV environments (checked but not verified successfully):
+Menu Bar > "File" > Preferences > Settings > n the search field enter "VENV" > Add VENV Folders or VENV path
+Links
+https://code.visualstudio.com/docs/getstarted/settings
+https://code.visualstudio.com/docs/python/settings-reference#_general-python-settings
+https://code.visualstudio.com/docs/python/environments#_manually-specify-an-interpreter
+https://code.visualstudio.com/docs/python/environments#_environment-variable-definitions-file
+
+10.1. Visual Studio Code 
+
+10.1.1. VS Code: Not able to debug / Invalid message: Duplicate Entries in "env"
+When trying to debug unit tests you'll get an error popup Invalid message: Duplicate Entries in "env"
+=> Fix (https://github.com/microsoft/vscode-python/issues/10722) > fix is to change launch.json
+in path ...\..._service\.vscode > launch.json 
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Test debug config",
+            "type": "python",
+            "request": "test",
+            "console": "integratedTerminal",
+            "logToFile": false
+        }
+    ]
+}
+
+10.2. Python Unit Tests 
+10.2.1. Mocker Methods Not Working
+If methods do not work, check with pip list, whether you have installed pytest-mock in your environment (import pytest should be sufficient)
+
+
+###LOGGING 
+# Setting local logging instance (reload required to reflect logging formatting)
+import logging
+reload(logging)
+# loglevel=logging.INFO
+loglevel=logging.DEBUG
+logging.basicConfig(format='%(asctime)s %(levelname)s %(module)s:[%(name)s.%(funcName)s(%(lineno)d)]: %(message)s',
+                     level=loglevel, stream=sys.stdout,datefmt="%Y%m%d_%H%M%S")
+ -----------------
+ 2022-11-10 How To Identify originating class for an exception
+import traceback
+
+#print traceback.format_exc()
+# start service locally 
+url_get_platforms_data=urljoin(v.url_localhost,v.get_platforms_data)
+token="Bearer "+token
+try:
+    r = requests.get(url=url_get_platforms_data,headers={"Authorization": token})
+except Exception as e:
+    exc_type, exc_value, exc_tb = sys.exc_info()
+    filename, line_num, func_name, text = traceback.extract_tb(exc_tb)[-1]
+    print(f'Thrown from: {filename}')
+    print (traceback.format_exc())
+------------------
+running sys.path
+------------------
+requests 
+# [*] Adjustment needed to fit your local settings
+import sys
+import os
+from IPython.display import Image
+from pathlib import Path
+from importlib import reload
+
+# import libs
+_lib=r"C:... _lib_utils" # [*]
+if not lib in sys.path:
+    sys.path.append(_lib)
+import ... as utils
+# reload(utils)
+------------------
+GENRATE PLANTUML
+# [*] Adjustment needed to fit your local settings
+import sys
+import os
+from IPython.display import Image
+from pathlib import Path
+from importlib import reload
+
+# import libs
+_lib=r"C:\" # [*]
+if not _lib in sys.path:
+    sys.path.append(_lib)
+import _util_lib as utils
+# reload(utils)
+
+# command to generate png / tested under windows
+CMD_GENERATE_PLANTUML='java -DPLANTUML_LIMIT_SIZE=10000 -jar "_PLANTUML_JAR_" "_PLANTUML_FILE_"'
+# path to plantuml jar
+FP_PLANTUML_JAR=r"C:\TOOLS\plantuml.jar" # [*]
+fp_plantuml_file=target_file
+print(f"*** Creating plantuml from file <{fp_plantuml_file}>")
+cmd_generate_plantuml=CMD_GENERATE_PLANTUML.replace("_PLANTUML_JAR_",FP_PLANTUML_JAR)
+cmd_generate_plantuml=cmd_generate_plantuml.replace("_PLANTUML_FILE_",fp_plantuml_file)
+retcode=os.system(cmd_generate_plantuml)
+print(f"    {cmd_generate_plantuml}, return code {retcode}")
+p_plantuml_file=Path(fp_plantuml_file)
+fp_plantuml_png=os.path.join(p_plantuml_file.parent,p_plantuml_file.stem+".png")
+print(f"**** Display: {fp_plantuml_png}")
+Image(filename=fp_plantuml_png)
+-----------------------
+GETTING API - PIVOT TABLE 
+# SAMPLE NOTEBOOK WITHOUT USING EXCEL but with local Python Environment 
+# (requires dependencies as shown here)
+# https://matplotlib.org/stable/gallery/color/named_colors.html
+import os
+import json
+import pandas as pd
+import requests
+import base64
+import pprint
+from urllib.parse import urljoin
+import matplotlib.colors as mcol
+import matplotlib.pyplot as plt
+from datetime import datetime as DateTime
+import webbrowser
+
+pp = pprint.PrettyPrinter(indent=3)
+
+# read json and text files (token and web responses)
+
+def read_json(filepath:str):
+    """ Reads JSON file"""
+    # logging.debug("START")
+    data = {}
+
+    if not os.path.isfile(filepath):
+        print(f"File path {filepath} does not exist. Exiting...")
+        return {}
+
+    try:
+        with open(filepath,encoding='utf-8') as json_file:
+            data = json.load(json_file)
+    except:
+        print(f"**** Error opening {filepath} ****")
+        print(traceback.format_exc())
+        print("***************")
+
+    return data
+
+def read_file(filepath,encoding='utf-8',show=False):
+    """reads plain file and returns as lines, if show is set it will be displayed"""
+    # logging.debug("START")
+    lines = []
+    try:
+        with open(filepath,encoding=encoding) as fp:   
+            for line in fp:
+                lines.append(line)
+    except:
+        print(f"Exception reading file {filepath}")
+        print(traceback.format_exc())   
+
+    if show is True:
+        for line in lines:
+            print(line.strip())
+
+    return lines
+
+def get_decoded_jwt(jwt_token_encoded):    
+    """ decodes the jwt token string from authentication """
+    token_parts=jwt_token_encoded.split(".")
+    decoded_jwt={}
+    # segments
+    JWT_SEGMENTS={"header":0,"payload":1,"signature":2}
+    for s,idx in JWT_SEGMENTS.items():
+        jwt_seg=token_parts[idx]
+        if s=="signature":
+            decoded_jwt[s]=jwt_seg
+        else:
+            # decode parts /additional padding
+            decoded_jwt[s]=json.loads(base64.standard_b64decode(jwt_seg+"====").decode("UTF-8"))
+    return decoded_jwt 
+
+def show_token_info(jwt_token_dict):
+    """ display relevant information from decoded token dict"""
+    payload=jwt_token_dict["payload"]
+    dt_10=payload.get('auth_time',0)
+    dt_10=DateTime.utcfromtimestamp(dt_10).strftime('%Y-%m-%d %H:%M:%S')
+    print("\n---- TOKEN INFO ----")
+    print(f"utc  : {dt_10} (Created)")    
+    print(f"iss  : {payload.get('iss')}")
+    print(f"email: {payload.get('email')}")
+    print(f"aud  : {payload.get('aud')}")
+    if payload.get('xs.system.attributes'):
+        if payload['xs.system.attributes'].get('xs.rolecollections'):
+            print(f"roles: {payload['xs.system.attributes']['xs.rolecollections']}")
+    else:
+        print("roles: NO ROLES")
+    print("--------\n")    
+    
+def get_request(url,token,headers=None,params=None):
+    """ http get request using jwt token """
+    token="Bearer "+token
+    if headers:
+        headers=headers
+    else:
+        headers={}
+    if params:
+        params=params
+    else:
+        params={}
+    
+    headers["Authorization"]=token
+    try:
+        r = requests.get(url=url,headers=headers,params=params)
+        return r
+    except (ConnectionError) as e:
+        print(f"Connection error: {e}")    
+        return None      
+        
+https://matplotlib.org/2.0.2/api/colors_api.html
+https://matplotlib.org/stable/gallery/color/named_colors.html
+        
+r=get_request(url=url,token=token,params=r_info[REQUEST_PARAMS])
+    if r:
+        print(f"*** {url}, status ({r.status_code}) ***")
+        response = json.loads(r.content.decode("utf-8"))
+        df=pd.DataFrame.from_dict(response)
+
+title="Report  ("+DateTime.now().strftime("%Y-%m-%d %H:%M")+")"
+ax=df.plot(kind='bar',title=title,color=[color_usage])
+_=ax.set_xlabel("Date End")
+_=ax.set_ylabel("Cumulative Count")
+plt.xticks(rotation=30)
+plt.savefig(img_usage,bbox_inches="tight")
+plt.show()
+
+cmap=[col1,col2, ...]
+df_pivot=df.pivot(index='DATE_TO', columns='data_columns', values='COUNT')
+df_pivot
+title="Report  ("+DateTime.now().strftime("%Y-%m-%d %H:%M")+")"
+fig=df_pivot.plot(kind='bar',title=title,color=cmap)
+_=ax.set_xlabel("Date End")
+_=ax.set_ylabel("Cumulative Count")
+plt.xticks(rotation=30)
+plt.savefig(img_adoption,bbox_inches="tight")
+plt.show()
+
+20230223 Beautiful Soup Parse MLO Notes using Beautiful Soup 
+
+
+http://localhost:8888/notebooks/2023_WORK_JUPYTER/20230223_parse_mlo_notes.ipynb
+
+-2023-04-16 PyTest Unit Test Research
+https://99kz.cn/
+Right Way to Test, Mock, and Patch in Python | by Munish Goyal | Geek Culture | Medium https://medium.com/geekculture/right-way-to-test-mock-and-patch-in-python-b02138fc5040
+Coverage.py — Coverage.py 6.5.0 documentation https://coverage.readthedocs.io/en/6.5.0/#quick-start
+Debugging test in VS Code does not work · Issue #10722 · microsoft/vscode-python https://github.com/microsoft/vscode-python/issues/10722
+flask - Import could not be resolved/could not be resolved from source Pylance in VS Code using Python 3.9.2 on Windows 10 - Stack Overflow https://stackoverflow.com/questions/68486207/import-could-not-be-resolved-could-not-be-resolved-from-source-pylance-in-vs-cod
+SAP/cf-python-logging-support: Logging library for python applications deployed on SAP Cloud Platform - CloudFoundry environment https://github.com/SAP/cf-python-logging-support
+How Mock Can Improve Your Unit Tests — Dan's Cheat Sheets 1 documentation https://cheat.readthedocs.io/en/latest/python/mock.html
+How to implement xunit-style set-up — pytest documentation https://doc.pytest.org/en/latest/how-to/xunit_setup.html
+How to mock the import of a module in python? - Stack Overflow https://stackoverflow.com/questions/70003857/how-to-mock-the-import-of-a-module-in-python
+Mocking an imported module-level function in Python http://www.gregreda.com/2021/06/28/mocking-imported-module-function-python/
+Mocking Has A Weakness, Speccing Removes It | by Matt Pease | Python Pandemonium | Medium https://medium.com/python-pandemonium/mocking-has-a-weakness-speccing-removes-it-2d2068a17df8
+Mocking, Monkey Patching, and Faking Functionality — Python 401 2.1 documentation https://codefellows.github.io/sea-python-401d7/lectures/mock.html#:~:text=monkeypatch%20is%20a%20part%20of,actually%20testing%20that%20function%20call!
+pytest fixtures: explicit, modular, scalable — pytest documentation https://docs.pytest.org/en/6.2.x/fixture.html
+towardsdatascience.com https://towardsdatascience.com/pytest-with-marking-mocking-and-fixtures-in-10-minutes-678d7ccd2f70
+pytest-cov · PyPI https://pypi.org/project/pytest-cov/
+pytest-mock Basics https://waylonwalker.com/pytest-mock-basics/
+pytest-mock documentation https://pytest-mock.readthedocs.io/en/latest/
+python - API testing: How do I mock/patch a method in one place only? - Stack Overflow https://stackoverflow.com/questions/72085125/api-testing-how-do-i-mock-patch-a-method-in-one-place-only
+python - How to configure VS Code pytest extension to show test results in the integrated terminal (instead of the integrated output)? - Stack Overflow https://stackoverflow.com/questions/61114075/how-to-configure-vs-code-pytest-extension-to-show-test-results-in-the-integrated
+python - How to debug Fastapi openapi generation error - Stack Overflow https://stackoverflow.com/questions/70257170/how-to-debug-fastapi-openapi-generation-error
+python - How to get coverage reporting when testing a pytest plugin? - Stack Overflow https://stackoverflow.com/questions/62221654/how-to-get-coverage-reporting-when-testing-a-pytest-plugin
+python - How to mock an import - Stack Overflow https://stackoverflow.com/questions/8658043/how-to-mock-an-import
+python - Proper way to return mocked object using pytest.fixture - Stack Overflow https://stackoverflow.com/questions/59045200/proper-way-to-return-mocked-object-using-pytest-fixture
+python - Pytest - mocking a side_effect on mock's nested attribute function / method - Stack Overflow https://stackoverflow.com/questions/69196926/pytest-mocking-a-side-effect-on-mocks-nested-attribute-function-method
+python - Temporary "unpatching" functionality within mock.side_effect - Stack Overflow https://stackoverflow.com/questions/7304588/temporary-unpatching-functionality-within-mock-side-effect
+python - Testing class methods with pytest - Stack Overflow https://stackoverflow.com/questions/39395731/testing-class-methods-with-pytest
+python - When using unittest.mock.patch, why is autospec not True by default? - Stack Overflow https://stackoverflow.com/questions/35915703/when-using-unittest-mock-patch-why-is-autospec-not-true-by-default
+Python Unittest Vs Pytest: Choose the Best - Python Pool https://www.pythonpool.com/python-unittest-vs-pytest/
+Removing sensitive data from a repository - GitHub Docs https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository
+Testing Python Applications with Pytest - Semaphore Tutorial https://semaphoreci.com/community/tutorials/testing-python-applications-with-pytest
+Understanding the Python Mock Object Library – Real Python https://realpython.com/python-mock-library/
+unit testing - Mock an entire module in python - Stack Overflow https://stackoverflow.com/questions/41220803/mock-an-entire-module-in-python
+unit testing - Mocking Method Calls In Python - Stack Overflow https://stackoverflow.com/questions/43941015/mocking-method-calls-in-python
+unit testing - Mocking python function based on input arguments - Stack Overflow https://stackoverflow.com/questions/16162015/mocking-python-function-based-on-input-arguments
+unit testing - Mocking the super class calls on python - Stack Overflow https://stackoverflow.com/questions/13093526/mocking-the-super-class-calls-on-python
+unit testing - Python: mock imported module method - Stack Overflow https://stackoverflow.com/questions/46257709/python-mock-imported-module-method
+unittest.mock — mock object library — Python 3.11.3 documentation https://docs.python.org/3/library/unittest.mock.html#quick-guide
+DataRaccoon https://www.dataraccoon.com/knowledge/testing_mock
+How to Write Independent Unit Test with Pytest and Mock Techniques | SAP Blogs https://blogs.sap.com/2022/02/16/how-to-write-independent-unit-test-with-pytest-and-mock-techniques/
+pytest: How to mock in Python – Chang Hsin Lee – Committing my thoughts to words. https://changhsinlee.com/pytest-mock/
+python - pass fixture to test class in pytest - Stack Overflow https://stackoverflow.com/questions/44891712/pass-fixture-to-test-class-in-pytest
+python - Patch a method of a mocked class - Stack Overflow https://stackoverflow.com/questions/60530098/patch-a-method-of-a-mocked-class
+Python Mocking: A Guide to Better Unit Tests | Toptal® https://www.toptal.com/python/an-introduction-to-mocking-in-python
+Python Testing: Mocking Functions based on Input Arguments - Siv Scripts https://alysivji.github.io/mocking-functions-inputs-args.html
+unit testing - How can I run a function (to get side effects) when a python Mock is called? - Stack Overflow https://stackoverflow.com/questions/34933411/how-can-i-run-a-function-to-get-side-effects-when-a-python-mock-is-called
+Right Way to Test, Mock, and Patch in Python | by Munish Goyal | Geek Culture | Medium https://medium.com/geekculture/right-way-to-test-mock-and-patch-in-python-b02138fc5040#f6de
+https://note.nkmk.me/en/python-pip-install-requirements/
+    
+#2023-04-16 Python Research
+How can I set up a virtual environment for Python in Visual Studio Code? - Stack Overflow https://stackoverflow.com/questions/54106071/how-can-i-set-up-a-virtual-environment-for-python-in-visual-studio-code#:~:text=Open%20Visual%20Studio%20Code%20in%20your%20project's%20folder.&text=Click%20Yes%20%3B%20and%20your%20venv,%3A%20(venv)%20...&text=Activate.
+How to install Python packages with pip and requirements.txt | note.nkmk.me https://note.nkmk.me/en/python-pip-install-requirements/
+How do I search for an available Python package using pip? - Stack Overflow https://stackoverflow.com/questions/17373473/how-do-i-search-for-an-available-python-package-using-pip
+git - Visual Studio Code - remove branches deleted on GitHub that still show in VS Code? - Stack Overflow https://stackoverflow.com/questions/38512124/visual-studio-code-remove-branches-deleted-on-github-that-still-show-in-vs-cod
+datetime - Getting the date of 7 days ago from current date in python - Stack Overflow https://stackoverflow.com/questions/20573459/getting-the-date-of-7-days-ago-from-current-date-in-python
+Example Google Style Python Docstrings — Sphinx documentation https://www.sphinx-doc.org/en/master/usage/extensions/example_google.html
+Find module name of the originating exception in Python - Stack Overflow https://stackoverflow.com/questions/1095601/find-module-name-of-the-originating-exception-in-python
+git - Visual Studio Code - remove branches deleted on GitHub that still show in VS Code? - Stack Overflow https://stackoverflow.com/questions/38512124/visual-studio-code-remove-branches-deleted-on-github-that-still-show-in-vs-cod
+google oauth - How can I get an oauth2 access_token using Python - Stack Overflow https://stackoverflow.com/questions/36719540/how-can-i-get-an-oauth2-access-token-using-python
+How can I set up a virtual environment for Python in Visual Studio Code? - Stack Overflow https://stackoverflow.com/questions/54106071/how-can-i-set-up-a-virtual-environment-for-python-in-visual-studio-code#:~:text=Open%20Visual%20Studio%20Code%20in%20your%20projects%20folder.&text=Click%20Yes%20%3B%20and%20your%20venv,%3A%20(venv)%20...&text=Activate.
+How do I search for an available Python package using pip? - Stack Overflow https://stackoverflow.com/questions/17373473/how-do-i-search-for-an-available-python-package-using-pip
+How To Build A Treemap In 3 Ways Using Python - Analytics Vidhya https://www.analyticsvidhya.com/blog/2021/10/how-to-build-a-treemap-in-3-ways-using-python/
+How to encrypt JSON in python - Stack Overflow https://stackoverflow.com/questions/61607367/how-to-encrypt-json-in-python
+How to install Python packages with pip and requirements.txt | note.nkmk.me https://note.nkmk.me/en/python-pip-install-requirements/
+Naming with Underscores in Python | by Rachit Tayal | Python Features | Medium https://medium.com/python-features/naming-conventions-with-underscores-in-python-791251ac7097#:~:text=The%20use%20of%20double%20underscore,with%20names%20defined%20by%20subclasses.
+password encryption with python | Medium https://pavan581.medium.com/save-passwords-to-json-file-with-encryption-using-python-9fb9430f22c3
+PEP 249 – Python Database API Specification v2.0 | peps.python.org https://peps.python.org/pep-0249/
+Preventing SQL Injection Attacks With Python – Real Python https://realpython.com/prevent-python-sql-injection/#crafting-safe-query-parameters
+python - How do I write data into CSV format as string (not file)? - Stack Overflow https://stackoverflow.com/questions/9157314/how-do-i-write-data-into-csv-format-as-string-not-file
+Python - iterate and update a nested dictionary & lists - Stack Overflow https://stackoverflow.com/questions/64765773/python-iterate-and-update-a-nested-dictionary-lists
+python-dotenv · PyPI https://pypi.org/project/python-dotenv/
+sql - How to group by hour in HANA - Stack Overflow https://stackoverflow.com/questions/42381060/how-to-group-by-hour-in-hana
+squarify · PyPI https://pypi.org/project/squarify/
+Zusammenfassung und Ausblick | heise online https://www.heise.de/hintergrund/async-await-in-Python-Nebenlaeufigkeit-leicht-gemacht-6193925.html?seite=4	
+https://yourbrainoncomputers.com/using-git-with-visual-studio-code-the-ultimate-guide/#Resolve_Merge_Conflicts
+https://docs.gitlab.com/ee/topics/git/git_rebase.html
+https://yourbrainoncomputers.com/using-git-with-visual-studio-code-the-ultimate-guide/#Resolve_Merge_Conflicts
+
+20230416 Python Logging 
+Neuer Tab
+chrome://newtab/
+towardsdatascience.com https://towardsdatascience.com/8-advanced-python-logging-features-that-you-shouldnt-miss-a68a5ef1b62d
+datetime - How to Customize the time format for Python logging? - Stack Overflow https://stackoverflow.com/questions/3220284/how-to-customize-the-time-format-for-python-logging
+pmav99/python-logging-example: A tutorial for python logging https://github.com/pmav99/python-logging-example
+Good logging practice in Python – Fang-Pen's coding note https://fangpenlin.com/posts/2012/08/26/good-logging-practice-in-python/
+how to add filter in python logging config file (logging.conf) - Stack Overflow https://stackoverflow.com/questions/43062244/how-to-add-filter-in-python-logging-config-file-logging-conf
+How to Implement Logger in Python | by Indhumathy Chelliah | Analytics Vidhya | Medium https://medium.com/analytics-vidhya/how-to-implement-logger-in-python-52eed94d0160
+How to list all existing loggers using python.logging module - Stack Overflow https://stackoverflow.com/questions/53249304/how-to-list-all-existing-loggers-using-python-logging-module#:~:text=Loggers%20are%20held%20in%20a,the%20loggers%20it%20knows%20about.&text=Calling%20getLogger(name)%20ensures%20that,are%20added%20to%20the%20list.
+log4j - how to print only top few stacks in a stacktrace in Java - Stack Overflow https://stackoverflow.com/questions/69507316/how-to-print-only-top-few-stacks-in-a-stacktrace-in-java
+logging — Logging facility for Python — Python 3.11.3 documentation https://docs.python.org/3/library/logging.html#logrecord-attributes
+Logging HOWTO — Python 3.11.3 documentation https://docs.python.org/3/howto/logging.html
+Logging HOWTO — Python 3.11.3 documentation https://docs.python.org/3/howto/logging.html#logging-from-multiple-modules
+Logging in Python: a broad, gentle introduction - Codemotion Magazine https://www.codemotion.com/magazine/ai-ml/big-data/logging-in-python-a-broad-gentle-introduction/
+Logging in python with JSON configuration - things get logged more than once? - Stack Overflow https://stackoverflow.com/questions/50301613/logging-in-python-with-json-configuration-things-get-logged-more-than-once
+python - How do I get the path and name of the file that is currently executing? - Stack Overflow https://stackoverflow.com/questions/50499/how-do-i-get-the-path-and-name-of-the-file-that-is-currently-executing/50905#50905
+python - logging in multiple classes with module name in log - Stack Overflow https://stackoverflow.com/questions/23386290/logging-in-multiple-classes-with-module-name-in-log
+python - Where is a complete example of logging.config.dictConfig? - Stack Overflow https://stackoverflow.com/questions/7507825/where-is-a-complete-example-of-logging-config-dictconfig
+Python logger in the hierarchy under root and over my project loggers? - Stack Overflow https://stackoverflow.com/questions/57021706/python-logger-in-the-hierarchy-under-root-and-over-my-project-loggers
+Python Logging - Disable logging from imported modules - Stack Overflow https://stackoverflow.com/questions/35325042/python-logging-disable-logging-from-imported-modules
+Python Logging: In-Depth Tutorial | Toptal® https://www.toptal.com/python/in-depth-python-logging
+Python logging: propagate messages of level below current logger level - Stack Overflow https://stackoverflow.com/questions/18058817/python-logging-propagate-messages-of-level-below-current-logger-level
+Understanding Python’s logging module | Electricmonk.nl weblog https://www.electricmonk.nl/log/2017/08/06/understanding-pythons-logging-module/   
+   
+
+
+
+
+
+
+    
+
+

@@ -1,0 +1,186 @@
+Tool Doc List 
+
+################################################
+@TOOL @NOTEPADPLUSPLUS NOTEPAD++
+https://npp-user-manual.org/docs/
+
+################################################
+@TOOL @VSCODE
+
+20220814 Fold / Unfold all methods / Shortcut List
+Command Fold / Unfold Code Shortcuts didnt work: CTRL SHIFT P FOLD ALL / UNFOLD ALL
+15.4.2022 Code Open in New Tab
+https://stackoverflow.com/questions/38713405/open-files-always-in-a-new-tab
+CTRL+SHIFT+P Preferences: Open User Settings > 
+"workbench.editor.enablePreview" property, and set its value to false.
+Editor > Rename > Enable Preview > 
+Workbench > Editor > Show Tabs
+14.04.2022 settings.json in C:\Users\<User>\AppData\Roaming\Code\User
+14.04.2022 Adding Bash As Console
+https://stackoverflow.com/questions/67601161/the-new-way-to-configure-default-shell-and-argument-commands-in-vscode
+https://code.visualstudio.com/docs/editor/integrated-terminal
+    "terminal.integrated.profiles.windows": {
+      // Add your custom one with a different profile name from "Git Bash"
+      "GitBash": {
+        "path": [
+          "C:\\<path to>\\bin\\bash.exe",
+        ],
+        "args": [],
+        "icon": "terminal-bash"
+      }
+    },
+    "terminal.integrated.defaultProfile.windows": "GitBash"
+
+Will start in Path $PATH!    
+
+################################################
+@TOOL @GIT
+------ @GIT HOW TO ------------
+Commands 
+git config --global --list
+git config --local --list
+List origin of gitconfig git config --list --show-origin
+change git config global location  
+git-mergetool http://git-scm.com/docs/git-mergetool  
+git-difftool http://git-scm.com/docs/git-difftool
+git difftool --dir-diff show all changes in directory 
+git branching merging https://git-scm.com/book/de/v2/Git-Branching-Einfaches-Branching-und-Merging
+Adding merge and diff tools
+git config --global diff.tool meld
+git config --global merge.tool meld
+open global gitconfig (if home is defined) open $HOME/.gitconfig
+git difftool -d [<commit> [<commit>]] showing commit diffsa in tool
+------ Links -------
+git rebase dev from master https://www.theserverside.com/blog/Coffee-Talk-Java-News-Stories-and-Opinions/How-to-Git-rebase-a-branch-to-master-example#:~:text=To%20rebase%20to%20GitHub%20or,the%20changes%20to%20be%20accepted.&text=A%20GitLab%20or%20GitHub%20rebase,local%20to%20your%20personal%20workspace.
+for beginner https://faun.pub/git-rebase-for-an-absolute-beginner-35d16144abd9
+
+################################################
+@TOOL CMDER 
+
+----------- CMDER SHORT CUTS --------------
+CMDER https://cmder.app/
+
+Macro Definition
+Up/Down Folder            WIN+ALT+P>Keys and Macro>MacroDropdown>Assign ALT Up / AlT DOWN /                           print "cd .. \r\n" / print "cd - \r\n"
+
+CMDER Tab
+Ctrl + `                : Global Summon from taskbar
+Win + Alt + p           :  Preferences (Or right click on title bar)
+Ctrl + t                : New tab dialog (maybe you want to open cmd as admin?)
+Ctrl + w                : Close tab
+Shift+Alt+(1/2)		  : Fast new tab:(1)CMD, (2)PowerShell
+Alt + Enter             : Fullscreen
+
+CMDER Shell
+Ctrl + Alt + u          : Traverse up in directory structure (lovely feature!)
+End, Home, Ctrl         : Traverse text as usual on Windows
+Ctrl + r                : History search
+Shift + mouse           : Select and copy text from buffer
+RightClick/Ctrl + Shift + v : Paste text
+Ctrl                    : In result list with links open link
+
+CMDER Tab
+Ctrl+`	Global Summon from taskbar
+Win+Alt+p	Preferences (Or right click on title bar)
+Ctrl+t	New tab dialog (maybe you want to open cmd as admin?)
+Ctrl+w	Close tab
+Shift+Alt+(1/2)	Fast new tab:(1)CMD, (2)PowerShell
+Alt+Enter	Fullscreen
+
+CMDER Shell
+Ctrl+Alt+u	Traverse up in directory structure (lovely feature!)
+End, Home,Ctrl	Traverse text as usual on Windows
+Ctrl+r	History search
+Shift+mouse	Select and copy text from buffer
+RightClick/Ctrl+Shift+v	Paste text
+Ctrl	In result list with links open link
+Notes / Docs
+Aliases
+There is simple support for aliases. They can be created by using the alias command like this: 
+alias ls=ls --color $*. 
+They are pretty much just doskeys in /config/aliases. One per line. And make sure to handle arguments by putting argument variables $* somewhere.
+Documentations
+Most of the Cmder functionality are documented in the 
+readme file on GitHub https://github.com/cmderdev/cmder/blob/master/README.md
+We have extented help available in Cmder Wiki https://github.com/cmderdev/cmder/wiki
+Console emulator ~ Conemu https://conemu.github.io/
+Cmd.exe enhancements ~ clink https://mridgers.github.io/clink/
+Unix tools on windows ~ git for windows https://gitforwindows.org/
+Tweaks on Completion Features https://superuser.com/questions/991493/cmder-use-tab-to-cycle-through-the-auto-completes-candidates
+21 => not working > clink completions bundle by nowe ...\cmder\vendor\clink-completions
+--- clink --- 
+https://chrisant996.github.io/clink/clink.html#sample-inputrc-file $HOME/.inputrc
+
+################################################
+
+@TOOL TOTAL COMMANDER 
+Create Button that opens a file with selected file from left and/or right file 
+https://stackoverflow.com/questions/29765474/add-button-in-totalcommander-that-executes-command-with-left-folder-and-right-fo
+Right click on the toolbar (button bar)
+Click on "Change..." context menu
+Fill in the fields:
+Command: => my_tool_path/my_tool.exe
+Parameters: => 
+"%X%P" "%X%T" 
+or 
+"%X%P%N" "%X%T%M" 
+for pathes with filenames
+Click OK
+--------------
+Create Short Cut:
+Tab Configurations > Options > Misc 
+HotKey CTRL SHIFT Key
+Command > Lens > usercmd.ini > new > em_vscode
+---------------------------
+"C:\...\VSCode\Code.exe"
+"%X%P%N"
+"C:\...\Code.exe"
+Open with VS COde 
+------------------------------
+> Add Button geht dann direkt durch hinzufügen von em_vscode
+action hier "C:\Users\xxx\AppData\Roaming\GHISLER\usercmd.ini"
+[em_vscode]
+button=""C:\...\VSCode\Code.exe""
+cmd=""C:\...\VSCode\Code.exe""
+param=""%X%P%N""
+menu=Open VS Code
+shortcut da "C:\Users\xxx\AppData\Roaming\GHISLER\wincmd.ini"
+[Shortcuts]
+CS+C=em_vscode
+-------------------
+Icon Sammlung 
+%SystemRoot%\System32\SHELL32.dll
+wcmicons.dll
+-----------------
+C:\xxxCMD\docs\ %SystemRoot%\System32\SHELL32.dll
+
+################################################
+@TOOL @EXIFTOOL 
+2022-06-19 So  @exiftool online doc https://exiftool.org/exiftool_pod.html
+2022-06-19 So @exiftool some Commands https://adamtheautomator.com/exiftool/
+2022-06-19 So Recursively look for files (only if directory is specified) exiftool -r -Directory * -FileName *.jpg / Show all Tags "exiftool -all:all -r -Directory * -FileName *.jpg"
+2022-06-19 So @exiftool Tag Groups and tag lists https://exiftool.org/index.html#groups "exiftool -xmp:all -exif:all" https://exiftool.org/TagNames/index.html
+2022-06-19 So @exiftool Attribute Names and Groups https://exiftool.org/index.html#groups "exiftool -s" (actual names) "exiftool -s -g#/ -G#" (0:Information Type;1 Specific Location;2 Category; 3 Document Number); 4 Instance Number; 5 Metadata Path; 6 EXIF/TIFF Format; 7 Tag ID)	. The exiftool output can be organized based on these groups using the -g or -G option (ie. -g1 to see family 1 groups, or -g3:1 to see both family 3 and family 1 group names in the output. 
+2022-06-19 So @exiftool display all list groups "exiftool -listG0 -listG1 -listG2 -listG3 -listG4 -listG5 -listG6 -listG7" (See the -g option in the exiftool application documentation  for more details (https://exiftool.org/exiftool_pod.html > look for -"g["). 
+2022-06-19 So @exiftool Recursively get all metadata from jpg export to json exiftool -all:all -r -j -g0 -s -Directory * -FileName *.jpg > out.json; open out.json
+2022-06-19 So @exiftool Recursively get all metadata from jpg export to csv exiftool -all:all -r -csv -g0 -s -Directory * -FileName *.jpg > out.csv; open out.csv / write from csv also possible exiftool -csv=a.csv dir (https://exiftool.org/exiftool_pod.html option "-csv")
+2022-06-19 So @exiftool Find Out about Groups exiftool -(G|g)(0...7) (-s) 20211207_Alltag_04269.jpg > check out which groups exist
+2022-06-19 So @exiftool parameters -a (also display duplicate attributes) -g/-G (groups) -s (tag names instead of descriptions) ( search for "options" http://web.mit.edu/graphics/src/Image-ExifTool-6.99/html/exiftool_pod.html / check for READING EXAMPLES WRITING EXAMPLES )
+2022-06-19 So @exiftool exiftool write parameters to an arg file "https://exiftool.org/faq.html#Q18" (look for "-@") / write to an argfile: "exiftool -args -G1 --filename --directory src.jpg > out.args" read: exiftool -@
+ test.args image.jpg (also check out https://exiftool.org/exiftool_pod.html look for "-args"   ) Note: Be careful when copying information with this technique since it is easy to write tags which are normally considered "Unsafe". 
+ For instance, the FileName and Directory tags are excluded in the example above to avoid renaming and moving the destination file. Also note that the second command above will produce warning messages for any 
+ tags which are not writable. As well, the -sep option should be used as in the second command above to
+  maintain separate list items when writing metadata back to image files, and the -struct option may be used when extracting to preserve structured XMP information.
+
+################################################
+14.04-2022 @Twitter https://twitter.com/TessaRDavis/status/1512402354435510276
+• from:twittername
+• keyword1 OR keyword2
+• min_faves:2000
+• min_retweets:2000
+• filter:links
+• filter:images
+• until:YYYY-MM-DD
+• since:YYYY-MM-DD
+• near:location within:15mi
+

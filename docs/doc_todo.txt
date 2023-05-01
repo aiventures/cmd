@@ -59,3 +59,8 @@ t_ app [n] "TEXT"				    : append text to todo [n]
 t_ prep [n] "TEXT"				    : prepend text to todo [n]
 t_ mv [n] DEST [SRC/todo.txt]		: Moves Todo [N] from SRC file to DEST file (residing in todo folder)
                                                  
+https://github.com/todotxt/todo.txt-cli/wiki/User-Documentation
+https://github.com/todotxt/todo.txt-cli/wiki/Tips-and-Tricks
+Additional Information http://plaintext-productivity.net/
+Explanation https://github.com/todotxt/todo.txt
+Display file https://unix.stackexchange.com/questions/86321/how-can-i-display-the-contents-of-a-text-file-on-the-command-line

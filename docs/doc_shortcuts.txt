@@ -1,0 +1,448 @@
+#	Program	ShortCut	Command
+0	VERSION	2023-05-23	V1
+1	Total Commander-MENU	F1	Help
+2	Total Commander-MENU	F2	Reread source window
+3	Total Commander-MENU	F3	List files
+4	Total Commander-MENU	F4	Edit files
+5	Total Commander-MENU	F5	Copy files
+6	Total Commander-MENU	F6	Rename files
+7	Total Commander-MENU	F7	Create directory
+8	Total Commander-MENU	F8	or DEL Delete files to recycle bin /delete directly - according to configuration
+9	Total Commander-MENU	F9	Activate menu above source window (left or right)
+10	Total Commander-MENU	F10	Activate left menu or leave menu
+11	Total Commander-MENU	ALT+F1	Change left drive
+12	Total Commander-MENU	ALT+F2	Change right drive
+13	Total Commander-MENU	ALT+F3	Use external viewer
+14	Total Commander-MENU	ALT+SHIFT+F3	Start Lister and load file with internal viewer (no plugins or multimedia)
+15	Total Commander-MENU	ALT+F4	Exit | Minimize (with option MinimizeOnClose, see help)
+16	Total Commander-MENU	ALT+F5	Pack selected files
+17	Total Commander-MENU	ALT+SHIFT+F5	Move to archive
+18	Total Commander-MENU	ALT+F6	Unpack specified files from archive under cursor, or selected archives (use Alt+F9 on Windows 95)
+19	Total Commander-MENU	ALT+F7	Find
+20	Total Commander-MENU	ALT+SHIFT+F7	Find in separate process
+21	Total Commander-MENU	ALT+F8	Opens the history list of the command line
+22	Total Commander-MENU	ALT+F9	Same as ALT+F6 (because ALT+F6 is broken on Windows 95)
+23	Total Commander-MENU	ALT+SHIFT+F9	Test archives for integrity
+24	Total Commander-MENU	ALT+F10	Open a directory tree window
+25	Total Commander-MENU	ALT+F11	Opens left current directory bar (breadcrumb bar)
+26	Total Commander-MENU	ALT+F12	Opens right current directory bar (breadcrumb bar)
+27	Total Commander-MENU	ALT+SHIFT+F11	Focus the button bar to use it with the keyboard
+28	Total Commander-MENU	ALT+LEFT	or right Open previous/next directory in list of already visited dirs
+29	Total Commander-MENU	ALT+DOWN	Open history list of already visited dirs
+30	Total Commander-MENU	ALT+SHIFT+DOWN	Open history list of already visited dirs without history thinning
+31	Total Commander-MENU	SHIFT+F1	Choose custom columns view
+32	Total Commander-MENU	SHIFT+F2	Compare file lists
+33	Total Commander-MENU	SHIFT+F3	List only file under cursor, when multiple files selected
+34	Total Commander-MENU	SHIFT+F4	Create new text file and load into editor
+35	Total Commander-MENU	SHIFT+F5	Copy files (with rename) in the same directory
+36	Total Commander-MENU	SHIFT+CTRL+F5	Create shortcut of files in target directory
+37	Total Commander-MENU	SHIFT+F6	Rename files in the same directory
+38	Total Commander-MENU	SHIFT+F7	Create directory in other panel, using name under cursor
+39	Total Commander-MENU	SHIFT+F8/DEL	Delete directly / delete to recycle bin - according to configuration
+40	Total Commander-MENU	SHIFT+F10	Show context menu
+41	Total Commander-MENU	SHIFT+ESC	Iconize Wincmd
+42	Total Commander-MENU	NUM+	Expand selection
+43	Total Commander-MENU	NUM-	Shrink selection
+44	Total Commander-MENU	NUM*	Invert selection
+45	Total Commander-MENU	NUM/	Restore selection
+46	Total Commander-MENU	SHIFT+NUM	+ Like NUM +, but files and folders if NUM + selects just files (and vice versa)
+47	Total Commander-MENU	SHIFT+NUM	- Always removes the selection just from files (NUM- from files and folders)
+48	Total Commander-MENU	SHIFT+NUM	* Like NUM *, but files and folders if NUM * inverts selection of just files (and vice versa)
+49	Total Commander-MENU	CTRL+NUM+	Select all
+50	Total Commander-MENU	CTRL+SHIFT+NUM	Select all (files and folders if CTRL+NUM + selects only files)
+51	Total Commander-MENU	CTRL+NUM-	Deselect all
+52	Total Commander-MENU	CTRL+SHIFT+NUM-	Deselect all (always files, no folders)
+53	Total Commander-MENU	ALT+NUM+	Select all files with the same extension
+54	Total Commander-MENU	ALT+NUM-	Remove selection from files with the same extension
+55	Total Commander-MENU	BACKSPACE	or CTRL+PgUp Change to parent directory (corresponds to cd ..)
+56	Total Commander-MENU	CTRL+PGDN	Open directory/archive (also self extracting .EXE archives)
+57	Total Commander-MENU	CTRL+<	Jump to the root directory (most European keyboards)
+58	Total Commander-MENU	CTRL+\	Jump to the root directory (US keyboard)
+59	Total Commander-MENU	CTRL+LEFT	or right Open directory/archive and display it in the target window. If the cursor is not on a directory name, the current directory is displayed instead.
+60	Total Commander-MENU	CTRL+F1	File display 'brief' (only file names)
+61	Total Commander-MENU	CTRL+SHIFT+F1	Thumbnails view (preview images)
+62	Total Commander-MENU	CTRL+F2	File display 'full' (all file details)
+63	Total Commander-MENU	CTRL+SHIFT+F2	Comments view
+64	Total Commander-MENU	CTRL+F3	Sort by name
+65	Total Commander-MENU	CTRL+F4	Sort by extension
+66	Total Commander-MENU	CTRL+F5	Sort by date/time
+67	Total Commander-MENU	CTRL+F6	Sort by size
+68	Total Commander-MENU	CTRL+F7	Unsorted
+69	Total Commander-MENU	CTRL+F8	Display directory tree
+70	Total Commander-MENU	CTRL+SHIFT+F8	Cycle through separate directory tree states: one tree, two trees, off
+71	Total Commander-MENU	CTRL+F9	Print file under cursor using the associated program
+72	Total Commander-MENU	CTRL+F10	Show all files
+73	Total Commander-MENU	CTRL+F11	Show only programs
+74	Total Commander-MENU	CTRL+F12	Show user defined files
+75	Total Commander-MENU	TAB	Switch between left and right file list
+76	Total Commander-MENU	SHIFT+TAB	Switch between current file list and separate tree
+77	Total Commander-MENU	LETTER	Redirected to command line, cursor jumps to command line
+78	Total Commander-MENU	INSERT	Select file or directory
+79	Total Commander-MENU	SPACE	Select file or directory (as INSERT). If SPACE is used on an unselected directory under the cursor, the contents in this directory are counted and the size is shown in the 'full' view instead of the string <DIR>.
+80	Total Commander-MENU	ENTER	Change directory/run program/run associated program/execute command line if not empty. If the source directory shows the contents of an archive,
+81	Total Commander-MENU	 FURTHER	information on the packed file is given.
+82	Total Commander-MENU	SHIFT+ENTER	1. Run command line/program under cursor via Windows shell and leave open the program's window. Only works if NOCLOSE.EXE is present in your Totalcmd directory!
+83	Total Commander-MENU	 2.	With ZIP files: use alternative choice of these (as chosen in Packer config): (Treat archives like directories <-> call associated program, i.e. winzip or quinzip).
+84	Total Commander-MENU	ALT+SHIFT+ENTER	The contents of all directories in the current directory are counted. The sizes of the directories are then shown in the 'full' view instead of the string <DIR>.
+85	Total Commander-MENU	ALT+ENTER	Show property sheet.
+86	Total Commander-MENU	CTRL+A	Select all
+87	Total Commander-MENU	CTRL+B	Directory branch: show contents of current dir and all subdirs in one list
+88	Total Commander-MENU	CTRL+SHIFT+B	Directory branch for selected directories: show contents of selected dir and all subdirs in one list
+89	Total Commander-MENU	CTRL+C	Copy files to clipboard
+90	Total Commander-MENU	CTRL+D	Open directory hotlist ('bookmarks')
+91	Total Commander-MENU	CTRL+F	Connect to FTP server
+92	Total Commander-MENU	CTRL+SHIFT+F	Disconnect from FTP server, port connection, and some file system plugins
+93	Total Commander-MENU	CTRL+I	Switch to target directory
+94	Total Commander-MENU	CTRL+L	Calculate occupied space (of the selected files)
+95	Total Commander-MENU	CTRL+M	Multi-Rename-Tool
+96	Total Commander-MENU	CTRL+SHIFT+M	Change FTP transfer mode
+97	Total Commander-MENU	CTRL+N	New FTP connection (enter URL or host address)
+98	Total Commander-MENU	CTRL+P	Copy current path to command line
+99	Total Commander-MENU	CTRL+Q	Show Quick View panel instead of a file list
+100	Total Commander-MENU	CTRL+SHIFT+Q	Separate quick view window (like Lister, but updates with cursor movement)
+101	Total Commander-MENU	CTRL+R	Reread source directory
+102	Total Commander-MENU	CTRL+S	Open Quick Filter dialog and activate filter
+103	Total Commander-MENU	CTRL+SHIFT+S	Open Quick Filter dialog and reactivate last-used filter
+104	Total Commander-MENU	CTRL+T	Open new folder tab and activate it
+105	Total Commander-MENU	CTRL+SHIFT+T	Open new folder tab, but do not activate it
+106	Total Commander-MENU	CTRL+U	Exchange directories
+107	Total Commander-MENU	CTRL+SHIFT+U	Exchange directories and tabs
+108	Total Commander-MENU	CTRL+V	Paste from clipboard to current dir
+109	Total Commander-MENU	CTRL+W	Close currently active tab
+110	Total Commander-MENU	CTRL+SHIFT+W	Close all open tabs
+111	Total Commander-MENU	CTRL+X	Cut files to clipboard
+112	Total Commander-MENU	CTRL+Z	Edit comment
+113	Total Commander-MENU	CTRL+UP	Open dir under cursor in new tab
+114	Total Commander-MENU	CTRL+SHIFT+UP	Open dir under cursor in other window (new tab)
+115	Total Commander-MENU	CTRL+TAB	Jump to next tab
+116	Total Commander-MENU	CTRL+SHIFT+TAB	Jump to previous tab
+117	Total Commander-MENU	ALTGR+LETTER(S)	or Quick search for file name (starting with specified letters) in current
+118	Total Commander-MENU	CTRL+ALT+LETTER(S)	directory (Support hotkeys Ctrl+X, Ctrl+C, Ctrl+V and Ctrl+A; use Ctrl+S for search filter on/off)
+119	Total Commander-CMD	ENTER	The command line is executed, if it contains at least one character (otherwise, the program under the cursor in the source window is started). If the command is cd, md or rd, it is executed internally. If it is an internal DOS command, DOS will be executed with this command. Otherwise,  aprogram with the given name is executed.
+120	Total Commander-CMD	 SHIFT-ENTER	Like ENTER, but via Windows shell. After the called DOS program is terminated, its window is not automatically closed. This will only work if the file NOCLOSE.EXE is in your Totalcmd directory.
+121	Total Commander-CMD	CTRL-ENTER	The file under the cursor in the source directory is appended to the command line.
+122	Total Commander-CMD	CTRL-SHIFT-ENTER	The file under the cursor including its path is appended to the command line.
+123	Total Commander-CMD	CTRL-CURSORDOWN	or A list with the latest command lines (history-list) is opened. Hold down
+124	Total Commander-CMD	ALT+F8	the CTRL key and use the up and down cursor keys to select an entry. By pressing the left or right key, you can edit the command line. This automatically closes the list.r
+125	Total Commander-CMD	TAB	or Cursor Keys Puts the cursor back to the source directory. Cursor left and cursor right move the cursor through the command line, even if the cursor was in the source directory before. If brief was selected, these keys move the cursor through the source directory. You then have to hold down SHIFT to move it inside the command line. Cursor up and cursor down move the cursor bar inside the source window, even if it was inside the command line.
+126	Total Commander-CMD	ESC	Clears the command line, put cursor back in file window.
+127	Total Commander-CMD	CTRL+A	Select entire command line
+128	Total Commander-CMD	CTRL+Y	Clears the command line, cursor stays in command line.
+129	Total Commander-CMD	CTRL+C	Copy selected text to clipboard
+130	Total Commander-CMD	CTRL+X	Cut selected text to clipboard
+131	Total Commander-CMD	CTRL+V	Paste text from clipboard to command line.
+132	Total Commander-CMD	CTRL+E	Copy previous command to command line
+133	Total Commander-CMD	CTRL+K	Delete to end of line
+134	Total Commander-CMD	CTRL+W	Delete word to the left of the cursor
+135	Total Commander-CMD	CTRL+T	Delete word to the right of the cursor
+136	VIM/CAT	:Q!/Q	quit
+137	BASH CHAR	CTRL+T	[cA_Bd > cBA_d] Tauschen/swap CHAR before/after cursor"
+138	BASH WORD	ALT+T	[ABC_XYZ > XYZ ABC_] Tauschen/swap WORD before/after cursor:"
+139	BASH CHAR	CTRL+H	[c#_bd > c_bd] Delete CHAR before Cursor"
+140	BASH CHAR	CTRL+D	[ca_#d > ca_d] Delete CHAR after Cursor"
+141	BASH WORD	ALT+D	[abc_### > abc_] Delete WORD after Cursor"
+142	BASH WORD	ALT+U	[abc_xyz > abcXYZ_] Upper case WORD"
+143	BASH WORD	ALT+L	[abc_XYZ > abcxyz_] Lower case WORD"
+144	BASH CHAR	ALT+C	[xa_by > xaBy_] Capitalize CHAR after Cursor/move to next word"
+145	BASH WORD	CTRL+W	[###_xyz > xyz] Cut WORD before cursor to clipboard"
+146	BASH LINE	CTRL+K	[123_### ### > 123_] Cut LINE after cursor to clipboard"
+147	BASH LINE	CTRL+U	[###_abc xyz > _abc xyz] Cut LINE before cursor to clipboard"
+148	BASH NAVIGATION	CTRL+A	(anfang) - HOME"
+149	BASH NAVIGATION	CTRL+E	(ende) - END"
+150	BASH NAVIGATION	ALT+B	(backwards one word)"
+151	BASH NAVIGATION	ALT+F	(forward one word)"
+152	BASH EDITING 	TAB	Tab completion for file/directory names"
+153	BASH EDITING 	HISTORY #N	Show last #n entries from history"
+154	BASH EDITING 	CTRL+R	History search, type string, go back with CTRL+R
+155	BASH EDITING 	!	Enter the NUM form history to execute command"
+156	BASH EDITING 	ALT+R	(revert changes like history)"
+157	BASH EDITING 	CTRL+L	clear Screen"
+158	BASH EDITING 	CTRL+P	(previous COMMAND)
+159	BASH EDITING 	CTRL+N	(next COMMAND)
+160	BASH EDITING 	CTRL+Y	paste last cut"
+161	BASH EDITING 	CTRL+_	Undo (CTRL+SHIFT+-)"
+162	BASH EDITING 	CTRL++/-	Change Font Size"
+163	MYLIFEORGANIZED MLO	ALT+F1	Task views pane open/close 
+164	MYLIFEORGANIZED MLO	ALT+F2	Properties pane open/close 
+165	MYLIFEORGANIZED MLO	F12	Full screen
+166	MYLIFEORGANIZED MLO	ALT+1	Toggle between Task List and Task Notes (Contexts List and Contexts Notes)
+167	MYLIFEORGANIZED MLO	ALT+2	General properties section open/close
+168	MYLIFEORGANIZED MLO	ALT+3	Timing & Reminder properties section open/close
+169	MYLIFEORGANIZED MLO	ALT+4	Effort properties section open/close
+170	MYLIFEORGANIZED MLO	ALT+5	Project properties section open/close
+171	MYLIFEORGANIZED MLO	ALT+6	Dependencies properties section open/close
+172	MYLIFEORGANIZED MLO	ALT+7	Format properties section open/close
+173	MYLIFEORGANIZED MLO	ALT+8	Review properties section open/close
+174	MYLIFEORGANIZED MLO	ALT+9	Task Statistics properties section open/close
+175	MYLIFEORGANIZED MLO	F6	Collapse entire task list
+176	MYLIFEORGANIZED MLO	F7	Expand entire task list
+177	MYLIFEORGANIZED MLO	F3	Open current workspace in new window
+178	MYLIFEORGANIZED MLO	ALT+SHIFT+LEFT RIGHT UP DOWN	Rearrange tasks in the outline
+179	MYLIFEORGANIZED MLO	CTRL+PGDN	Next tab
+180	MYLIFEORGANIZED MLO	CTRL+PGUP	Previous tab
+181	MYLIFEORGANIZED MLO	CTRL+ALT+M	To-Do manual sorting
+182	MYLIFEORGANIZED MLO	CTRL+UP	Ctrl+Down
+183	MYLIFEORGANIZED MLO	ALT+UP DOWN	Select next/previous sibling in the current outline. Select next/previous visible task without focusing this task list. The current active control will be still focused during task change by this shortcut. Useful to iterate quickly through the list of tasks and change specific task parameter.
+184	MYLIFEORGANIZED MLO	CTRL+ALT+UP DOWN	Select next/previous project in the current outline
+185	MYLIFEORGANIZED MLO	CTRL+`	Collapse/Expand all subtasks of the current task
+186	MYLIFEORGANIZED MLO	SHIFT+CTRL+0-9	Set quick bookmark #1, 2...9 to a task in the outline 
+187	MYLIFEORGANIZED MLO	CTRL+0-9	Go to bookmark #1, 2...9 in the outline 
+188	MYLIFEORGANIZED MLO	CTRL+ < >	Go to previous/next bookmark set
+189	MYLIFEORGANIZED MLO	CTRL+ALT+>	Open Bookmarks dialog
+190	MYLIFEORGANIZED MLO	ALT+C	Edit Context for a task
+191	MYLIFEORGANIZED MLO	ALT+L	Select Context for a task from the list
+192	MYLIFEORGANIZED MLO	ALT+V	Select View 
+193	MYLIFEORGANIZED MLO	ALT+P	Toggle complete subtasks in order 
+194	MYLIFEORGANIZED MLO	ALT+Y	Toggle hide in todo 
+195	MYLIFEORGANIZED MLO	ALT+R	Reminder
+196	MYLIFEORGANIZED MLO	ALT+J	Toggle "This is a Project"
+197	MYLIFEORGANIZED MLO	ALT+X	Max time required 
+198	MYLIFEORGANIZED MLO	ALT+W	Toggle Weekly goal 
+199	MYLIFEORGANIZED MLO	ALT+D	Set Due Date for a task
+200	MYLIFEORGANIZED MLO	CTRL+=-	Increase/decrease task due date by one day.
+201	MYLIFEORGANIZED MLO	CTRL+ALT=-	Increase/decrease task due date by one week.
+202	MYLIFEORGANIZED MLO	INSERT CTRL+N	Create a task (Context)
+203	MYLIFEORGANIZED MLO	SHIFT+CTRL+INSERT	Create a new folder
+204	MYLIFEORGANIZED MLO	CTRL+D	Duplicate task(s)
+205	MYLIFEORGANIZED MLO	ALT+INSERT	Create a subtask
+206	MYLIFEORGANIZED MLO	CTRL+DEL	Delete a task (Context)
+207	MYLIFEORGANIZED MLO	CTRL+R/+ALT R	Zoom-in Zoom-out
+208	MYLIFEORGANIZED MLO	ALT+LEFT/+RIGHT	Jump back/forward to previously selected task. Jump forward to the next task in history
+209	MYLIFEORGANIZED MLO	CTRL+H	Highlight a task
+210	Notepad++ File Menu	CTRL+O	Open the File
+211	Notepad++ File Menu	CTRL+N	New File
+212	Notepad++ File Menu	CTRL+S	Save File
+213	Notepad++ File Menu	CTRL+SHIFT+S	Save All
+214	Notepad++ File Menu	CTRL+ALT+S	Save As
+215	Notepad++ File Menu	CTRL+P	Print the File
+216	Notepad++ File Menu	ALT+F4	Exit the File
+217	Notepad++ File Menu	CTRL+TAB	Open the next Document
+218	Notepad++ File Menu	CTRL+SHIFT+TAB	Open the previous Document
+219	Notepad++ File Menu	CTRL+W	Close current Document
+220	Notepad++ File Menu	CTRL+NUMPAD	Navigate to the n-th Document
+221	Notepad++ Edit Menu	CTRL+C	Copy
+222	Notepad++ Edit Menu	CTRL+INSERT	Copy
+223	Notepad++ Edit Menu	CTRL+SHIFT+T	Copy the current line to the clipboard
+224	Notepad++ Edit Menu	CTRL+X	Cut
+225	Notepad++ Edit Menu	SHIFT+DELETE	Cut
+226	Notepad++ Edit Menu	CTRL+V	Paste
+227	Notepad++ Edit Menu	SHIFT+INSERT	Paste
+228	Notepad++ Edit Menu	CTRL+Z	Undo
+229	Notepad++ Edit Menu	ALT+BACKSPACE	Undo
+230	Notepad++ Edit Menu	CTRL+Y	Redo
+231	Notepad++ Edit Menu	CTRL+A	Select All
+232	Notepad++ Edit Menu	ALT+SHIFT+ARROW KEYS	Column Mode Select
+233	Notepad++ Edit Menu	CTRL+LEFT MOUSE CLICK	Start the new selected area
+234	Notepad++ Edit Menu	ALT+C	Column Editor
+235	Notepad++ Edit Menu	CTRL+D	Duplicate the Current Line
+236	Notepad++ Edit Menu	CTRL+T	Switch the current line position with the previous line position
+237	Notepad++ Edit Menu	CTRL+SHIFT+UP	Move the Current Line
+238	Notepad++ Edit Menu	CTRL+SHIFT+DOWN	Move the Current Line
+239	Notepad++ Edit Menu	CTRL+LEFT MOUSE CLICK	Delete the Current Line
+240	Notepad++ Edit Menu	CTRL+I	Split Lines
+241	Notepad++ Edit Menu	CTRL+J	Join Lines
+242	Notepad++ Edit Menu	CTRL+G	Launch the GoToLine Dialog
+243	Notepad++ Edit Menu	CTRL+Q	Single line comment
+244	Notepad++ Edit Menu	CTRL+SHIFT+Q	Single line uncomment
+245	Notepad++ Edit Menu	CTRL+K	Toggle the single line comment
+246	Notepad++ Edit Menu	CTRL+SHIFT+K	Block comment
+247	Notepad++ Edit Menu	TAB	Insert indent
+248	Notepad++ Edit Menu	SHIFT+TAB	Insert outdent
+249	Notepad++ Edit Menu	CTRL+BACKSPACE	Delete to the start of the word
+250	Notepad++ Edit Menu	CTRL+DELETE	Delete to the end of the word
+251	Notepad++ Edit Menu	CTRL+SHIFT+BACKSPACE	Delete to the start of the line
+252	Notepad++ Edit Menu	CTRL+SHIFT+DELETE	Delete to the end of the line
+253	Notepad++ Edit Menu	CTRL+U	Convert to lower case
+254	Notepad++ Edit Menu	CTRL+SHIFT+U	Convert to upper case
+255	Notepad++ Edit Menu	CTRL+B	Go to matching brace
+256	Notepad++ Edit Menu	CTRL+SPACE	Launch the CallTip ListBox
+257	Notepad++ Edit Menu	CTRL+SHIFT+SPACE	Launch the Function Completion ListBox
+258	Notepad++ Edit Menu	CTRL+ALT+SPACE	Launch the Path Completion ListBox
+259	Notepad++ Edit Menu	CTRL+ENTER	Launch the Word Completion ListBox
+260	Notepad++ Edit Menu	CTRL+ALT+R	Text Direction RTL
+261	Notepad++ Edit Menu	CTRL+ALT+L	Text Direction LTR
+262	Notepad++ Edit Menu	ENTER	Split the line downwards
+263	Notepad++ Edit Menu	SHIFT+ENTER	Split the line downwards
+264	Notepad++ Edit Menu	CTRL+ALT+ENTER	Insert new unindented line above the current one
+265	Notepad++ Edit Menu	CTRL+ALT+SHIFT+ENTER	Insert new unindented line below the current one
+266	Notepad++ Search Menu	CTRL+F	Launch Find Dialog
+267	Notepad++ Search Menu	CTRL+H	Launch Find/Replace Dialog
+268	Notepad++ Search Menu	F3	Find Next
+269	Notepad++ Search Menu	SHIFT+F3	Find Previous
+270	Notepad++ Search Menu	CTRL+SHIFT+F3	Find in Files
+271	Notepad++ Search Menu	F7	Switch to the Search Results window
+272	Notepad++ Search Menu	CTRL+ALT+F3	Find (volatile) Next
+273	Notepad++ Search Menu	CTRL+ALT+SHIFT+F3	Find (volatile) Previous
+274	Notepad++ Search Menu	CTRL+F3	Select and Find Next
+275	Notepad++ Search Menu	CTRL+SHIFT+F3	Select and Find Previous
+276	Notepad++ Search Menu	F4	Got to next found
+277	Notepad++ Search Menu	SHIFT+F4	Go to previous found
+278	Notepad++ Search Menu	CTRL+SHIFT+I	Incremental Search
+279	Notepad++ Search Menu	CTRL+N	Jump Down
+280	Notepad++ Search Menu	CTRL+SHIFT+N	Jump Up
+281	Notepad++ Search Menu	CTRL+F2	Toggle Bookmark
+282	Notepad++ Search Menu	F2	Go to the Next Bookmark
+283	Notepad++ Search Menu	SHIFT+F2	Go to the Previous Bookmark
+284	Notepad++ Search Menu	CTRL+B	Go to the Matching Brace
+285	Notepad++ Search Menu	CTRL+ALT+B	Select All between the Matching Braces
+286	Notepad++ Macro Menu	CTRL+SHIFT+R	Start to record / Stop recording the macro
+287	Notepad++ Macro Menu	CTRL+SHIFT+P	Play the recorded macro
+288	Notepad++ Macro Menu	ALT+SHIFT+S	Trim Trailing and Save
+289	Notepad++ Run Menu	F5	Launch Run Dialog
+290	Notepad++ Run Menu	ALT+F1	Get PHP help
+291	Notepad++ Run Menu	ALT+F2	Google search
+292	Notepad++ Run Menu	ALT+F3	Wikipedia search
+293	Notepad++ Run Menu	ALT+F5	Open file
+294	Notepad++ Run Menu	ALT+F6	Open file in another instance
+295	Notepad++ Run Menu	CTRL+ALT+SHIFT+R	Open in Chrome
+296	Notepad++ Run Menu	CTRL+ALT+SHIFT+X	Open in Firefox
+297	Notepad++ Run Menu	CTRL+ALT+SHIFT+I	Open in IE
+298	Notepad++ Run Menu	CTRL+ALT+SHIFT+F	Open in Safari
+299	Notepad++ Run Menu	CTRL+ALT+SHIFT+O	Send via Outlook
+300	Notepad++ Increm Search	ENTER	Next match
+301	Notepad++ Increm Search	SHIFT+ENTER	Previous match
+303	Notepad++ View Menu	CTRL+(KEYPAD-/KEYPAD+)	Zoom in and zoom out
+304	Notepad++ View Menu	CTRL+KEYPAD/	Restore the original size
+305	Notepad++ View Menu	F11	Toggle full screen
+306	Notepad++ View Menu	F12	Toggle Post-It mode
+307	Notepad++ View Menu	CTRL+ALT+F	Collapse the current level
+308	Notepad++ View Menu	CTRL+ALT+SHIFT+F	Uncollapse the current level
+309	Notepad++ View Menu	ALT+0	Fold all
+310	Notepad++ View Menu	ALT+(1~8)	Collapse the level (1~8)
+311	Notepad++ View Menu	ALT+SHIFT+0	Unfold all
+312	Notepad++ View Menu	ALT+SHIFT+(1~8)	Uncollapse the level (1~8)
+313	VSCODE General	CTRL+SHIFT+P,F1	Show Command Palette
+314	VSCODE General	CTRL+P	Quick Open, Go to File…
+315	VSCODE General	CTRL+SHIFT+N	New window/instance
+316	VSCODE General	CTRL+SHIFT+W	Close window/instance
+317	VSCODE General	CTRL+,	User Settings
+318	VSCODE General	CTRL+K,CTRL+S	Keyboard Shortcuts
+319	VSCODE Basic Editing	CTRL+X	Cut line (empty selection)
+320	VSCODE Basic Editing	CTRL+C	Copy line (empty selection)
+321	VSCODE Basic Editing	ALT+UP/DOWN	Move line up/down
+322	VSCODE Basic Editing	SHIFT+ALT+DOWN/UP	Copy line up/down
+323	VSCODE Basic Editing	CTRL+SHIFT+K	Delete line
+324	VSCODE Basic Editing	CTRL+ENTER	Insert line below
+325	VSCODE Basic Editing	CTRL+SHIFT+ENTER	Insert line above
+326	VSCODE Basic Editing	CTRL+SHIFT+\	Jump to matching bracket
+327	VSCODE Basic Editing	CTRL+]/[	Indent/outdent line
+328	VSCODE Basic Editing	HOME/END	Go to beginning/end of line
+329	VSCODE Basic Editing	CTRL+HOME	Go to beginning of file
+330	VSCODE Basic Editing	CTRL+END	Go to end of file
+331	VSCODE Basic Editing	CTRL+UP/DOWN	Scroll line up/down
+332	VSCODE Basic Editing	ALT+PGUP/PGDN	Scroll page up/down
+333	VSCODE Basic Editing	CTRL+SHIFT+[	Fold (collapse) region
+334	VSCODE Basic Editing	CTRL+SHIFT+]	Unfold (uncollapse) region
+335	VSCODE Basic Editing	CTRL+K	Ctrl+[ Fold (collapse) all subregions
+336	VSCODE Basic Editing	CTRL+K	Ctrl+] Unfold (uncollapse) all subregions
+337	VSCODE Basic Editing	CTRL+K	Ctrl+0 Fold (collapse) all regions
+338	VSCODE Basic Editing	CTRL+K	Ctrl+J Unfold (uncollapse) all regions
+339	VSCODE Basic Editing	CTRL+K	Ctrl+C Add line comment
+340	VSCODE Basic Editing	CTRL+K	Ctrl+U Remove line comment
+341	VSCODE Basic Editing	CTRL+/	Toggle line comment
+342	VSCODE Basic Editing	SHIFT+ALT+A	Toggle block comment
+343	VSCODE Basic Editing	ALT+Z	Toggle word wrap
+344	VSCODE - Navigation	CTRL+T	Show all Symbols
+345	VSCODE - Navigation	CTRL+G	Go to Line...
+346	VSCODE - Navigation	CTRL+P	Go to File...
+347	VSCODE - Navigation	CTRL+SHIFT+O	Go to Symbol...
+348	VSCODE - Navigation	CTRL+SHIFT+M	Show Problems panel
+349	VSCODE - Navigation	F8	Go to next error or warning
+350	VSCODE - Navigation	SHIFT+F8	Go to previous error or warning
+351	VSCODE - Navigation	CTRL+SHIFT+TAB	Navigate editor group history
+352	VSCODE - Navigation	ALT+LEFT/RIGHT	Go back/forward
+353	VSCODE - Navigation	CTRL+M	Toggle Tab moves focus
+354	VSCODE Search and Replace	CTRL+F	Find
+355	VSCODE Search and Replace	CTRL+H	Replace
+356	VSCODE Search and Replace	F3/SHIFT+F3	Find next/previous
+357	VSCODE Search and Replace	ALT+ENTER	Select all occurences of Find match
+358	VSCODE Search and Replace	CTRL+D	Add selection to next Find match
+359	VSCODE Search and Replace	CTRL+K	Ctrl+D Move last selection to next Find match
+360	VSCODE Search and Replace	ALT+C/R/W	Toggle case-sensitive/regex/whole word
+361	VSCODE Multicursor Select	ALT+CLICK	Insert cursor
+362	VSCODE Multicursor Select	CTRL+ALT+UP/DOWN	Insert cursor above/below
+363	VSCODE Multicursor Select	CTRL+U	Undo last cursor operation
+364	VSCODE Multicursor Select	SHIFT+ALT+I	Insert cursor at end of each line selected
+365	VSCODE Multicursor Select	CTRL+L	Select current line
+366	VSCODE Multicursor Select	CTRL+SHIFT+L	Select all occurrences of current selection
+367	VSCODE Multicursor Select	CTRL+F2	Select all occurrences of current word
+368	VSCODE Multicursor Select	SHIFT+ALT+RIGHT	Expand selection
+369	VSCODE Multicursor Select	SHIFT+ALT+LEFT	Shrink selection
+370	VSCODE Multicursor Select	SHIFT+ALT+(DRAG MOUSE)	Column (box) selection
+371	VSCODE Multicursor Select	CTRL+SHIFT+ALT+(ARROW KEY)	Column (box) selection
+372	VSCODE Multicursor Select	CTRL+SHIFT+ALT+PGUP/PGDN	Column (box) selection page up/down
+373	VSCODE Rich Lang Editing	CTRL+SPACE,	Ctrl+I Trigger suggestion
+374	VSCODE Rich Lang Editing	CTRL+SHIFT+SPACE	Trigger parameter hints
+375	VSCODE Rich Lang Editing	SHIFT+ALT+F	Format document
+376	VSCODE Rich Lang Editing	CTRL+K	Ctrl+F Format selection
+377	VSCODE Rich Lang Editing	F12	Go to Definition
+378	VSCODE Rich Lang Editing	ALT+F12	Peek Definition
+379	VSCODE Rich Lang Editing	CTRL+K	F12 Open Definition to the side
+380	VSCODE Rich Lang Editing	CTRL+.	Quick Fix
+381	VSCODE Rich Lang Editing	SHIFT+F12	Show References
+382	VSCODE Rich Lang Editing	F2	Rename Symbol
+383	VSCODE Rich Lang Editing	CTRL+K	Ctrl+X Trim trailing whitespace
+384	VSCODE Rich Lang Editing	CTRL+K	M Change file language
+385	VSCODE Editor Management	CTRL+F4,	Ctrl+W Close editor
+386	VSCODE Editor Management	CTRL+K	F Close folder
+387	VSCODE Editor Management	CTRL+\	Split editor
+388	VSCODE Editor Management	CTRL+	1/2/3 Focus into 1
+389	VSCODE Editor Management	ST,	2nd or 3rd editor group
+390	VSCODE Editor Management	CTRL+K/CTRL+LEFT/RIGHT	Focus into previous/next editor group
+391	VSCODE Editor Management	CTRL+SHIFT+PGUP/PGDN	Move editor left/right
+392	VSCODE Editor Management	CTRL+K	Left/Right Move active editor group
+393	VSCODE File Management	CTRL+N	New File
+394	VSCODE File Management	CTRL+O	Open File...
+395	VSCODE File Management	CTRL+S	Save
+396	VSCODE File Management	CTRL+SHIFT+S	Save As...
+397	VSCODE File Management	CTRL+K	S Save All
+398	VSCODE File Management	CTRL+F4	Close
+399	VSCODE File Management	CTRL+K	Ctrl+W Close All
+400	VSCODE File Management	CTRL+SHIFT+T	Reopen closed editor
+401	VSCODE File Management	CTRL+K	Enter Keep preview mode editor open
+402	VSCODE File Management	CTRL+TAB	Open next
+403	VSCODE File Management	CTRL+SHIFT+TAB	Open previous
+404	VSCODE File Management	CTRL+K	P Copy path of active file
+405	VSCODE File Management	CTRL+K	R Reveal active file in Explorer
+406	VSCODE File Management	CTRL+K	O Show active file in new window/instance
+407	VSCODE Display	F11	Toggle full screen
+408	VSCODE Display	SHIFT+ALT+0	Toggle editor layout (horizontal/vertical)
+409	VSCODE Display	CTRL+	=/- Zoom in/out
+410	VSCODE Display	CTRL+B	Toggle Sidebar visibility
+411	VSCODE Display	CTRL+SHIFT+E	Show Explorer/Toggle focus
+412	VSCODE Display	CTRL+SHIFT+F	Show Search
+413	VSCODE Display	CTRL+SHIFT+G	Show Source Control
+414	VSCODE Display	CTRL+SHIFT+D	Show Debug
+415	VSCODE Display	CTRL+SHIFT+X	Show Extensions
+416	VSCODE Display	CTRL+SHIFT+H	Replace in files
+417	VSCODE Display	CTRL+SHIFT+J	Toggle Search details
+418	VSCODE Display	CTRL+SHIFT+U	Show Output panel
+419	VSCODE Display	CTRL+SHIFT+V	Open Markdown preview
+420	VSCODE Display	CTRL+K	V Open Markdown preview to the side
+421	VSCODE Display	CTRL+K	Z Zen Mode (Esc Esc to exit)
+422	VSCODE Debug	F9	Toggle breakpoint
+423	VSCODE Debug	F5	Start/Continue
+424	VSCODE Debug	SHIFT+F5	Stop
+425	VSCODE Debug	F11/SHIFT+F11	Step into/out
+426	VSCODE Debug	F10	Step over
+427	VSCODE Debug	CTRL+K	Ctrl+I Show hover
+428	VSCODE Terminal	CTRL+`	Show integrated terminal
+429	VSCODE Terminal	CTRL+SHIFT+`	Create new terminal
+430	VSCODE Terminal	CTRL+C	Copy selection
+431	VSCODE Terminal	CTRL+V	Paste into active terminal
+432	VSCODE Terminal	CTRL+UP/DOWN	Scroll up/down
+433	VSCODE Terminal	SHIFT+PGUP/PGDN	Scroll page up/down
+434	VSCODE Terminal	CTRL+HOME/END	Scroll to top/bottom
+435	CMDER Tab	CTRL+`	Global Summon from taskbar
+436	CMDER Tab	WIN+ALT+P	Preferences (Or right click on title bar)
+437	CMDER Tab	CTRL+T	New tab dialog (maybe you want to open cmd as admin?)
+438	CMDER Tab	CTRL+W	Close tab
+439	CMDER Tab	SHIFT+ALT+(1/2)	Fast new tab:(1)CMD, (2)PowerShell
+440	CMDER Tab	ALT+ENTER	Fullscreen
+441	CMDER Shell	CTRL+ALT+U	Traverse up in directory structure (lovely feature!)
+442	CMDER Shell	END, HOME,CTRL	Traverse text as usual on Windows
+443	CMDER Shell	CTRL+R	History search
+444	CMDER Shell	SHIFT+MOUSE	Select and copy text from buffer
+445	CMDER Shell	RIGHTCLICK/CTRL+SHIFT+V	Paste text
+446	CMDER Shell	CTRL	In result list with links open link
+
