@@ -55,6 +55,6 @@ register_todo "todo"
 # alias help_todo="cat ${p_docs}/help_todo_local.txt"
 # accesses file locally allwos to search 
 # TODO: use either help_todo.txt or replace it with your own locla helpfile 
-alias help_todo="cdd ${p_docs}; grep_single_file help_todo_local.txt"
+alias help_todo="cdd ${p_docs}; grep_single_file doc_todo_local.txt"
 # decomment
 # echo -e "\r\n     header_todo.sh definitions ----"

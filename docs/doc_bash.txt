@@ -1,3 +1,8 @@
+2023-05-07
+
+BASH REGEX character classes can be specified within the square braces, using the syntax [:CLASS:], where CLASS is defined in the POSIX standard and has one of the values
+# "alnum", "alpha", "ascii", "blank", "cntrl", "digit", "graph", "lower", "print", "punct", "space", "upper", "word" or "xdigit".
+
 2023-04-29 
 
 # 2023-04-29 Checking for integer values splitting grep copy of filename:line:<...> into string filename [line]
