@@ -49,7 +49,7 @@ t_ report 							: archive/report (date|#open|done)
 t_ deduplicate						: delete duplicates
 
 #### TASK OPERATIONS 							
-t_add [p:PRIO] "test +proj @ctx..." : create new task with Prio B (use p:PRIORITY to set prio) 
+t_add "test +proj @ctx..." [p:PRIO]  : create new task with Prio B (additionally use p:PRIORITY to set prio) 
 t_done [n]		        			: set task [n] to done without archiving it  (added -a -N do)
 t_ del [n]		        			: delete task [n] 
 t_ replace [n] "TEXT"	   			: replace task [n] 
